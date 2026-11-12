@@ -1,135 +1,129 @@
-# Survival Guide — a task-first front end for the offline library
+# Lastbook
 
-A new way into the Survival & Rebuilding Library (`library-data/` → the real collection). It starts from
-what a person needs ("Someone is hurt", "Get safe drinking water", "Power is out", map of nearby help),
-then shows a few hand-picked pages with exact page numbers and the source's own limits, then the full
-manuals, videos and encyclopedias. It runs entirely from this computer.
+Lastbook is an offline survival library for Mac and Windows. It puts manuals, videos, encyclopedias, an offline map and
+short practical guides on one computer, and it keeps working with no internet at all. It starts from what a person needs
+("Someone is hurt", "Get safe drinking water", "Power is out", "Find help nearby"). Then it shows a few hand-picked pages
+with exact page numbers and each source's own limits, and after that the full manuals, videos and encyclopedias.
 
-## Run it
+Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 
-```bash
-python3 server.py
-```
+> This repository is private for now. It will be opened later, under a licence that has not been chosen yet (see
+> [LICENSE](LICENSE)).
 
-Then open http://127.0.0.1:8890/ (or double-click **Open Survival Guide.command**, which uses the library's
-bundled Python). `python3 server.py --lan` also serves phones on the same Wi-Fi (no internet needed).
+## How it is built
 
-The previous interface on port 8879 is untouched and keeps running separately.
-
-## Ask the library (local DeepSeek assistant)
-
-- Model: `deepseek-v4.1-flash` at `http://127.0.0.1:19443` (called only by the server; override with
-  `SURVIVAL_MODEL_BASE`, which must be a loopback address). The 19442 gateway is not used.
-- Every question is first searched with the shared retriever; the model then gets five read-only tools:
-  `search_library`, `read_pages`, `view_page` (sends the page image — verified the model reads it),
-  `get_timed_transcript`, `lookup_place`. Tools accept catalog ids only: no paths, URLs or shell input.
-  Source text is wrapped as untrusted reference data.
-- Citations (`[S3]`) are checked against what the tools actually returned; unknown keys are removed and
-  reported. Sentences without a citation are shown dotted as the model's own wording; "Not found in the
-  library", "Sources disagree" and "own reasoning" sections are styled separately.
-- If the model is down, the Ask tab says so and lists the best-matching pages instead; all browsing works.
-- Other local DeepSeek clients can use the same tools: `GET /api/tools` (OpenAI-style schemas) and
-  `POST /api/tool/<name>` with JSON arguments. Hybrid passages: `GET /api/retrieve?q=…&k=8&kind=any|manual|video`.
-
-## Optional local AI in the desktop app (`llm_local.py`)
-
-The Lastbook desktop app can write answers with **Gemma 4 26B A4B** (Unsloth `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`,
-16,947,541,728 bytes, SHA-256 `f2c28b3d…3f293f`, revision `c099eb48`), running on the same computer. The server
-version above keeps using the model server at `SURVIVAL_MODEL_BASE` unless started with `LASTBOOK_LOCAL_AI=1`.
-
-- **Runner:** `packaging/llm/lastbook_llm.cpp`, our own small program on llama.cpp b12032 (the build the small-model
-  evaluation used). It speaks JSON lines on standard input and output and opens no socket or port. It holds no RPC
-  backend and none of llama.cpp's common library except the memory fitting (`common/fit.cpp`, the same as llama-server's
-  default `--fit`) and its log. Build it with `bash packaging/llm/build_llm_macos.sh`, which refuses a binary with
-  network calls or a folder of this Mac in it. Prompts go in as segments: Gemma's template markup with special tokens
-  read, library and user text with them never read, so a document cannot start a turn of its own.
-- **Finding the model:** the file in `LastbookData/models/`, `LastbookData/`, Downloads, Documents or Desktop. It is
-  checked once (size, then SHA-256, about 10 s on this Mac), then `lastbook-llm --measure` asks llama.cpp where it fits.
-  It is offered when the computer's memory holds the measured need plus 2.5 GiB. On a Mac GPU and CPU share that memory;
-  on Windows only the part not placed on the graphics card counts. There is no fixed 32 GB rule.
-- **Measured here** (Apple M3 Ultra, 16k context): 16.9 GiB on the GPU plus 0.8 GiB host. Loading takes 1.5 s, and an
-  answer with sources takes about 5–12 s. The process holds about 17.4 GB resident.
-- **Lifecycle:** it starts when someone asks and stops after 15 minutes unused, when turned off (About page), and when the
-  app quits or dies (the closed pipe ends it, plus a kill-on-close job object on Windows). A crash while answering
-  shows a plain error, and the next question starts it again.
-- **Limits:** text only (no `view_page`: the local model is not given page images). Its answers were graded in the
-  one-question evaluation (`derived/small-models/RECOMMENDATION.md`): 0–1 dangerous of 60, depending on the reader. The
-  app's full loop, with follow-up searches and follow-up questions, has been tried but not graded.
-
-## Retrieval service (`retrieval.py`)
-
-Keyword search = the library's own FTS5/BM25 `search.sqlite` (read only). Meaning-based search =
-BAAI bge-small-en-v1.5 (ONNX, from the official BAAI Hugging Face repo) run locally with onnxruntime.
-Results are fused with reciprocal-rank fusion, lightly weighted by source type, with an exact
-equipment-model boost. Index files: `derived/index/semantic.sqlite` + `vectors.f16` (append-only).
-It updates incrementally: the server re-checks the catalog every 5 minutes and embeds only new or
-changed documents and transcripts (single writer, file lock). Build/refresh by hand:
-
-```bash
-library-data/runtime/macos-arm64/python/bin/python3 retrieval.py
-```
-
-What it cannot read is reported in the app (About page, `/api/assistant/status`): videos without
-captions (most of them), scanned PDFs without text, pictures inside videos, raw GIS files.
-
-## Sharing with phones on the same network
-
-```bash
-library-data/runtime/macos-arm64/python/bin/python3 server.py --lan
-```
-
-Prints a one-time link `http://<this-mac>:8890/?key=…`; opening it sets a cookie. Without the key other
-devices get 403. Network clients only get the app, its APIs, encyclopedias and library content folders
-(no worker state, logs, databases or directory listings). Loopback behaves exactly as before. Delete
-`derived/lan-key` to change the key. Nothing is exposed beyond the local network by this server.
-
-## Runtime dependencies (all local)
-
-The library's bundled Python 3.12 (`library-data/runtime/...`), the library's own `tools/library.py`
-and vendored packages (libzim, bs4), poppler `pdftoppm` (page images), and in `derived/pylib`:
-onnxruntime, tokenizers, numpy. The model server at 19443 is needed only for Ask. No internet.
+- **Offline.** After setup, the app needs no network. Its windows block all web loads, the assistant talks only to a
+  local program over pipes, and nothing is ever sent anywhere: no telemetry, no update check, no account.
+- **No port.** The desktop app opens no network port. The window and the engine talk through an in-memory bridge
+  (`app/bridge.py`): WKURLSchemeHandler on macOS (`app/shell_macos.py`), WebView2 `WebResourceRequested` on Windows
+  (`app/shell_windows.py`). The local AI runner speaks JSON lines on standard input and output and opens no socket either.
+- **One way out.** First-run setup (`engine/setup/`) is the only code that may reach the internet, and only when the
+  person starts or resumes a download. It uses HTTPS to an allow-listed set of hosts and checks every file against the
+  SHA-256 in the manifest. See [docs/SETUP-API.md](docs/SETUP-API.md).
+- **A working library is never broken.** New data is unpacked beside the old one, checked, and then switched in with a
+  single rename.
 
 ## What's where
 
 | Path | What it is |
 |---|---|
-| `server.py` | Small server. Imports `library-data/tools/library.py` and subclasses its `Handler`, so every original file URL, `/api/search`, `/api/collection-search`, `/zim/...`, and video range requests behave exactly as on 8879. Adds read-only endpoints (topics, plain-language search, page images/text, transcripts, browse, map tiles, nearby help, place finder). |
-| `web/` | The app: `index.html`, `app.css`, `app.js`, `chat.js`, `map.js`, `sw.js`. No build step, no external fonts/scripts. |
-| `retrieval.py`, `assistant.py` | Shared retrieval service and the assistant (tools, streaming, citation checks). |
-| `content/topics/*.json` | 14 curated guides (8 urgent needs, 6 learning tracks), ~720 references, each checked against the page it cites. Format: `content/SCHEMA.md`. |
-| `content/gaps.json` | What curators looked for and did not find, plus places where sources disagree. Shown on each guide. |
-| `tools/libq.py` | Read-only helper for curators (search, read a page, find titles, encyclopedia lookup). |
-| `tools/validate_topics.py` | Checks every curated id/page/encyclopedia path. Needs port 8879 running for the ZIM checks. |
-| `tools/build_map.py`, `tools/build_coast.py`, `tools/build_places.py` | Build the offline map and place finder into `derived/geo/` from library geography files (read only). |
-| `derived/` | Generated data: `geo/map.sqlite` (1.7 GB, SoCal streets/buildings/water/help points), `geo/places.sqlite` (ZIP codes, towns, named places), `geo/socal.gpkg` (extracted copy), `cache/` (rendered PDF pages), `buildenv/` (pyosmium, build-time only). |
+| `app/` | The desktop app: entry point (`main.py`), the no-port bridge, the macOS and Windows shells, and tests (`app/tests/`). |
+| `engine/` | Paths and data-folder lookup, library access, saved pages, and first-run setup (`engine/setup/`). `engine/vendor-macos/` holds pypdfium2 for the Mac build. |
+| `server.py`, `assistant.py`, `retrieval.py`, `llm_local.py` | The engine: request handler, the assistant and its citation checks, keyword plus meaning-based search, and the optional local AI. |
+| `web/` | The interface, in plain HTML, CSS and JavaScript with no build step and nothing loaded from the web. `setup.*` is the first-run setup screen. |
+| `content/` | The curated guides (`topics/*.json`) and what curators looked for and did not find (`gaps.json`). Format: `content/SCHEMA.md`. |
+| `packaging/` | App builds (macOS and Windows), pack builder, release manifest, package scans, and `packaging/llm/` (the local AI runner). |
+| `derived/packs/pack-spec.json` | What goes into each download pack (Small, Medium, All and add-ons). Everything else under `derived/` is generated and not kept here. |
+| `tools/` | Builders for the offline map and place finder, plus curator helpers (`libq.py`, `validate_topics.py`). |
+| `website/`, `website-next/` | The lastbook.org website: the current site and the next one, both static. |
+| `docs/` | The setup contract (`SETUP-API.md`) and notes on the library server version (`LIBRARY-SERVER.md`). |
 
-## Rebuilding derived data
+## Run from source
+
+You need Python 3.11 or later and a **data folder**. A data folder holds `library-data/catalog.json` (the library) and gets
+a `derived/` folder for indexes, caches and logs. Get one by running the app once and letting setup download a pack, or by
+unzipping a pack from lastbook.org.
 
 ```bash
-cd /path/to/lastbook
-unzip -o library-data/geography/openstreetmap/socal-latest-free.gpkg.zip -d derived/geo
-library-data/runtime/macos-arm64/python/bin/python3 tools/build_map.py derived/geo/socal.gpkg derived/geo/map.sqlite
-derived/buildenv/bin/python tools/build_coast.py library-data/geography/openstreetmap/socal-latest.osm.pbf derived/geo/map.sqlite
-python3 tools/build_places.py
+python3 -m venv .venv
+.venv/bin/pip install -r packaging/requirements_macos.txt     # on Windows: packaging/requirements_app.txt
+.venv/bin/python app/main.py --data /path/to/LastbookData
 ```
 
-## How it stays correct as the library grows
+Without `--data`, the app looks in `LASTBOOK_DATA`, then the folder chosen last time, then `LastbookData` beside the
+program, in Downloads, Documents or the home folder, and finally in the app's own data folder. If it finds none, it opens
+setup. The full order is in `app/main.py`.
 
-- Nothing in `library-data` is written. Source details (publisher, edition, pages, video length, transcript)
-  are read live from `catalog.json`, which the server reloads when the indexer rewrites it.
-- Search runs on the library's own `search.sqlite` full-text index, so new downloads appear automatically.
-  Queued downloads are not in the catalog and never show up as if they were available.
-- Curated guides reference catalog ids. Re-run `tools/validate_topics.py` after big catalog changes.
+The **library server** version runs the same engine in a browser and can share with phones on the same Wi-Fi:
 
-## Integrating into the main library (port 8879) — not done, by design
+```bash
+LASTBOOK_DATA=/path/to/LastbookData python3 server.py          # then open http://127.0.0.1:8890/
+```
 
-`library.py`'s `write_index()` copies `library-data/app/index.html` to the root `index.html` on every rebuild,
-so dropping files there alone would not work: this app needs the extra endpoints in `server.py`. Two options:
+See [docs/LIBRARY-SERVER.md](docs/LIBRARY-SERVER.md). It was written for the household library this project grew out of,
+so some of its paths and ports describe that setup.
 
-1. **Keep it separate (current, recommended).** Run `server.py` on 8890; it already serves all original files
-   and APIs. Link it from the old site if wanted.
-2. **Merge.** Add to the end of `library.py`, just before `if __name__ == '__main__':`, a guarded import such as
-   `try: import survival_guide_ext; Handler = survival_guide_ext.extend(Handler)` and move `server.py`'s handler
-   methods into that module, with `web/` copied to `library-data/app/` and `content/` + `derived/` reachable from it.
-   Because `write_index()` regenerates `index.html` from `app/index.html`, the app's `index.html` would then
-   survive re-indexing. This changes the shared server and should be done by whoever owns it.
+## Build the apps
+
+The builds write into `derived/app-build/` and refuse to finish if the package scan finds something that must not ship:
+test code, a network call, a web address in our own pages, or a word from the private list (see below).
+
+**macOS (Apple Silicon, needs [uv](https://github.com/astral-sh/uv)):**
+
+```bash
+bash packaging/llm/build_llm_macos.sh    # optional: the local AI runner, llama.cpp at a pinned tag, Metal
+bash packaging/build_app_macos.sh        # Lastbook.app, ad-hoc signed, not notarized
+```
+
+**Windows (64-bit, in Git Bash):**
+
+```bash
+TOOLS='C:\path\to\tools' bash packaging/llm/build_llm_windows.sh                 # the runner: llama.cpp with Vulkan, CPU fallbacks
+PY=/c/path/to/python.exe OUT='C:\path\to\output' bash packaging/build_app_windows.sh
+```
+
+`PY` is CPython 3.12 with `packaging/requirements_app.txt` installed. The script header lists each tool it needs, with its
+version and checksum. The three WebView2 files come from the NuGet package `Microsoft.Web.WebView2` 1.0.3856.49 and are
+checked against the hashes in `build_app_windows.sh`. `packaging/build_setup_windows.sh` builds the installer.
+
+The Mac build reads the release manifest from a release folder under `derived/release/`, which is not in this repository;
+see `packaging/release_manifest.py`.
+
+## Packs and the local AI
+
+- **Packs** are data folders: a library plus its catalog, search index and map. `packaging/build_packs.py` builds them
+  from a frozen snapshot of a full library according to `derived/packs/pack-spec.json`, and `packaging/verify_packs.py` and
+  `packaging/scan_pack.py` check them. The published packs are on `downloads.lastbook.org`. Setup downloads the one the
+  person picks and checks it against `setup/manifest-v1.json`, which `packaging/release_manifest.py` writes at build time.
+- **The local AI** is optional: Gemma 4 26B A4B (Unsloth's `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`, about 17 GB). The file
+  name, size, SHA-256 and Hugging Face revision are pinned in `llm_local.py`. Setup downloads it directly from Hugging
+  Face, and only on computers where llama.cpp's own measurement says it fits. The model is never part of the app or of
+  this repository. The runner is our own small program (`packaging/llm/lastbook_llm.cpp`) on llama.cpp.
+- **Meaning-based search** uses BAAI's bge-small-en-v1.5 (ONNX) through onnxruntime, on Windows only; the Mac build uses
+  keyword search.
+
+## What is not in this repository, and why
+
+- **The library** (`library-data/`): hundreds of gigabytes of third-party manuals, videos and encyclopedias, each under
+  its own terms. It is distributed as packs, with a Sources and permissions page in each pack.
+- **Models** (GGUF, ONNX): large, and published by their makers. Setup fetches them, and the checksums and pins are here.
+- **Generated data** (`derived/`, builds, installers): everything there can be rebuilt with the scripts here.
+- **Private data**: the household's own home area (`web/home-area.json`), the private word lists the scans use, machine
+  and user names, keys and deploy settings. The guides here are already in their shipped, general wording. To keep your
+  own home-area words out of a build, put them in a local copy of `packaging/ship_edits.json` (`forbidden`) and never
+  commit it.
+
+## Tests
+
+```bash
+python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships
+```
+
+These run without a library. `packaging/test_pack_tools.py SAMPLE WORK` checks the pack tools against a pack sample
+(`build_packs.py build <pack> --sample N`). The `mac_*` and `win_*` scripts in `app/tests/` drive a real build against a real data
+folder, and their paths are placeholders (`/path/to/lastbook`, `C:\Users\you\app-test`) to set for your own machine.
+
+## Contributing and licence
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). The licence is still to be decided
+([LICENSE](LICENSE)). Third-party software and models are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -1,0 +1,65 @@
+# Contributing to Lastbook
+
+Thank you for helping. Lastbook is meant for the day the internet is gone, so what matters most is that it works offline,
+stays correct, and never sends anything anywhere.
+
+## Set up
+
+1. Clone the repository and make a virtual environment with Python 3.11 or later.
+2. Install the requirements for your platform: `packaging/requirements_macos.txt` (Mac) or
+   `packaging/requirements_app.txt` (Windows).
+3. Get a data folder: run `python app/main.py` and let setup download the Small pack, or unzip a pack from lastbook.org.
+   Point the app at it with `--data` or `LASTBOOK_DATA`.
+
+The README explains the layout and how to build the apps.
+
+## Test
+
+```bash
+python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships
+```
+
+Run these before you open a pull request. If you change the packaging, also run the build for your platform: it ends
+with a package scan, and that scan must pass. If you change a guide in `content/`, run `tools/validate_topics.py`
+against a library, so every id, page and encyclopedia path it cites still exists.
+
+## Rules that keep Lastbook what it is
+
+**No network.** The app opens no port and makes no connection, with one exception: the downloader in `engine/setup/`,
+which runs only when the person starts a download and only to the hosts in `ALLOWED_HOSTS`.
+
+- No telemetry, analytics, crash reporting, update checks, fonts or scripts from the web, or "phone home" of any kind.
+- Our own pages (`web/`) contain no web address. The build fails if they do.
+- A new dependency must work fully offline, and must not open a socket or start a server. Say in the pull request what
+  it is, its licence, and why it is needed, and add it to `THIRD_PARTY_NOTICES.md`.
+- The local AI runner stays socket-free: no RPC backend, no HTTP server, no download code.
+
+**General wording, no household.** Lastbook began as one household's library. The shipped guides use general wording, and
+nothing shared may name a real person's home, street, coordinates, machines or accounts.
+
+- Write guides for any reader in any place. Name a region only when the source is about that region.
+- Never commit `web/home-area.json`, a private word list, real coordinates of a home, user or machine names, LAN
+  addresses, keys or tokens. Test paths use placeholders such as `/path/to/lastbook` and `C:\Users\you\app-test`.
+- To keep your own words out of a build, put them in a local copy of `packaging/ship_edits.json` (`forbidden`) and do not
+  commit it.
+
+**Sources first.** A guide card points at a real page of a real source in the library, with its page number. If the
+library does not cover something, record that in `content/gaps.json` instead of writing advice from memory.
+
+**Plain words.** Interface text is short, concrete and calm. Many readers will be stressed, tired, or reading in a second
+language.
+
+## Pull requests
+
+- Keep each change small and about one thing, and say what you checked and how.
+- Screenshots help for any change you can see, in light and dark mode, on Mac and on Windows if you can.
+- Be ready to explain anything that touches setup, the bridge, the scans or the downloader. These keep people's libraries
+  safe and their computers private.
+
+## Reporting a security or privacy problem
+
+Do not open a public issue. Email hello@lastbook.org with what you found and how to reproduce it.
+
+## Code of conduct
+
+Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).

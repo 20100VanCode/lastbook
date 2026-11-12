@@ -118,7 +118,7 @@ class WhatShips(unittest.TestCase):
             self.assertIn('coastal-growing-', grow)
             web = '\n'.join(p.read_text(encoding='utf-8', errors='replace') for p in files if p.parent.name == 'web' and p.suffix in ('.js', '.html', '.css'))
             self.assertFalse(re.findall(r'https?://(?!www\.w3\.org/)[^\s"\'`<)]*', web))   # no web address in our own pages
-        for word in ('home-area-placeholder-word', 'Home-Area-Placeholder-Word'):   # with the household's own list in place, check its words and coordinates here
+        for word in ('placeholdertown', 'Placeholdertown'):   # with the household's own list in place, check its words and coordinates here
             self.assertTrue(HOUSEHOLD.search(word), word)
         for fine in ('39.0997', 'Southern California', 'Los Angeles County', 'claude_source_id'):
             self.assertIsNone(HOUSEHOLD.search(fine), fine)

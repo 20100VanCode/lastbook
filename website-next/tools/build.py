@@ -231,7 +231,8 @@ def home():
     <h2 id="essentials-h">Everything free, local, private.</h2>
     <div class="feature-shots">
       <figure>
-        <figcaption><h3>AI</h3><p>Free. Local. Private.</p></figcaption>
+        <figcaption><h3>AI</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>Gemma 4</b>26B A4B</p><small>Runs on your computer</small></figcaption>
+        <img class="real-ai-shot" src="/img/feature-ai-app.png?v=2" width="1364" height="775" alt="Lastbook’s local AI screen with questions about safe drinking water and first aid.">
       </figure>
       <figure>
         <figcaption><h3>Maps</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>258,000+</b> searchable places</p><small>With the All library</small></figcaption>
@@ -256,14 +257,14 @@ def home():
 
 <section class="sec community" aria-labelledby="community-h">
   <div class="wrap">
-    <h2 id="community-h">Build Lastbook with us.</h2>
-    <p class="lead">Lastbook is open source.<br>Help us improve it.</p>
+    <h2 id="community-h">Lastbook is open source.</h2>
+    <p class="lead">Help us improve it.</p>
     <div class="community-grid">
       <div><h3>Improve the app</h3><p>Code, design and accessibility.</p></div>
       <div><h3>Grow the library</h3><p>Recommend resources and help review guides.</p></div>
       <div><h3>Try it. Tell us.</h3><p>Report bugs and share what you need.</p></div>
     </div>
-    <a class="btn" href="mailto:hello@lastbook.org?subject=Contributing%20to%20Lastbook">Join the community</a>
+    <div class="community-actions"><a class="btn github-button" href="https://github.com/Immortal-Protocols" target="_blank" rel="noopener" aria-label="GitHub"><img src="/img/github-lockup-white.svg" width="110" height="32" alt="GitHub"></a><a class="btn-2" href="mailto:hello@lastbook.org?subject=Contributing%20to%20Lastbook">Join the community</a></div>
     <img class="community-people" src="/img/ink/foot-crowd.svg" width="1080" height="200" alt="" loading="lazy">
   </div>
 </section>

@@ -1,0 +1,10 @@
+Lastbook: licence to be decided
+
+No licence has been chosen for Lastbook's own code and content yet. Until one is added here, all rights are reserved
+by the Lastbook project, and this repository is private.
+
+Third-party software, models and library content keep their own licences: see THIRD_PARTY_NOTICES.md and the Sources
+and permissions page in each library pack.
+
+A note for choosing the licence: the apps bundle python-libzim (GPL-3.0-or-later) and libzim (GPL-2.0, per upstream), so
+the apps as distributed must meet the GPL's terms. That affects which licences fit the project as a whole.

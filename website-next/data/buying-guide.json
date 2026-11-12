@@ -1,26 +1,106 @@
 {
   "ASSOCIATE_TAG": "",
-  "_ASSOCIATE_TAG": "The owner's Amazon Associates tracking ID (looks like name-20), from the Associates account. Leave empty until the account is approved. Empty means plain Amazon links and a note that says the account isn't connected.",
+  "_ASSOCIATE_TAG": "Amazon Associates tracking ID supplied by the owner. An empty value generates ordinary Amazon links.",
   "marketplace": "https://www.amazon.com",
   "updated": "12 November 2026",
-  "_products": "Each item can list products: {\"asin\": \"B0…\", \"name\": \"as the Amazon listing titles it\", \"maker_says\": \"one short point the listing or maker states, or empty\", \"checked\": \"date a person opened amazon.com/dp/ASIN and it loaded\"}. A product without a checked date is not shown. Never write prices, ratings, review counts or stock here: Amazon allows those only from its own API.",
+  "_products": "Products include name, maker_url, feature, checked (ISO date), and query. Optional asin requires seen_url identifying the published Amazon product link. Descriptions are paraphrased from manufacturer pages. Prices and ratings are omitted.",
   "sources": {
-    "kit": {"name": "Build a Kit", "by": "Ready.gov (FEMA)", "url": "https://www.ready.gov/kit", "library": true},
-    "ayr": {"name": "Are You Ready? guide", "by": "FEMA", "url": "https://www.ready.gov/sites/default/files/2021-11/are-you-ready-guide.pdf", "library": true},
-    "ayr-basic": {"name": "Are You Ready? Basic Preparedness", "by": "FEMA", "url": "https://www.fema.gov/pdf/areyouready/basic_preparedness.pdf", "library": true},
-    "foodwater": {"name": "Food and Water in an Emergency", "by": "FEMA and the American Red Cross", "url": "https://www.fema.gov/pdf/library/f&web.pdf", "library": true},
-    "cert": {"name": "CERT Basic Training Participant Manual (2019)", "by": "FEMA", "url": "https://www.govinfo.gov/content/pkg/GOVPUB-HS5_100-PURL-gpo185734/pdf/GOVPUB-HS5_100-PURL-gpo185734.pdf", "library": true},
-    "nps": {"name": "Two Ways to Purify Water", "by": "National Park Service", "url": "https://www.nps.gov/articles/2wayspurifywater.htm", "library": true},
-    "epa": {"name": "Emergency Disinfection of Drinking Water", "by": "EPA", "url": "https://www.epa.gov/ground-water-and-drinking-water/emergency-disinfection-drinking-water", "library": false},
-    "food": {"name": "Food", "by": "Ready.gov (FEMA)", "url": "https://www.ready.gov/food", "library": false},
-    "canners": {"name": "Recommended canners", "by": "National Center for Home Food Preservation (USDA)", "url": "https://nchfp.uga.edu/how/can/general-information/recommended-canners/", "library": false},
-    "winter": {"name": "#WinterReady toolkit", "by": "Ready.gov (FEMA)", "url": "https://www.ready.gov/winter-toolkit", "library": true},
-    "wildfire": {"name": "How to Prepare for a Wildfire", "by": "FEMA", "url": "https://www.ready.gov/sites/default/files/2020-07/how-to-prepare-for-a-wildfire.pdf", "library": true},
-    "usfa": {"name": "Fire extinguishers", "by": "U.S. Fire Administration (FEMA)", "url": "https://www.usfa.fema.gov/prevention/home-fires/prepare-for-fire/fire-extinguishers/", "library": false},
-    "power": {"name": "Power Outages", "by": "Ready.gov (FEMA)", "url": "https://www.ready.gov/power-outages", "library": false},
-    "generac": {"name": "Air-cooled generator owner’s manual", "by": "Generac", "url": "https://generac.com/globalassets/products/residential/standby-generators/owners-manual/g-10-26kw-60hz-standby-generator-owners-manual-en.pdf", "library": true},
-    "nwr": {"name": "NOAA Weather Radio All Hazards", "by": "National Weather Service", "url": "https://www.weather.gov/nwr/", "library": false},
-    "quake": {"name": "Earthquake Safety at Home", "by": "FEMA", "url": "https://www.fema.gov/sites/default/files/2020-08/fema_earthquakes_fema-p-530-earthquake-safety-at-home-march-2020.pdf", "library": true}
+    "kit": {
+      "name": "Build a Kit",
+      "by": "Ready.gov (FEMA)",
+      "url": "https://www.ready.gov/kit",
+      "library": true
+    },
+    "ayr": {
+      "name": "Are You Ready? guide",
+      "by": "FEMA",
+      "url": "https://www.ready.gov/sites/default/files/2021-11/are-you-ready-guide.pdf",
+      "library": true
+    },
+    "ayr-basic": {
+      "name": "Are You Ready? Basic Preparedness",
+      "by": "FEMA",
+      "url": "https://www.fema.gov/pdf/areyouready/basic_preparedness.pdf",
+      "library": true
+    },
+    "foodwater": {
+      "name": "Food and Water in an Emergency",
+      "by": "FEMA and the American Red Cross",
+      "url": "https://www.fema.gov/pdf/library/f&web.pdf",
+      "library": true
+    },
+    "cert": {
+      "name": "CERT Basic Training Participant Manual (2019)",
+      "by": "FEMA",
+      "url": "https://www.govinfo.gov/content/pkg/GOVPUB-HS5_100-PURL-gpo185734/pdf/GOVPUB-HS5_100-PURL-gpo185734.pdf",
+      "library": true
+    },
+    "nps": {
+      "name": "Two Ways to Purify Water",
+      "by": "National Park Service",
+      "url": "https://www.nps.gov/articles/2wayspurifywater.htm",
+      "library": true
+    },
+    "epa": {
+      "name": "Emergency Disinfection of Drinking Water",
+      "by": "EPA",
+      "url": "https://www.epa.gov/ground-water-and-drinking-water/emergency-disinfection-drinking-water",
+      "library": false
+    },
+    "food": {
+      "name": "Food",
+      "by": "Ready.gov (FEMA)",
+      "url": "https://www.ready.gov/food",
+      "library": false
+    },
+    "canners": {
+      "name": "Recommended canners",
+      "by": "National Center for Home Food Preservation (USDA)",
+      "url": "https://nchfp.uga.edu/how/can/general-information/recommended-canners/",
+      "library": false
+    },
+    "winter": {
+      "name": "#WinterReady toolkit",
+      "by": "Ready.gov (FEMA)",
+      "url": "https://www.ready.gov/winter-toolkit",
+      "library": true
+    },
+    "wildfire": {
+      "name": "How to Prepare for a Wildfire",
+      "by": "FEMA",
+      "url": "https://www.ready.gov/sites/default/files/2020-07/how-to-prepare-for-a-wildfire.pdf",
+      "library": true
+    },
+    "usfa": {
+      "name": "Fire extinguishers",
+      "by": "U.S. Fire Administration (FEMA)",
+      "url": "https://www.usfa.fema.gov/prevention/home-fires/prepare-for-fire/fire-extinguishers/",
+      "library": false
+    },
+    "power": {
+      "name": "Power Outages",
+      "by": "Ready.gov (FEMA)",
+      "url": "https://www.ready.gov/power-outages",
+      "library": false
+    },
+    "generac": {
+      "name": "Air-cooled generator owner’s manual",
+      "by": "Generac",
+      "url": "https://generac.com/globalassets/products/residential/standby-generators/owners-manual/g-10-26kw-60hz-standby-generator-owners-manual-en.pdf",
+      "library": true
+    },
+    "nwr": {
+      "name": "NOAA Weather Radio All Hazards",
+      "by": "National Weather Service",
+      "url": "https://www.weather.gov/nwr/",
+      "library": false
+    },
+    "quake": {
+      "name": "Earthquake Safety at Home",
+      "by": "FEMA",
+      "url": "https://www.fema.gov/sites/default/files/2020-08/fema_earthquakes_fema-p-530-earthquake-safety-at-home-march-2020.pdf",
+      "library": true
+    }
   },
   "sections": [
     {
@@ -33,28 +113,57 @@
           "name": "A stocked first aid kit",
           "why": "Cuts, burns and sprains still happen when clinics are closed.",
           "look": [
-            ["Sterile gauze pads in 2-inch and 4-inch sizes, roller bandages, triangular bandages and adhesive tape.", "cert"],
-            ["Non-latex exam gloves, scissors, tweezers and a thermometer.", "cert"],
-            ["Antibiotic ointment, a hot and cold compress, and bandages in assorted sizes.", "cert"]
+            [
+              "Sterile gauze pads in 2-inch and 4-inch sizes, roller bandages, triangular bandages and adhesive tape.",
+              "cert"
+            ],
+            [
+              "Non-latex exam gloves, scissors, tweezers and a thermometer.",
+              "cert"
+            ],
+            [
+              "Antibiotic ointment, a hot and cold compress, and bandages in assorted sizes.",
+              "cert"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "American Red Cross Deluxe Family First Aid Kit",
+              "maker_url": "https://www.redcross.org/store/deluxe-family-first-aid-kit/321275.html",
+              "feature": "115 pieces in a portable soft case, with latex-free contents.",
+              "checked": "2026-11-12",
+              "query": "American Red Cross Deluxe Family First Aid Kit 115 piece"
+            }
+          ],
+          "search": "first aid kit"
         },
         {
           "name": "A first aid manual on paper",
           "why": "Paper works with no power at all.",
           "look": [
-            ["FEMA lists a first aid kit “and manual”. Keep the two together.", "ayr-basic"]
+            [
+              "FEMA lists a first aid kit “and manual”. Keep the two together.",
+              "ayr-basic"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "first aid manual book"
         },
         {
-          "name": "Spare medicines",
-          "why": "Pharmacies may be closed or out of stock for days.",
+          "name": "Medicines and a labelled organizer",
+          "why": "Keep your regular medicines together and plan refills before an emergency.",
           "look": [
-            ["A supply of each prescription, plus pain relievers, anti-diarrhea medicine, antacids and laxatives.", "kit"],
-            ["Replace anything past its date. Check the whole kit once a year.", "kit"]
+            [
+              "A supply of each prescription, plus pain relievers, anti-diarrhea medicine, antacids and laxatives.",
+              "kit"
+            ],
+            [
+              "Replace anything past its date. Check the whole kit once a year.",
+              "kit"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "labelled medicine organizer"
         }
       ]
     },
@@ -68,29 +177,75 @@
           "name": "Stored water",
           "why": "One gallon per person per day, for drinking, food and washing. Two weeks if you can.",
           "look": [
-            ["Commercially bottled water is the safest. Keep it sealed and watch the use-by date.", "ayr-basic"],
-            ["For your own water, use food-grade storage containers. Not milk or juice jugs, and not glass.", "ayr-basic"]
+            [
+              "Commercially bottled water is the safest. Keep it sealed and watch the use-by date.",
+              "ayr-basic"
+            ],
+            [
+              "For your own water, use food-grade storage containers. Not milk or juice jugs, and not glass.",
+              "ayr-basic"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "Reliance Aqua-Tainer, 7 gallon",
+              "maker_url": "https://relianceoutdoors.com/products/aqua-tainer-4g-15l",
+              "feature": "Rigid food-safe container with a carry handle and a spigot that stores inside the cap.",
+              "checked": "2026-11-12",
+              "query": "Reliance Aqua Tainer 7 gallon 9410"
+            }
+          ],
+          "search": "food grade water storage container"
         },
         {
           "name": "A water filter",
-          "why": "Removes dirt, parasites and some bacteria from water you collect.",
+          "why": "Helps remove particles, parasites and bacteria from collected water.",
           "look": [
-            ["Absolute pore size of 1 micron or smaller, rated to NSF Standard 53 or 58 for cyst reduction.", "nps"],
-            ["Filters can’t remove viruses. Boil or disinfect the water too.", "nps"]
+            [
+              "Check the manufacturer’s removal claims for bacteria, protozoa and viruses. Many portable filters do not remove viruses.",
+              "nps"
+            ],
+            [
+              "Choose a filter you can clean and maintain. Plan a compatible disinfection method for untreated natural water.",
+              "nps"
+            ],
+            [
+              "Boiling and disinfection do not remove heavy metals, salts or most chemical contamination.",
+              "epa"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "Sawyer MINI, blue",
+              "maker_url": "https://www.sawyer.com/product/mini-water-filtration-system-blue",
+              "feature": "0.1-micron filter for bacteria and protozoa, with a pouch and cleaning syringe.",
+              "checked": "2026-11-12",
+              "query": "Sawyer MINI SP128 blue",
+              "asin": "B00FA2RLX2",
+              "seen_url": "https://www.ovs.org/wp-content/uploads/2024/07/Outdoor-Ed.-Equipment-Links-Amazon.com_.pdf"
+            }
+          ],
+          "search": "water filter NSF 53 cyst reduction"
         },
         {
           "name": "Plain unscented bleach and a dropper",
-          "why": "A few drops make clear water safe when you can’t boil it.",
+          "why": "An emergency disinfection option when boiling is unavailable.",
           "look": [
-            ["Regular, unscented chlorine bleach. The label should say 6% or 8.25% sodium hypochlorite.", "epa"],
-            ["Not scented, color-safe, or with added cleaners. Less than a year old.", "epa"],
-            ["8 drops of 6% bleach, or 6 drops of 8.25%, per gallon. Wait 30 minutes.", "epa"]
+            [
+              "Regular, unscented chlorine bleach labelled for disinfection, with 6% or 8.25% sodium hypochlorite.",
+              "epa"
+            ],
+            [
+              "Avoid scented, color-safe products and added cleaners. Keep fresh bleach and a clean dropper.",
+              "epa"
+            ],
+            [
+              "Use the EPA’s complete directions for the bleach concentration and water conditions.",
+              "epa"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "unscented bleach 8.25% sodium hypochlorite"
         }
       ]
     },
@@ -104,37 +259,73 @@
           "name": "Food that keeps, and a manual can opener",
           "why": "At least several days of food that needs no fridge.",
           "look": [
-            ["Non-perishable food your household already eats. Include a manual can opener and utensils.", "food"],
-            ["Ready-to-eat canned food and high-energy foods like peanut butter and crackers.", "cert"]
+            [
+              "Non-perishable food your household already eats. Include a manual can opener and utensils.",
+              "food"
+            ],
+            [
+              "Ready-to-eat canned food and high-energy foods like peanut butter and crackers.",
+              "cert"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "OXO Good Grips Soft-Handled Can Opener",
+              "maker_url": "https://www.oxo.com/soft-handled-can-opener-433.html",
+              "feature": "Manual opener with cushioned handles, an oversized knob and a stainless-steel cutting wheel.",
+              "checked": "2026-11-12",
+              "query": "OXO Good Grips Soft Handled Can Opener"
+            }
+          ],
+          "search": "manual can opener"
         },
         {
           "name": "A fridge and freezer thermometer",
           "why": "Tells you what to keep and what to throw out after the power goes off.",
           "look": [
-            ["Throw out perishable food that sat above 40°F for two hours or more.", "food"]
+            [
+              "Throw out perishable food that sat above 40°F for two hours or more.",
+              "food"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "refrigerator freezer thermometer"
         },
         {
           "name": "A camp stove and fuel",
           "why": "Cook and boil water when the stove at home doesn’t work.",
           "look": [
-            ["A small cooking stove with a can of its fuel.", "cert"],
-            ["Outdoors only. Never use a camp stove, grill or generator indoors.", "winter"]
+            [
+              "A small cooking stove with a can of its fuel.",
+              "cert"
+            ],
+            [
+              "Outdoors only. Never use a camp stove, grill or generator indoors.",
+              "winter"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "camp stove"
         },
         {
           "name": "A pressure canner",
           "why": "Preserves a harvest for months without a freezer.",
           "look": [
-            ["Low-acid foods must be processed in a pressure canner.", "canners"],
-            ["Underwriters Laboratories (UL) approval.", "canners"],
-            ["A dial gauge needs checking for accuracy every year. A weighted gauge doesn’t.", "canners"]
+            [
+              "Low-acid foods must be processed in a pressure canner.",
+              "canners"
+            ],
+            [
+              "Underwriters Laboratories (UL) approval.",
+              "canners"
+            ],
+            [
+              "A dial gauge needs checking for accuracy every year. A weighted gauge doesn’t.",
+              "canners"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "pressure canner"
         }
       ]
     },
@@ -148,28 +339,57 @@
           "name": "A wrench to turn off utilities",
           "why": "A gas leak or a burst pipe can’t wait for a plumber.",
           "look": [
-            ["A wrench or pliers that fit your gas and water shutoffs. Learn how before you need it.", "ayr"],
-            ["For gas, a non-sparking wrench. Only a licensed technician should turn the gas back on.", "cert"]
+            [
+              "A wrench or pliers that fit your gas and water shutoffs. Learn how before you need it.",
+              "ayr"
+            ],
+            [
+              "For gas, a non-sparking wrench. Only a licensed technician should turn the gas back on.",
+              "cert"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "gas and water shut off tool"
         },
         {
           "name": "Duct tape, plastic sheeting and a tarp",
           "why": "Seal a broken window, cover a damaged roof, or shelter in place.",
           "look": [
-            ["Plastic sheeting, scissors and duct tape.", "kit"],
-            ["A tarp for a damaged roof, to stop more damage.", "wildfire"]
+            [
+              "Plastic sheeting, scissors and duct tape.",
+              "kit"
+            ],
+            [
+              "A tarp for a damaged roof, to stop more damage.",
+              "wildfire"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "heavy duty tarp"
         },
         {
           "name": "A fire extinguisher",
           "why": "Fire crews may be far away or busy.",
           "look": [
-            ["At least an A-B-C type, for most home fires.", "ayr-basic"],
-            ["A “UL Listed” label. The largest size you can use safely and comfortably.", "usfa"]
+            [
+              "At least an A-B-C type, for most home fires.",
+              "ayr-basic"
+            ],
+            [
+              "A “UL Listed” label. The largest size you can use safely and comfortably.",
+              "usfa"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "First Alert HOME1 / FE1A10GR",
+              "maker_url": "https://www.firstalert.com/collections/home-fire-extinguishers",
+              "feature": "Rechargeable home extinguisher rated 1-A:10-B:C.",
+              "checked": "2026-11-12",
+              "query": "First Alert HOME1 FE1A10GR fire extinguisher"
+            }
+          ],
+          "search": "ABC fire extinguisher UL listed"
         }
       ]
     },
@@ -183,37 +403,73 @@
           "name": "Flashlights and extra batteries",
           "why": "Use them instead of candles.",
           "look": [
-            ["One flashlight for every person in the house.", "power"],
-            ["Extra batteries in the sizes they take.", "kit"]
+            [
+              "One flashlight for every person in the house.",
+              "power"
+            ],
+            [
+              "Extra batteries in the sizes they take.",
+              "kit"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "Energizer Vision HD LED Headlamp",
+              "maker_url": "https://energizer.com/product/lighting/hands-free-lighting/energizer-vision-hd-led-headlamp/",
+              "feature": "Hands-free light powered by three AAA batteries, with four light modes.",
+              "checked": "2026-11-12",
+              "query": "Energizer Vision HD LED headlamp 300 lumens 3 AAA"
+            }
+          ],
+          "search": "LED flashlight"
         },
         {
           "name": "A backup battery for your phone",
           "why": "Keeps a phone charged for calls, texts and alerts.",
           "look": [
-            ["Chargers and a backup battery, kept charged.", "kit"],
-            ["A solar charger can top it up during a long outage.", "quake"]
+            [
+              "Chargers and a backup battery, kept charged.",
+              "kit"
+            ],
+            [
+              "A solar charger can top it up during a long outage.",
+              "quake"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "portable power bank"
         },
         {
           "name": "Carbon monoxide alarms",
           "why": "Generators, stoves and heaters make a gas you can’t see or smell.",
           "look": [
-            ["Battery backup. One in a central place on every level of the home.", "power"]
+            [
+              "Battery backup. One in a central place on every level of the home.",
+              "power"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "carbon monoxide alarm battery backup"
         },
         {
           "name": "A generator, used safely",
           "why": "Runs a fridge, a pump or medical equipment through a long outage.",
           "look": [
-            ["Outdoors only, at least 20 feet from windows, doors and attached garages.", "power"],
-            ["Plug appliances in with heavy-duty extension cords.", "power"],
-            ["Never connect it to the house wiring unless a licensed electrician installs an approved transfer switch.", "generac"]
+            [
+              "Outdoors only, at least 20 feet from windows, doors and attached garages.",
+              "power"
+            ],
+            [
+              "Plug appliances in with heavy-duty extension cords.",
+              "power"
+            ],
+            [
+              "Never connect it to the house wiring unless a licensed electrician installs an approved transfer switch.",
+              "generac"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "portable generator"
         }
       ]
     },
@@ -227,39 +483,82 @@
           "name": "A weather radio",
           "why": "Hear warnings and news when phones and internet are down.",
           "look": [
-            ["Battery-powered or hand-crank, and a NOAA Weather Radio with tone alert.", "kit"],
-            ["NOAA Weather Radio needs a radio made to receive it.", "nwr"],
-            ["A “Public Alert” feature.", "quake"]
+            [
+              "Battery-powered or hand-crank, and a NOAA Weather Radio with tone alert.",
+              "kit"
+            ],
+            [
+              "NOAA Weather Radio needs a radio made to receive it.",
+              "nwr"
+            ],
+            [
+              "A “Public Alert” feature.",
+              "quake"
+            ]
           ],
-          "products": []
+          "products": [
+            {
+              "name": "Midland ER310",
+              "maker_url": "https://midlandusa.com/products/er310-portable-emergency-crank-weather-radio",
+              "feature": "NOAA weather alerts, hand-crank and solar charging, plus AA battery backup.",
+              "checked": "2026-11-12",
+              "query": "Midland ER310 emergency crank weather radio",
+              "asin": "B015QIC1PW",
+              "seen_url": "https://new.janeterjung.org/docs/Cool%20Gadgets%20For%20PSPS.pdf"
+            }
+          ],
+          "search": "NOAA weather radio hand crank"
         },
         {
           "name": "A whistle and dust masks",
-          "why": "Signal for help, and filter dusty or smoky air.",
+          "why": "Signal for help and keep suitable respiratory protection in your kit.",
           "look": [
-            ["A whistle to signal for help, and a dust mask to help filter contaminated air.", "kit"]
+            [
+              "A whistle to signal for help.",
+              "kit"
+            ],
+            [
+              "Choose respiratory protection for the hazard. A simple dust mask does not protect against gases.",
+              "wildfire"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "emergency whistle"
         },
         {
           "name": "Containers that carry it all",
           "why": "If you have to leave fast, the kit goes with you.",
           "look": [
-            ["Items in airtight plastic bags, in one or two easy-to-carry bins or a duffel bag.", "kit"],
-            ["A waterproof container for copies of documents, and one for matches.", "kit"]
+            [
+              "Items in airtight plastic bags, in one or two easy-to-carry bins or a duffel bag.",
+              "kit"
+            ],
+            [
+              "A waterproof container for copies of documents, and one for matches.",
+              "kit"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "waterproof document bag"
         },
         {
           "name": "Warm bedding",
           "why": "Heat may be off for days.",
           "look": [
-            ["A sleeping bag or warm blanket for each person.", "kit"],
-            ["A change of clothes for your climate and sturdy shoes.", "kit"]
+            [
+              "A sleeping bag or warm blanket for each person.",
+              "kit"
+            ],
+            [
+              "A change of clothes for your climate and sturdy shoes.",
+              "kit"
+            ]
           ],
-          "products": []
+          "products": [],
+          "search": "emergency sleeping bag"
         }
       ]
     }
-  ]
+  ],
+  "_search": "Search buttons open Amazon search results, with the owner’s Associates tag. Named examples use manufacturer sources; search results and seller availability can change."
 }
