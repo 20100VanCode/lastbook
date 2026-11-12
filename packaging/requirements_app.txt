@@ -1,0 +1,12 @@
+# The packaged desktop app on Windows (packaging/build_app_windows.sh). No pywebview: the window is app/shell_windows.py.
+# Versions as tested on the build machine.
+pyinstaller==6.22.3
+# Below 4: libzim 4.0.0 renamed getResults and getEstimatedMatches, which engine/library.py calls.
+libzim==3.13.1
+onnxruntime==1.31.1
+tokenizers==0.23.3
+numpy==2.5.4
+beautifulsoup4==4.15.0
+pypdfium2==5.14.0
+pythonnet==3.2.1
+clr_loader==0.3.1
