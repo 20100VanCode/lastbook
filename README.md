@@ -1,9 +1,8 @@
 # Lastbook
 
 Lastbook is an offline survival library for Mac and Windows. It puts manuals, videos, encyclopedias, an offline map and
-short practical guides on one computer, and it keeps working with no internet at all. It starts from what a person needs
-("Someone is hurt", "Get safe drinking water", "Power is out", "Find help nearby"). Then it shows a few hand-picked pages
-with exact page numbers and each source's own limits, and after that the full manuals, videos and encyclopedias.
+short practical guides on one computer. After setup, it works offline. The desktop sidebar opens Videos, Map and Chat.
+Chat answers questions using the library and links to its sources.
 
 Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 
@@ -15,7 +14,7 @@ Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 | Platform | Version | Status |
 |---|---|---|
 | macOS (Apple Silicon, macOS 14 or later) | 1.1.8 | Live on lastbook.org, signed |
-| Windows (64-bit, Windows 10 or later) | 1.1.8 | Built, waiting for Authenticode signing (Azure) before release |
+| Windows (64-bit, Windows 10 or later) | 1.1.8 | Live on lastbook.org, Authenticode signed |
 
 ## What it does
 
@@ -23,13 +22,13 @@ Website: <https://lastbook.org>. Contact: hello@lastbook.org.
   with page numbers, plus what curators looked for and did not find (`content/gaps.json`).
 - **The full library.** Manuals and PDFs (with a whole-PDF view), videos, and offline encyclopedias (ZIM files), with
   keyword search everywhere and meaning-based search on Windows.
-- **Offline map.** A base map of the world and the US, and an optional detailed map of one US state: local streets,
+- **Offline map.** A base map of the world and the US, plus a detailed map for the state selected during setup: local streets,
   buildings, terrain, crops, and water, help and resource points. Addresses in that state can be found offline. The person
   picks the state; Lastbook never detects location.
 - **Optional local AI.** Ask questions in plain words and get answers that cite library pages, from a model that runs on
-  the computer itself (see "The local AI" below). Without it, Ask still finds the right pages.
-- **One-download setup.** On first run, setup recommends a library size (Small, Medium or All) for the computer's disk and
-  memory, downloads it with the AI and a state map if wanted, checks every file and installs it. A library already on the
+  the computer itself (see "The local AI" below). Without it, Chat still finds the right pages.
+- **One-download setup.** On first run, setup defaults to Small and selects local AI when the computer can run it.
+  The person can choose Small, Medium or All, selects a state map, and starts the checked downloads. A library already on the
   computer (a folder or a pack zip) can be used instead of downloading.
 - **Check for updates, only when asked.** About has a Check for updates button (and the Mac menu has Lastbook > Check for
   Updates…). It only says whether a newer version is on the website; nothing is downloaded or installed.
@@ -70,7 +69,7 @@ The setup contract, including state maps, is in [docs/SETUP-API.md](docs/SETUP-A
 | `packaging/` | App builds (macOS and Windows), the Windows installer and its front (`setup_stub/`), signing helper (`sign_windows.ps1`), icons (`icon/`), pack and state-map builders, release manifest, TLS roots tools, package scans, and `packaging/llm/` (the local AI runner). |
 | `derived/packs/pack-spec.json` | What goes into each download pack (Small, Medium, All and add-ons) and each state map. Everything else under `derived/` is generated and not kept here. |
 | `tools/` | Builders for the offline map, addresses and place finder, plus curator helpers (`libq.py`, `validate_topics.py`). |
-| `website/`, `website-next/` | The lastbook.org website: the current site and the next one, both static. |
+| `website/`, `website-next/` | The earlier website and the current static lastbook.org site, respectively. |
 | `docs/` | The setup contract (`SETUP-API.md`) and notes on the library server version (`LIBRARY-SERVER.md`). |
 
 ## Run from source
@@ -85,9 +84,9 @@ python3 -m venv .venv
 .venv/bin/python app/main.py --data /path/to/LastbookData
 ```
 
-Without `--data`, the app looks in `LASTBOOK_DATA`, then the folder chosen last time, then `LastbookData` beside the
-program, in Downloads, Documents or the home folder, and finally in the app's own data folder. If it finds none, it opens
-setup. The full order is in `app/main.py`.
+Without `--data`, the app checks `LASTBOOK_DATA`, the folder chosen last time, and its own data folder.
+Existing libraries elsewhere are accessed when the person chooses them. If no library is available, it opens setup.
+The full order is in `app/main.py`.
 
 The **library server** version runs the same engine in a browser and can share with phones on the same Wi-Fi:
 
@@ -130,9 +129,18 @@ script header lists the tools it needs, with versions and checksums. The three W
 3.13.0 on Windows because Smart App Control refuses 3.13.1's `zim-9.dll`.
 
 `build_setup_windows.sh` makes a per-user installer (no administrator prompt). Its front, `packaging/setup_stub/`, is a
-small C program with no C runtime that loads DLLs from System32 only, so a DLL planted in Downloads cannot run. To sign,
-`packaging/sign_windows.ps1` signs the app folder, the uninstaller and the installer with Microsoft's signing tool and the
-signer's own Azure session; no credentials are kept here.
+small C program with no C runtime that loads DLLs from System32 only. Its payload reader supports the certificate table
+and alignment padding appended by Authenticode signing.
+
+To sign during packaging, set `SIGNTOOL`, `SIGNING_DLIB` and `SIGNING_METADATA` to the Windows paths for SignTool,
+the Azure Artifact Signing client DLL and your signing metadata file. `build_setup_windows.sh` calls
+`packaging/sign_windows.ps1` for the app folder, uninstaller, inner installer and final installer, in that order.
+The helper preserves valid vendor signatures and verifies timestamped signatures after signing. Signing credentials
+and account metadata stay in the release environment.
+
+The published Windows 1.1.8 installer passed installation and startup checks, and all 90 installed EXE, DLL and PYD files
+had valid signatures. The release is 104,960,408 bytes with SHA-256
+`0b31eea87fa05523ca710575e5939754fe10a65eb44ee7d88fe975fbbd161d74`.
 
 ## Packs, state maps and the local AI
 
@@ -182,3 +190,12 @@ scripts in `app/tests/` drive a real build against a real data folder, and their
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). The licence is still to be decided
 ([LICENSE](LICENSE)). Third-party software and models are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Website maintenance
+
+`website-next/` is the deployed site. Run `python3 -I tools/build.py` from that folder to rebuild the main pages.
+The current emergency buying guide is maintained directly in `buying-guide/index.html` and `buying-guide.css`,
+with image provenance in `buying-guide/IMAGE-SOURCES.md`. The older `tools/buying_guide.py` and
+`data/buying-guide.json` describe the preceding guide and will overwrite the current guide if run.
+The current guide contains 17 named products with matching photos. Deployment-specific Amazon Associates tags
+are omitted from this repository.

@@ -11,7 +11,8 @@ param(
 
 # Sign the unpacked app before build_setup_windows.sh creates its payload.
 # Also run this on the generated uninstaller before it enters the payload,
-# and on the final installer after packaging. Existing valid vendor signatures
+# on the inner installer before the native front embeds it, and on the final
+# installer after packaging. Existing valid vendor signatures
 # are preserved. Azure credentials remain in the user's authenticated session.
 $ErrorActionPreference = 'Stop'
 foreach ($RequiredFile in @($SignTool, $Dlib, $Metadata)) {

@@ -18,7 +18,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://lastbook.org"
 R2 = "https://downloads.lastbook.org"
 MAC = R2 + "/Lastbook-1.1.8-mac.dmg"
-WIN = R2 + "/Lastbook-1.0.0-Setup.exe"
+WIN = R2 + "/Lastbook-1.1.8-Setup.exe"
 LIB = R2 + "/Lastbook-Small-20261113.zip"
 DATE = "13 November 2026"
 
@@ -136,7 +136,7 @@ def pic(stem, w, h, alt, widths=(720, 1280), sizes="92vw", fallback=None, eager=
 
 
 MAC_BTN = btn(MAC, APPLE, "Download for Mac", "Lastbook 1.1.8 · 28.5 MB")
-WIN_BTN = btn(WIN, WINDOWS, "Download for Windows", "Lastbook 1.0.0 · 75.2 MB")
+WIN_BTN = btn(WIN, WINDOWS, "Download for Windows", "Lastbook 1.1.8 · 105 MB")
 LIB_BTN = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
 LIB_BTN_SHORT = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
 MAC_FINE = "Free · Apple M1 or newer · macOS 14 or newer"
@@ -169,7 +169,7 @@ AGAIN = f"""<section class="band band-lamp" aria-labelledby="again-h">
       <a class="btn-2 dl-mac" href="{MAC}">Download for Mac</a>
       <a class="btn-2 dl-win" href="{WIN}">Download for Windows</a>
     </p>
-    <p class="fine">Mac 1.1.8 · 28.5 MB · Windows 1.0.0 · 75.2 MB</p>
+    <p class="fine">Mac 1.1.8 · 28.5 MB · Windows 1.1.8 · 105 MB</p>
   </div>
 </section>
 """
@@ -214,7 +214,7 @@ def home():
     <p class="lead">Everything you need to survive and rebuild society.<br>Free, local, offline and private.<span class="phone-note"> It’s for Mac and Windows computers, not iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></span></p>
     <div class="dl">
       <div class="dl-item dl-mac"><a class="btn" href="{MAC}">{APPLE}<span>Download for Mac</span></a><p class="cap">28.5 MB · Apple M1 or newer · macOS 14+</p></div>
-      <div class="dl-item dl-win"><a class="btn-2" href="{WIN}">{WINDOWS}<span>Download for Windows</span></a><p class="cap">75.2 MB · Windows 10 or 11, 64-bit</p></div>
+      <div class="dl-item dl-win"><a class="btn-2" href="{WIN}">{WINDOWS}<span>Download for Windows</span></a><p class="cap">105 MB · Windows 10 or 11, 64-bit</p></div>
     </div>
   </div>
 
@@ -258,7 +258,7 @@ def home():
       <div><h3>Grow the library</h3><p>Recommend resources and help review guides.</p></div>
       <div><h3>Try it. Tell us.</h3><p>Report bugs and share what you need.</p></div>
     </div>
-    <div class="community-actions"><a class="btn github-button" href="https://github.com/Immortal-Protocols" target="_blank" rel="noopener" aria-label="GitHub"><img src="/img/github-lockup-white.svg" width="110" height="32" alt="GitHub"></a></div>
+    <div class="community-actions"><a class="btn github-button" href="https://github.com/Immortal-Protocols/lastbook" target="_blank" rel="noopener" aria-label="GitHub"><img src="/img/github-lockup-white.svg" width="110" height="32" alt="GitHub"></a></div>
     <img class="community-people" src="/img/ink/foot-crowd.svg" width="1080" height="200" alt="" loading="lazy">
   </div>
 </section>
@@ -279,7 +279,7 @@ def home():
         <p>Internet is needed to download the app, library and optional AI. Once setup finishes, reading, maps, videos and AI work offline.</p>
       </div></details>
       <details><summary>What is Chat?</summary><div>
-        <p>Chat uses the optional local Gemma model to answer questions from your library and link to its sources. It is available in the Mac app. The Windows release with local AI is awaiting signing.</p>
+        <p>Chat uses the optional local Gemma model to answer questions from your library and link to its sources. It is available in the Mac and Windows apps.</p>
       </div></details>
       <details><summary>Is the medical information checked?</summary><div>
         <p>It comes from published guides, such as Hesperian, the World Health Organization and the Red Cross. Lastbook itself is not clinically reviewed, and it doesn’t replace trained care. In an emergency, call 911 if you can.</p>
@@ -309,13 +309,13 @@ def home():
 
 # ---------------------------------------------------------------- Download
 def download():
-    return head("Download", "Download Lastbook for Mac or Windows. Mac setup downloads your library and optional local AI.", "/download/") + bar("/download/") + f"""
+    return head("Download", "Download Lastbook for Mac or Windows. Setup downloads your library, local map and optional local AI.", "/download/") + bar("/download/") + f"""
 <main id="main" class="page"><div class="wrap">
-{page_head("Download Lastbook", "Install the app. On Mac, choose your library and optional AI when it opens.", "fig-laptop")}
+{page_head("Download Lastbook", "Install the app, then choose your library, local map and optional AI.", "fig-laptop")}
 {PHONE}
 <ul class="files" id="need">
 <li class="card file dl-mac"><h2>Mac</h2><p class="file-name">Lastbook 1.1.8 · 28.5 MB</p><p class="req">Apple Silicon (M1 or newer) · macOS 14 or newer</p>{MAC_BTN}<p>Setup checks your storage and downloads your library and optional local AI.</p></li>
-<li class="card file dl-win"><h2>Windows</h2><p class="file-name">Lastbook 1.0.0 · 75.2 MB</p><p class="req">Windows 10 or 11 · 64-bit</p>{WIN_BTN}<p>This release uses a separate <a href="{LIB}">Small library download (7.7 GB)</a>. The updated Windows app with library setup and local AI is awaiting signing.</p></li>
+<li class="card file dl-win"><h2>Windows</h2><p class="file-name">Lastbook 1.1.8 · 105 MB</p><p class="req">Windows 10 or 11 · 64-bit</p>{WIN_BTN}<p>Setup lets you choose your library size, local map and optional local AI.</p></li>
 </ul>
 <div class="os">
 <section class="card os-card dl-mac" id="mac" aria-labelledby="mac-h">
@@ -324,7 +324,7 @@ def download():
 <details class="ver" id="why"><summary>Apple security checks</summary><div><p>Lastbook 1.1.8 is signed with our Developer ID and notarized by Apple. On first launch, macOS may ask you to confirm opening an app downloaded from the internet.</p></div></details>
 <p>Once setup finishes, the library and AI work offline.</p>
 </section>
-<section class="card os-card dl-win" id="windows" aria-labelledby="win-h"><h2 id="win-h">{WINDOWS} Install on Windows</h2><ol class="list"><li>Download the app and the <a href="{LIB}">Small library</a>.</li><li>Right-click <b>Lastbook-Small-20261113.zip</b> and choose <b>Extract All</b>.</li><li>Run <b>Lastbook-1.0.0-Setup.exe</b> and follow the installer.</li><li>Open Lastbook. If asked for your library, choose the extracted <b>LastbookData</b> folder.</li></ol><p>If Windows blocks the installer, contact <a href="mailto:hello@lastbook.org">hello@lastbook.org</a> with the message you see.</p></section>
+<section class="card os-card dl-win" id="windows" aria-labelledby="win-h"><h2 id="win-h">{WINDOWS} Install on Windows</h2><ol class="list"><li>Download and run <b>Lastbook-1.1.8-Setup.exe</b>.</li><li>Follow the installer, then open Lastbook.</li><li>Choose your library size, state map and optional local AI in setup.</li></ol><p>If Windows blocks the installer, contact <a href="mailto:hello@lastbook.org">hello@lastbook.org</a> with the message you see.</p></section>
 </div>
 <section class="card plain" id="check"><h2>Check your download</h2><p>Mac 1.1.8 SHA-256</p><p><code style="overflow-wrap:anywhere">626e3b451d5a1a6855ed2b2fc2e4147d070153ca2d803f544c828a1447dfab08</code></p><p><a href="/SHA256SUMS.txt">All published checksums</a></p></section>
 </div></main>
@@ -489,7 +489,7 @@ def privacy():
 <p>The site is hosted by Vercel, and the download files are stored on Cloudflare. Like any web host, they may keep standard request logs, such as IP addresses. We don’t add anything on top.</p>
 
 {ph2("p-envelope", "App signing")}
-<p>The Mac app is signed with our Developer ID and notarized by Apple. Windows signing is in progress. Your computer may ask you to confirm opening a downloaded app.</p>
+<p>The Mac app is signed with our Developer ID and notarized by Apple. The Windows app and installer are signed. Your computer may ask you to confirm opening a downloaded app.</p>
 <p><a href="/download/#mac">What to click on a Mac</a> · <a href="/download/#windows">What to click on Windows</a></p>
 
 {ph2("p-magnifier", "Check your download")}

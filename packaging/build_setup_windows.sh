@@ -1,5 +1,5 @@
 #!/bin/bash
-# Lastbook-<version>-Setup.exe from a built app folder: per-user, unsigned, no administrator prompt. Run in Git Bash on Windows:
+# Lastbook-<version>-Setup.exe from a built app folder: per-user, no administrator prompt. Run in Git Bash on Windows:
 #
 #   PY=/c/path/to/python.exe DIST='C:\path\to\dist\Lastbook' OUT='C:\path\to\output' bash packaging/build_setup_windows.sh
 #
@@ -7,6 +7,8 @@
 # DIST  The app folder that build_app_windows.sh made (dist\Lastbook, with Lastbook.exe).
 # OUT   Build output. The installer lands at OUT\Lastbook-<version>-Setup.exe.
 # CLANG llvm-mingw's clang.exe (the toolchain of packaging/llm/build_llm_windows.sh), for the front in packaging/setup_stub/.
+# SIGNTOOL, SIGNING_DLIB, SIGNING_METADATA optionally enable Azure Artifact Signing.
+# Set all three to Windows paths. The metadata file names the signing account and certificate profile.
 #
 # Steps: the icon, the uninstaller (lastbook_setup.py without a payload), app.zip (the app folder, the uninstaller and the icon),
 # then the installer (the same program with app.zip inside). The network and other unused modules are left out of both programs.
@@ -23,6 +25,18 @@ export TEMP="$OUT\\tmp" TMP="$OUT\\tmp" LOCALAPPDATA="$OUT\\tmp\\localappdata" P
 export PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 PYTHONHASHSEED=0
 unset PYTHONHOME PYTHONPATH
 test -f "$(cygpath -u "$DIST")/Lastbook.exe"
+
+sign_target() {
+  if [ -z "${SIGNTOOL:-}${SIGNING_DLIB:-}${SIGNING_METADATA:-}" ]; then
+    return
+  fi
+  : "${SIGNTOOL:?Set all three signing paths}"
+  : "${SIGNING_DLIB:?Set all three signing paths}"
+  : "${SIGNING_METADATA:?Set all three signing paths}"
+  powershell.exe -NoProfile -NonInteractive -File "$HEREW\\sign_windows.ps1" \
+    -Path "$1" -SignTool "$SIGNTOOL" -Dlib "$SIGNING_DLIB" -Metadata "$SIGNING_METADATA"
+}
+sign_target "$DIST"
 
 cp "$HERE/icon/Lastbook.ico" "$OUTU/Lastbook.ico"
 
@@ -45,6 +59,7 @@ build() {   # name, output folder, extra PyInstaller arguments
     "$@" "$HEREW\\lastbook_setup.py"
 }
 build "Uninstall Lastbook" uninstall
+sign_target "$OUT\\uninstall\\Uninstall Lastbook.exe"
 "$PY" -I -B - "$DIST" "$OUT\\uninstall\\Uninstall Lastbook.exe" "$OUT\\Lastbook.ico" "$OUT\\payload\\app.zip" <<'ZIP'
 import os, sys, zipfile
 dist, uninstaller, icon, out = sys.argv[1:]
@@ -58,6 +73,7 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     z.write(icon, 'Lastbook.ico')
 ZIP
 build "Lastbook-$VERSION-Setup" setup --add-data "$OUT\\payload\\app.zip;."
+sign_target "$OUT\\setup\\Lastbook-$VERSION-Setup.exe"
 
 # The front (packaging/setup_stub/lastbook_setup_stub.c): what the person runs. It allows DLLs from System32 only, then runs the
 # installer above from a private folder of its own, so nothing planted beside a downloaded Setup.exe is loaded (audit N-DLL).
@@ -101,5 +117,6 @@ data = open(inner, 'rb').read()
 with open(out, 'wb') as f:
     f.write(open(stub, 'rb').read()); f.write(data); f.write(struct.pack('<Q', len(data)) + b'LBSETUP1')
 JOIN
+sign_target "$OUT\\Lastbook-$VERSION-Setup.exe"
 ls -l "$OUTU/Lastbook-$VERSION-Setup.exe"
 sha256sum "$OUTU/Lastbook-$VERSION-Setup.exe"

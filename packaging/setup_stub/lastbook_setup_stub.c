@@ -7,6 +7,7 @@
 // command line, waits, removes it, and exits with its exit code. The real installer's own folder is then that private folder.
 //
 // The real installer is appended to this file: [stub][installer bytes][8-byte size, little-endian]["LBSETUP1"].
+// Authenticode may append alignment bytes and a certificate table after this footer.
 // No C runtime: built with -nostdlib, so nothing else is loaded before the first line runs.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -67,15 +68,34 @@ void WinMainCRTStartup(void) {
     if (f == INVALID_HANDLE_VALUE) fail(L"Setup could not read itself.");
     LARGE_INTEGER total;
     if (!GetFileSizeEx(f, &total) || total.QuadPart < 16) fail(L"This copy of Setup is damaged. Download it again.");
+    BYTE *image = (BYTE *)GetModuleHandleW(NULL);
+    IMAGE_DOS_HEADER *dos = (IMAGE_DOS_HEADER *)image;
+    IMAGE_NT_HEADERS *nt = (IMAGE_NT_HEADERS *)(image + dos->e_lfanew);
+    IMAGE_DATA_DIRECTORY certificate = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_SECURITY];
+    LONGLONG payload_end = total.QuadPart;
+    if (certificate.Size) {
+        if (certificate.VirtualAddress < 16 ||
+            (ULONGLONG)certificate.VirtualAddress + certificate.Size > (ULONGLONG)total.QuadPart)
+            fail(L"This copy of Setup is damaged. Download it again.");
+        // Unlike other PE directories, the certificate table uses a file offset.
+        payload_end = certificate.VirtualAddress;
+    }
     char tail[16];
     DWORD got = 0;
-    LARGE_INTEGER pos; pos.QuadPart = total.QuadPart - 16;
-    if (!SetFilePointerEx(f, pos, NULL, FILE_BEGIN) || !ReadFile(f, tail, 16, &got, NULL) || got != 16 || !same8(tail + 8, MAGIC))
-        fail(L"This copy of Setup is damaged. Download it again.");
+    LARGE_INTEGER pos;
+    int found = 0;
+    // SignTool aligns the certificate table to eight bytes. The footer can precede up to seven padding bytes.
+    for (int padding = 0; padding < 8 && payload_end >= 16 + padding; padding++) {
+        pos.QuadPart = payload_end - 16 - padding;
+        if (!SetFilePointerEx(f, pos, NULL, FILE_BEGIN) || !ReadFile(f, tail, 16, &got, NULL) || got != 16)
+            fail(L"This copy of Setup is damaged. Download it again.");
+        if (same8(tail + 8, MAGIC)) { payload_end -= padding; found = 1; break; }
+    }
+    if (!found) fail(L"This copy of Setup is damaged. Download it again.");
     unsigned long long size = 0;
     for (int i = 7; i >= 0; i--) size = (size << 8) | (unsigned char)tail[i];
-    if (size == 0 || size > (unsigned long long)total.QuadPart - 16) fail(L"This copy of Setup is damaged. Download it again.");
-    pos.QuadPart = total.QuadPart - 16 - (LONGLONG)size;
+    if (size == 0 || size > (unsigned long long)payload_end - 16) fail(L"This copy of Setup is damaged. Download it again.");
+    pos.QuadPart = payload_end - 16 - (LONGLONG)size;
 
     // A new folder of this person's own, under their temporary folder (only they and the system can write there).
     static wchar_t dir[MAX_PATH + 64], exe[MAX_PATH + 96];
