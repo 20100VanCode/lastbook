@@ -47,7 +47,7 @@ FOLDER_EXT = {
     'collections': {'.zim'},
 }
 SUMMARY_FIELDS = {'resources', 'pdfs', 'pdf_pages', 'web_pages', 'videos', 'collections', 'document_bytes'}
-PACK_FIELDS = {'name', 'size', 'map', 'built', 'snapshot', 'sample', 'add_ons', 'counts', 'known_gaps', 'incomplete'}
+PACK_FIELDS = {'name', 'size', 'map', 'built', 'snapshot', 'sample', 'add_ons', 'counts', 'known_gaps', 'incomplete', 'content_revision'}
 SIZE_NAMES = set(SPEC['sizes']) | set(SPEC['addons'])
 ACCEPTABLE = ('pdf.', 'zim.', 'term.')
 WEB_ANCHOR = 'html.web_anchor'

@@ -14,7 +14,7 @@ Versions are the pins in `packaging/requirements*.txt`, `packaging/llm/*.sh`, `p
 
 | Component | Version | Licence | Source | Checked |
 |---|---|---|---|---|
-| pypdfium2 (`engine/vendor-macos/`) | 5.14.0 | Apache-2.0 or BSD-3-Clause; data files CC-BY-4.0 | https://github.com/pypdfium2-team/pypdfium2 | Checked: `pypdfium2-5.14.0.dist-info/licenses/` |
+| pypdfium2 (`engine/vendor-macos/` on Mac; installed from PyPI for the Windows build) | 5.14.0 | Apache-2.0 or BSD-3-Clause; data files CC-BY-4.0 | https://github.com/pypdfium2-team/pypdfium2 | Checked: `pypdfium2-5.14.0.dist-info/licenses/` |
 | PDFium, inside pypdfium2's `libpdfium.dylib` | as built by pdfium-binaries | BSD-3-Clause (The PDFium Authors) | https://pdfium.googlesource.com/pdfium, https://github.com/bblanchon/pdfium-binaries | Checked: `BUILD_LICENSES/pdfium.txt`, `pdfium-binaries.txt` |
 | Libraries built into PDFium: abseil, agg 2.3, fast_float, FreeType, ICU, Little CMS, libjpeg-turbo, OpenJPEG, libpng, LLVM libc, simdutf, zlib | as built | Each under its own licence (Apache-2.0, BSD-style, FreeType/FTL, Unicode, MIT, IJG, zlib and others) | see each file | Checked: the full texts are in `engine/vendor-macos/pypdfium2-5.14.0.dist-info/licenses/data/darwin_arm64/BUILD_LICENSES/` |
 
@@ -22,9 +22,9 @@ Versions are the pins in `packaging/requirements*.txt`, `packaging/llm/*.sh`, `p
 
 | Component | Version | Licence | Source | Checked |
 |---|---|---|---|---|
-| Python (runtime bundled by PyInstaller) | 3.11 (Mac), 3.12 (Windows) | PSF-2.0 | https://www.python.org | Upstream |
+| Python (runtime bundled by PyInstaller) | 3.11.18 (Mac), 3.14.10 or a later 3.14 (Windows) | PSF-2.0 | https://www.python.org | Upstream |
 | PyInstaller bootloader | 6.22.3 | GPL-2.0-or-later with the PyInstaller exception, which allows bundling programs under any licence | https://github.com/pyinstaller/pyinstaller | Checked: package metadata |
-| python-libzim | 3.13.1 | **GPL-3.0-or-later** | https://github.com/openzim/python-libzim | Checked: `libzim-3.13.1.dist-info/licenses/LICENSE` |
+| python-libzim | 3.13.1 (Mac), 3.13.0 (Windows) | **GPL-3.0-or-later** | https://github.com/openzim/python-libzim | Checked: `libzim-3.13.1.dist-info/licenses/LICENSE` |
 | libzim (C++, inside python-libzim's wheel) | 9 | GPL-2.0 | https://github.com/openzim/libzim | Upstream |
 | Xapian and ICU 73, built into libzim | as built | Xapian: GPL-2.0-or-later; ICU: Unicode License | https://xapian.org, https://icu.unicode.org | Upstream (both found in the binary) |
 | zstd and liblzma (xz), used by libzim | as built | zstd: BSD-3-Clause or GPL-2.0; liblzma: 0BSD/public domain | https://github.com/facebook/zstd, https://tukaani.org/xz/ | Upstream |

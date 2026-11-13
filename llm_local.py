@@ -1,7 +1,7 @@
 """The optional local AI: Gemma 4 26B A4B run on this computer by lastbook-llm, a program of ours that speaks only through pipes.
 
 Nothing here opens a socket or reaches past this computer. The model is a file the person downloads from the website, outside the
-app. Lastbook finds it (in LastbookData, Downloads, Documents or Desktop), checks it is exactly the published file, asks llama.cpp
+app. Lastbook finds it inside the selected library or an explicitly configured model folder, checks the published file, asks llama.cpp
 whether it fits this computer's memory, and starts it when someone asks a question. It stops after IDLE_STOP seconds unused,
 when turned off, and when the app quits (the program leaves when its standard input closes).
 
@@ -43,9 +43,8 @@ def runner_path():
 
 
 def places():
-    """Folders the model file may be in, most likely first. Only the top of each is looked at, for the one file name."""
-    home = Path.home()
-    out = [paths.DATA / 'models', paths.DATA, paths.DATA.parent, home / 'Downloads', home / 'Documents', home / 'Desktop']
+    """The selected library and an explicitly configured model folder only."""
+    out = [paths.DATA / 'models', paths.DATA]
     if os.environ.get('LASTBOOK_MODEL_DIR'):
         out.insert(0, Path(os.environ['LASTBOOK_MODEL_DIR']))
     seen, res = set(), []
@@ -80,10 +79,11 @@ def _stamp(p):
     return [str(p), st.st_size, st.st_mtime_ns]
 
 
-def mark_checked(path):
-    """For setup: it has just checked this file's SHA-256 while downloading it, so the AI need not read it again."""
+def mark_checked(path, sha256):
+    """For setup: it has just checked this file's SHA-256 while downloading it, so the AI need not read it again.
+    sha256 is the digest setup computed; it must be the published one, or nothing is recorded."""
     p = Path(path)
-    if p.name != FILE or p.stat().st_size != SIZE:
+    if p.name != FILE or p.stat().st_size != SIZE or str(sha256).lower() != SHA256:
         raise ValueError('not the model file')
     LOCAL.saved['checked'] = _stamp(p)
     _save(LOCAL.saved)

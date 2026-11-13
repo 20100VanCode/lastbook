@@ -112,9 +112,12 @@ vram_bytes}], disks: [{path, free_bytes, total_bytes}], ai: {fits, needs_bytes, 
 `memory_bytes` and RAM, marked `"estimate": true`. On Windows, RAM plus dedicated VRAM, from DXGI.
 
 `job` = `{id, state, items: [{id, kind: "pack" or "model", title, state, bytes_done, bytes_total, rate_bps, eta_s,
-error}], error, started, folder}`. States in order: `waiting`, `downloading`, `paused`, `verifying`, `unpacking`,
+error}], error, started, folder}`. Each item also has `source`: `"found"` when its file is already on this computer
+(it is checked, not downloaded), else `"download"` (it changes to `"download"` when a found file is rejected). After a restart, an
+item that stopped mid-run has `paused_from` (`downloading`, `verifying`, `unpacking` or `activating`), dropped on resume, and its
+`bytes_done`/`bytes_total` describe that step: unpacked bytes of the installed size for `unpacking`, the whole file for a found item. States in order: `waiting`, `downloading`, `paused`, `verifying`, `unpacking`,
 `activating`, `done`, or `failed` (with `error`: a plain sentence and a `code`: `no_space`, `network`, `checksum`, `unpack`,
-`activate`, `cancelled`). The job lives in `LastbookData.setup/job.json`, so a restart picks it up as `paused` and resumes
+`activate`, `cancelled`, and `found_mismatch`: a file already on this computer (`use`) did not match its published SHA-256; the error carries `file`, the file is left untouched and no longer offered, and `retry` downloads it instead). The job lives in the app's own settings folder (`<settings>/setup/job.json`, with a staged switch in `<settings>/setup/pending.json`; never in `LastbookData.setup`, whose contents are not obeyed: audit E3), so a restart picks it up as `paused` and resumes
 with HTTP Range from the bytes already on disk. A corrupt download (wrong SHA-256) is deleted and downloaded once more
 automatically, then fails with `checksum`.
 
@@ -124,3 +127,56 @@ automatically, then fails with `checksum`.
 with the engine now started on the new folder. If an in-process switch proves fragile, the app may relaunch itself instead,
 with the same result for the person. Either way, an upgrade (for example Small to Medium) renames the old LastbookData to
 `LastbookData.old-<date>` only after the new one is complete and opens, and offers to delete the old one afterwards.
+
+## State maps (added 2026-11-12)
+
+The owner wants setup to offer one US state's detailed map with any library: local streets, buildings, terrain,
+crops and the resource layers (water points, help points, atlas), built by `packaging/build_packs.py map <ST>`
+(rules in `derived/packs/pack-spec.json` → `map_sets.state`). A state map set is self-contained: it is the base map
+plus every row inside the state's box, so it **replaces** the library's map set and never merges with it.
+One state per library for now; choosing another state replaces the first.
+
+Who owns what: **map-packages** builds, zips, uploads and lists the state maps; **setup-backend** downloads and
+installs them; **setup-ui** shows the choice. The app's Map, Ask and Videos screens are unchanged, and read the new
+map set the same way as the base one.
+
+Manifest: a new top-level list, alongside `packs` and `models`. A fetched manifest merges by `id`, as packs do.
+
+```json
+"maps": [
+  {"id": "CA", "title": "California", "kind": "state", "installed_bytes": 5000000000, "available": true,
+   "includes": "Local streets, buildings, terrain and crops, plus water, help and resource points",
+   "files": [{"name": "Lastbook-Map-CA.zip", "url": "https://downloads.lastbook.org/maps/Lastbook-Map-CA.zip",
+              "size": 0, "sha256": "…", "kind": "zip"}]}
+]
+```
+
+The zip unpacks to the same layout as a pack, holding only the map set's files: `derived/geo/*.sqlite`,
+`derived/geo/national-status.json`, `derived/geo/socal-cells.json` and `library-data/geography/resources/atlas.sqlite`,
+plus `map-set.json` naming the state. Nothing else is allowed in it. Unpacking guards are the same as for packs.
+
+Setup: `POST /api/setup/start {pack, ai, map: "CA" | null}`. A map is a third job item, `kind: "map"`. The space
+needed counts the map's download plus installed bytes. Installing it builds the new map set in
+`LastbookData.setup/unpack/` and switches the listed files in one step, keeping the old map set until the library
+opens with the new one. `state.current.map` reports the installed set (`base`, `us` or a state code, from
+`map-set.json`). The manage screen lets a person add or change the state later. A pack that already contains a
+detailed map (Medium has California; All has the whole US) shows that, and choosing a state on Medium replaces
+its California map. All needs no state map. The state is chosen by the person; Lastbook does not detect location.
+
+Built by setup-backend (2026-11-12):
+- Job item `kind: "map"` comes after the pack and before the model: `waiting`, `downloading`, `unpacking` (bytes of
+  `installed_bytes`), `done`. With a pack, the state's files replace the pack's own map set inside the staged library.
+  On its own (manage mode, `start {map: "CA"}` with no `pack`), the job ends `done` with the swap staged. The swap happens
+  when the app restarts after `finish`: the old map set's files, with their SQLite `-wal`/`-shm` files, move to
+  `LastbookData.setup/map-old/`, the new ones move in, and if the result does not check out (every file `map-set.json`
+  lists, at its size) the old set is put back. `map-old/` is deleted once the library has opened.
+- A map zip may hold only the map-set files listed above (it fails with `unpack` otherwise), and `map-set.json`'s `name`
+  must equal the entry's `id`. Its files may sit under a top `LastbookData/` folder or at the zip's top (as the published
+  state zips do); a pack zip still needs the folder.
+- `state.current.map` is `map-set.json`'s `name`, else `pack.json`'s `map`, else `"base"`. Asking for the state already
+  there answers `{code: "nothing"}`. In first-run setup, a map needs a pack in the same `start`.
+- `state.recommend.map_need_bytes` = `{map id: download + installed bytes}`; `start`'s space check adds the map.
+  `state.manifest.maps` lists the entries (without URLs).
+- `found[]` also lists a `Lastbook-Map-*.zip` already on this computer (`kind: "map"`); `use` on it starts the map job
+  in manage mode, or is used by the next `start` in first-run setup.
+- Repair skips the map files when a `map-set.json` is present; those are checked against it instead.

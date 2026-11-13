@@ -16,11 +16,11 @@ import hashlib, html, json, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://lastbook.org"
-R2 = "https://pub-28c3cc06eb774c5cac057e6c9343efbd.r2.dev"
-MAC = R2 + "/Lastbook-1.0.0-mac.dmg"
+R2 = "https://downloads.lastbook.org"
+MAC = R2 + "/Lastbook-1.1.8-mac.dmg"
 WIN = R2 + "/Lastbook-1.0.0-Setup.exe"
-LIB = R2 + "/Lastbook-Small.zip"
-DATE = "4 November 2026"
+LIB = R2 + "/Lastbook-Small-20261113.zip"
+DATE = "13 November 2026"
 
 
 def h(path):
@@ -80,7 +80,7 @@ def head(title, desc, path, extra="", index=True):
 """
 
 
-NAV = [("/download/", "Download"), ("/library/", "Library"), ("/privacy/", "Privacy"), ("/credits/", "Credits")]
+NAV = [("/download/", "Download")]
 
 
 def bar(current, over=False):
@@ -95,7 +95,6 @@ def bar(current, over=False):
     <nav class="nav" aria-label="Main">
       {chr(10).join("      " + l for l in links).strip()}
     </nav>
-    <a class="btn btn-sm" href="/download/"{cur}>Download</a>
   </div>
 </header>
 """
@@ -107,12 +106,13 @@ FOOT = f"""<footer class="foot">
     <p class="foot-links">
       <a href="/download/">Download</a>
       <a href="/library/">What’s in the library</a>
+      <a href="/buying-guide/">Buying guide</a>
       <a href="/privacy/">Privacy</a>
       <a href="/credits/">Credits and licences</a>
       <a href="/download/#check">Check your download</a>
       <a href="mailto:hello@lastbook.org">hello@lastbook.org</a>
     </p>
-    <p class="fine">Lastbook 1.0.0 · {DATE} · This site has no cookies and no tracking. Licence details for the app are coming soon.</p>
+    <p class="fine">Lastbook · {DATE} · This site has no cookies and no tracking. Third-party licences are listed in Credits.</p>
   </div>
 </footer>
 </body>
@@ -135,10 +135,10 @@ def pic(stem, w, h, alt, widths=(720, 1280), sizes="92vw", fallback=None, eager=
     </picture>"""
 
 
-MAC_BTN = btn(MAC, APPLE, "Download for Mac", "Lastbook 1.0.0 · 22.5 MB")
+MAC_BTN = btn(MAC, APPLE, "Download for Mac", "Lastbook 1.1.8 · 28.5 MB")
 WIN_BTN = btn(WIN, WINDOWS, "Download for Windows", "Lastbook 1.0.0 · 75.2 MB")
-LIB_BTN = btn(LIB, BOX, "Download the library", "Small · 8.2 GB", "btn-2")
-LIB_BTN_SHORT = btn(LIB, BOX, "Download the library", "Small · 8.2 GB", "btn-2")
+LIB_BTN = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
+LIB_BTN_SHORT = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
 MAC_FINE = "Free · Apple M1 or newer · macOS 14 or newer"
 WIN_FINE = "Free · Windows 10 or 11, 64-bit"
 PHONE = '<p class="os-note fine">Lastbook runs on Mac and Windows computers. It doesn’t run on iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></p>'
@@ -168,9 +168,8 @@ AGAIN = f"""<section class="band band-lamp" aria-labelledby="again-h">
     <p class="again">
       <a class="btn-2 dl-mac" href="{MAC}">Download for Mac</a>
       <a class="btn-2 dl-win" href="{WIN}">Download for Windows</a>
-      <a class="btn-2" href="{LIB}">Download the library</a>
     </p>
-    <p class="fine">Mac 22.5 MB · Windows 75.2 MB · Library 8.2 GB (you need about <span class="nw">17 GB</span> free) · <a href="/download/#mac">How to open it</a></p>
+    <p class="fine">Mac 1.1.8 · 28.5 MB · Windows 1.0.0 · 75.2 MB</p>
   </div>
 </section>
 """
@@ -212,35 +211,30 @@ def home():
     <h1 class="wm" id="h1"><span class="vh">Lastbook</span>
       {WORDMARK}
     </h1>
-    <p class="lead">Everything you need to survive and rebuild.<br>Free, local, offline and private.<span class="phone-note"> It’s for Mac and Windows computers, not iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></span></p>
+    <p class="lead">Everything you need to survive and rebuild society.<br>Free, local, offline and private.<span class="phone-note"> It’s for Mac and Windows computers, not iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></span></p>
     <div class="dl">
-      <div class="dl-item dl-mac"><a class="btn" href="{MAC}">{APPLE}<span>Download for Mac</span></a><p class="cap">22.5 MB · Apple M1 or newer · macOS 14+</p></div>
+      <div class="dl-item dl-mac"><a class="btn" href="{MAC}">{APPLE}<span>Download for Mac</span></a><p class="cap">28.5 MB · Apple M1 or newer · macOS 14+</p></div>
       <div class="dl-item dl-win"><a class="btn-2" href="{WIN}">{WINDOWS}<span>Download for Windows</span></a><p class="cap">75.2 MB · Windows 10 or 11, 64-bit</p></div>
     </div>
-    <p class="then">Then <a href="{LIB}">download the library</a> <span class="nw">(8.2 GB,</span> needs about <span class="nw">17 GB</span> free)</p>
   </div>
 
-  <button class="pause" id="pause" type="button" aria-pressed="false" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path class="i-pause" d="M4 3v10M12 3v10"/><path class="i-play" d="M4.5 2.5 13 8l-8.5 5.5Z"/></svg><span>Pause</span></button>
-  <div class="hero-foot">
-    <p>Lastbook 1.0.0 · Free · Never uses the internet · This site has no cookies and no tracking</p>
-  </div>
 </section>
 
 <section class="sec essentials" aria-labelledby="essentials-h">
   <div class="wrap">
-    <h2 id="essentials-h">Everything free, local, private.</h2>
+    <h2 id="essentials-h">Free, local, private.</h2>
     <div class="feature-shots">
       <figure>
-        <figcaption><h3>AI</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>Gemma 4</b>26B A4B</p><small>Runs on your computer</small></figcaption>
+        <figcaption><h3>AI</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>Gemma 4</b>26B A4B</p></figcaption>
         <img class="real-ai-shot" src="/img/feature-ai-app.png?v=2" width="1364" height="775" alt="Lastbook’s local AI screen with questions about safe drinking water and first aid.">
       </figure>
       <figure>
-        <figcaption><h3>Maps</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>258,000+</b> searchable places</p><small>With the All library</small></figcaption>
+        <figcaption><h3>Maps</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>258,000+</b> searchable places</p></figcaption>
         <img class="real-map-shot" src="/img/feature-map-crop.png" width="598" height="584" alt="Kansas City in Lastbook with water, medical, fire and shelter layers enabled.">
         <div class="map-key" aria-label="Map legend"><span><b class="key-water">W</b> Water</span><span><b class="key-medical">+</b> Medical</span><span><b class="key-fire">F</b> Fire stations</span><span><b class="key-shelter">⌂</b> Shelters</span></div>
       </figure>
       <figure>
-        <figcaption><h3>Videos</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>2,324</b> videos</p><small>With the All library</small></figcaption>
+        <figcaption><h3>Videos</h3><p>Free. Local. Private.</p><p class="feature-metric"><b>2,324</b> videos</p></figcaption>
         <img class="real-video-shot" src="/img/feature-videos-crop.png?v=3" width="1166" height="656" alt="How to Use a Compass in the Lastbook video player.">
       </figure>
     </div>
@@ -264,24 +258,8 @@ def home():
       <div><h3>Grow the library</h3><p>Recommend resources and help review guides.</p></div>
       <div><h3>Try it. Tell us.</h3><p>Report bugs and share what you need.</p></div>
     </div>
-    <div class="community-actions"><a class="btn github-button" href="https://github.com/Immortal-Protocols" target="_blank" rel="noopener" aria-label="GitHub"><img src="/img/github-lockup-white.svg" width="110" height="32" alt="GitHub"></a><a class="btn-2" href="mailto:hello@lastbook.org?subject=Contributing%20to%20Lastbook">Join the community</a></div>
+    <div class="community-actions"><a class="btn github-button" href="https://github.com/Immortal-Protocols" target="_blank" rel="noopener" aria-label="GitHub"><img src="/img/github-lockup-white.svg" width="110" height="32" alt="GitHub"></a></div>
     <img class="community-people" src="/img/ink/foot-crowd.svg" width="1080" height="200" alt="" loading="lazy">
-  </div>
-</section>
-
-<section class="sec" aria-labelledby="trust-h">
-  <div class="wrap trust">
-    <div>
-      <h2 id="trust-h">No internet. No account. No tracking.</h2>
-      <ul class="checks">
-        <li><strong>It never uses the internet.</strong> Everything is on your computer, so it works with no signal at all.</li>
-        <li><strong>It runs on a laptop battery.</strong> No power grid, no server, nothing to sign in to.</li>
-        <li><strong>It’s free.</strong> No account, no ads, nothing to buy.</li>
-        <li><strong>This site doesn’t track you either.</strong> No cookies, no analytics, nothing from other companies.</li>
-      </ul>
-      <p><a href="/privacy/">Privacy, in full</a></p>
-    </div>
-    {ink("fig-lantern", 172, 208, "trust-fig")}
   </div>
 </section>
 
@@ -290,27 +268,24 @@ def home():
     <h2 id="faq-h">Questions</h2>
     <div class="faq">
       <details><summary>Will it run on my computer?</summary><div>
-        <p>On a Mac, you need Apple Silicon (M1 or newer) and macOS 14 Sonoma or newer. Macs with Intel chips can’t run version 1.0. {MAC_CHECK}</p>
+        <p>On a Mac, you need Apple Silicon (M1 or newer) and macOS 14 Sonoma or newer. Intel Macs are not supported. {MAC_CHECK}</p>
         <p>On Windows, you need Windows 10 or 11, 64-bit. {WIN_CHECK}</p>
         <p>Lastbook doesn’t run on phones or tablets.</p>
       </div></details>
       <details><summary>How much space do I need?</summary><div>
-        <p>About 17 GB of free space. After the library is unzipped, you can delete Lastbook-Small.zip.</p>
+        <p>Choose Small (7.7 GB), Medium (67.5 GB), or All (about 388 GB). Local AI adds about 17 GB. Your selected state map and address index add more, with sizes shown in setup. Mac setup checks free space before downloading.</p>
       </div></details>
       <details><summary>Does it need the internet?</summary><div>
-        <p>Only to download it. After that, Lastbook never uses the internet.</p>
+        <p>Internet is needed to download the app, library and optional AI. Once setup finishes, reading, maps, videos and AI work offline.</p>
       </div></details>
-      <details><summary>Why does my computer warn me?</summary><div>
-        <p>Version 1.0 isn’t signed yet, so your computer asks you to confirm the first time. <a href="/download/#why">Why the warning?</a></p>
-      </div></details>
-      <details><summary>What is Ask?</summary><div>
-        <p>The Ask page can’t answer questions yet in version 1.0. Use the search box instead. Search, guides, videos and the map all work.</p>
+      <details><summary>What is Chat?</summary><div>
+        <p>Chat uses the optional local Gemma model to answer questions from your library and link to its sources. It is available in the Mac app. The Windows release with local AI is awaiting signing.</p>
       </div></details>
       <details><summary>Is the medical information checked?</summary><div>
         <p>It comes from published guides, such as Hesperian, the World Health Organization and the Red Cross. Lastbook itself is not clinically reviewed, and it doesn’t replace trained care. In an emergency, call 911 if you can.</p>
       </div></details>
       <details><summary>Is there a bigger library?</summary><div>
-        <p>Yes. Medium (67 GB) comes later. Small is the one to get now.</p>
+        <p>Yes. Small (7.7 GB) and Medium (67.5 GB) are available. All (about 388 GB) is also available. Mac setup shows the available choices.</p>
       </div></details>
       <details><summary>Something else?</summary><div>
         <p>Email <a href="mailto:hello@lastbook.org">hello@lastbook.org</a>.</p>
@@ -319,150 +294,40 @@ def home():
   </div>
 </section>
 
-""" + AGAIN + "</main>\n" + FOOT
+""" + AGAIN + """
+<section class="sec" aria-labelledby="buying-guide-h">
+  <div class="wrap narrow">
+    <h2 id="buying-guide-h">Buying guide</h2>
+    <p class="lead">Practical gear for first aid, water, food and repairs.</p>
+    <p>Purchases through our affiliate links help support Lastbook. Shopping is optional, and the app is free.</p>
+    <p class="buying-guide-cta"><a class="btn-2" href="/buying-guide/">Explore the buying guide</a></p>
+  </div>
+</section>
+</main>
+""" + FOOT
 
 
 # ---------------------------------------------------------------- Download
 def download():
-    return head("Download",
-                "Download Lastbook 1.0.0 for Mac or Windows and the Small library, then follow the steps to open it the first time.",
-                "/download/") + bar("/download/") + f"""
-<main id="main" class="page">
-<div class="wrap">
-
-{page_head("Download Lastbook", "You need two things: the app for your computer, and the library.", "fig-laptop")}
+    return head("Download", "Download Lastbook for Mac or Windows. Mac setup downloads your library and optional local AI.", "/download/") + bar("/download/") + f"""
+<main id="main" class="page"><div class="wrap">
+{page_head("Download Lastbook", "Install the app. On Mac, choose your library and optional AI when it opens.", "fig-laptop")}
 {PHONE}
-
 <ul class="files" id="need">
-  <li class="card file dl-mac">
-    <p class="kicker">App</p><h2>Mac</h2>
-    <p class="file-name">Lastbook-1.0.0-mac.dmg · 22.5 MB</p>
-    <p class="req">For Apple Silicon Macs (M1 or newer) with macOS 14 Sonoma or newer.</p>
-    <p class="req">{MAC_CHECK}</p>
-    {MAC_BTN}
-  </li>
-  <li class="card file dl-win">
-    <p class="kicker">App</p><h2>Windows</h2>
-    <p class="file-name">Lastbook-1.0.0-Setup.exe · 75.2 MB</p>
-    <p class="req">For Windows 10 or 11, 64-bit.</p>
-    <p class="req">{WIN_CHECK}</p>
-    {WIN_BTN}
-  </li>
-  <li class="card file">
-    <p class="kicker">Library</p><h2>Small</h2>
-    <p class="file-name">Lastbook-Small.zip · 8.2 GB</p>
-    <p class="req">You need about 17 GB of free space. After the library is unzipped, you can delete Lastbook-Small.zip. It can take hours on a slow connection.</p>
-    {LIB_BTN}
-  </li>
-  <li class="card file file-later">
-    <span class="tag">Coming later</span>
-    <p class="kicker">Library</p><h2>Medium</h2>
-    <p class="file-name">67 GB</p>
-    <p class="req">A bigger library. It comes later.</p>
-  </li>
+<li class="card file dl-mac"><h2>Mac</h2><p class="file-name">Lastbook 1.1.8 · 28.5 MB</p><p class="req">Apple Silicon (M1 or newer) · macOS 14 or newer</p>{MAC_BTN}<p>Setup checks your storage and downloads your library and optional local AI.</p></li>
+<li class="card file dl-win"><h2>Windows</h2><p class="file-name">Lastbook 1.0.0 · 75.2 MB</p><p class="req">Windows 10 or 11 · 64-bit</p>{WIN_BTN}<p>This release uses a separate <a href="{LIB}">Small library download (7.7 GB)</a>. The updated Windows app with library setup and local AI is awaiting signing.</p></li>
 </ul>
-<p class="fine host">The files download from Lastbook’s storage at Cloudflare (pub-28c3…r2.dev).</p>
-
-<p class="note ready"><strong>The first time you open Lastbook, your computer warns you. That’s expected.</strong> Here’s what to click.</p>
-
 <div class="os">
-  <div class="os-side dl-mac">
-  <section class="card os-card dl-mac" id="mac" aria-labelledby="mac-h">
-    <h2 id="mac-h">{APPLE} Mac</h2>
-    <p class="fine">For Apple Silicon Macs (M1 or newer) with macOS 14 Sonoma or newer.</p>
-    <ol class="list">
-      <li>Open <b>Lastbook-1.0.0-mac.dmg</b>.</li>
-      <li>Drag <b>Lastbook</b> to <b>Applications</b>. Then eject the <b>Lastbook</b> disk in the Finder sidebar.</li>
-      <li>Leave <b>Lastbook-Small.zip</b> in <b>Downloads</b> and double-click it. Wait until it finishes. It makes a folder called <b>LastbookData</b>. Leave it there.<br><span class="fine">If you already see a <b>LastbookData</b> folder in Downloads, leave it there and skip this step.</span></li>
-      <li>Open <b>Lastbook</b> from Applications.</li>
-    </ol>
-    <p class="note warn">The first time, macOS warns that it can’t check Lastbook. That is expected. Don’t click <b>Move to Trash</b>.</p>
-    <details class="ver" open>
-      <summary>macOS 15 Sequoia or newer</summary>
-      <div>
-      <ol class="list">
-        <li>Click <b>Done</b>.</li>
-        <li>Open <b>System Settings</b> &gt; <b>Privacy &amp; Security</b>.</li>
-        <li>Scroll down to <b>Security</b>. Next to the line that says Lastbook was blocked, click <b>Open Anyway</b>.</li>
-        <li>When asked, click <b>Open Anyway</b> (or <b>Open</b>), and use Touch ID or your Mac password.</li>
-      </ol>
-      <p class="fine">If the button is gone, open Lastbook again and come back within an hour.</p>
-      </div>
-    </details>
-    <details class="ver" open>
-      <summary>macOS 14 Sonoma</summary>
-      <div>
-      <ol class="list">
-        <li>Click <b>Cancel</b>.</li>
-        <li>Open <b>Applications</b> in the Finder.</li>
-        <li>Control-click <b>Lastbook</b>. Choose <b>Open</b>.</li>
-        <li>Click <b>Open</b>.</li>
-      </ol>
-      </div>
-    </details>
-    <p><strong>You only do this once.</strong></p>
-    <p class="fine">If your Mac asks to let Lastbook use your Downloads or Documents folder, click <b>Allow</b>. That is how it finds the library.</p>
-  </section>
-  <section class="card plain" id="find" aria-labelledby="find-h">
-    <h2 id="find-h">If Lastbook can’t find the library</h2>
-    <p>It asks you. Choose the <b>LastbookData</b> folder. It is in Downloads, or on Windows in Downloads &gt; Lastbook-Small.</p>
-  </section>
-  </div>
-
-  <div class="os-side dl-win">
-  <section class="card os-card dl-win" id="windows" aria-labelledby="win-h">
-    <h2 id="win-h">{WINDOWS} Windows</h2>
-    <p class="fine">For Windows 10 or 11, 64-bit.</p>
-    <p class="tip">If your browser says the Setup file <b>isn’t commonly downloaded</b>: in Edge, click <b>…</b> next to it, then <b>Keep</b>, <b>Show more</b> and <b>Keep anyway</b>. In Chrome, click <b>Keep</b>.</p>
-    <p class="tip">Windows may hide the end of file names, so you may see <b>Lastbook-Small</b> (a zipped folder) and <b>Lastbook-1.0.0-Setup</b>.</p>
-    <ol class="list">
-      <li>Right-click <b>Lastbook-Small.zip</b> in Downloads and choose <b>Extract All</b>.</li>
-      <li>Click <b>Extract</b>. Keep the folder it suggests. Wait until it finishes, which can take several minutes.</li>
-      <li>Double-click <b>Lastbook-1.0.0-Setup.exe</b> in Downloads.</li>
-      <li>If <b>Windows protected your PC</b> appears, click <b>More info</b>, then <b>Run anyway</b>.</li>
-      <li>Click <b>Install</b>, then <b>Open Lastbook</b>.</li>
-    </ol>
-    <p>Next time, open <b>Lastbook</b> from the Start menu.</p>
-    <div class="note warn sac">
-      <img src="/img/ink/d-bang-red.svg" alt="" width="40" height="40">
-      <div>
-      <p class="only">Only if you see this message</p>
-      <p><strong>Windows 11 only:</strong> Smart App Control may block Lastbook, because it isn’t signed yet. There is no way to allow just one app.</p>
-      <p>If Windows says Smart App Control blocked Lastbook, open <b>Windows Security</b> &gt; <b>App &amp; browser control</b> &gt; <b>Smart App Control settings</b> and choose <b>Off</b>. On an up-to-date Windows 11 you can turn it back on later. A signed version that doesn’t need this is coming.</p>
-      </div>
-    </div>
-  </section>
-  <section class="card plain" id="why" aria-labelledby="why-h">
-    <h2 id="why-h">Why the warning?</h2>
-    <p>Apple and Microsoft expect app makers to register a digital signature. Lastbook doesn’t have one yet, so your computer shows a warning. A signed version comes later.</p>
-    <p>Lastbook never uses the internet.</p>
-  </section>
-  </div>
-</div>
-
-<section class="card plain sums-card" id="check" aria-labelledby="check-h">
-  <h2 id="check-h">Check your download</h2>
-  <p>Optional. You can skip this. It proves the file you got is exactly the one we made.</p>
-  <p>SHA-256 of each file:</p>
-  <dl class="sums">
-    <dt>Lastbook-Small.zip</dt><dd><code>55a3d9b2bad7288786a60baf120ba861b1a9497199a3540d303886d7c2fad773</code></dd>
-    <dt>Lastbook-1.0.0-mac.dmg</dt><dd><code>592daf8387b7cec099dbe1811158845dfd87bbb2a0ba37ae15da92387d75d447</code></dd>
-    <dt>Lastbook-1.0.0-Setup.exe</dt><dd><code>b36d10291137492124ff7d9e2b5c993bd01ef00fcc5fc32e72e6c413e96dedc6</code></dd>
-  </dl>
-  <details class="ver cmd">
-    <summary>How to check</summary>
-    <div>
-      <p>On a Mac, open Terminal and type:<br><code>shasum -a 256 ~/Downloads/Lastbook-1.0.0-mac.dmg</code><br><code>shasum -a 256 ~/Downloads/Lastbook-Small.zip</code></p>
-      <p>On Windows, open PowerShell and type:<br><code>Get-FileHash $HOME\\Downloads\\Lastbook-1.0.0-Setup.exe</code><br><code>Get-FileHash $HOME\\Downloads\\Lastbook-Small.zip</code></p>
-      <p class="fine">The long code it shows should match the one above. Capital letters don’t matter. The library is big, so its check can take a few minutes.</p>
-    </div>
-  </details>
-  <p class="fine"><a href="/SHA256SUMS.txt">SHA256SUMS.txt</a></p>
-  <p>Questions? Email <a href="mailto:hello@lastbook.org">hello@lastbook.org</a>.</p>
+<section class="card os-card dl-mac" id="mac" aria-labelledby="mac-h">
+<h2 id="mac-h">{APPLE} Install on Mac</h2>
+<ol class="list"><li>Open <b>Lastbook-1.1.8-mac.dmg</b>.</li><li>Drag <b>Lastbook</b> to <b>Applications</b>.</li><li>Open <b>Lastbook</b> from Applications.</li><li>Choose your state for a detailed local map, then your library size and optional local AI. Setup shows the space needed.</li><li>Click <b>Install</b> and keep your internet connection on until setup finishes.</li></ol>
+<details class="ver" id="why"><summary>Apple security checks</summary><div><p>Lastbook 1.1.8 is signed with our Developer ID and notarized by Apple. On first launch, macOS may ask you to confirm opening an app downloaded from the internet.</p></div></details>
+<p>Once setup finishes, the library and AI work offline.</p>
 </section>
-
+<section class="card os-card dl-win" id="windows" aria-labelledby="win-h"><h2 id="win-h">{WINDOWS} Install on Windows</h2><ol class="list"><li>Download the app and the <a href="{LIB}">Small library</a>.</li><li>Right-click <b>Lastbook-Small-20261113.zip</b> and choose <b>Extract All</b>.</li><li>Run <b>Lastbook-1.0.0-Setup.exe</b> and follow the installer.</li><li>Open Lastbook. If asked for your library, choose the extracted <b>LastbookData</b> folder.</li></ol><p>If Windows blocks the installer, contact <a href="mailto:hello@lastbook.org">hello@lastbook.org</a> with the message you see.</p></section>
 </div>
-</main>
+<section class="card plain" id="check"><h2>Check your download</h2><p>Mac 1.1.8 SHA-256</p><p><code style="overflow-wrap:anywhere">626e3b451d5a1a6855ed2b2fc2e4147d070153ca2d803f544c828a1447dfab08</code></p><p><a href="/SHA256SUMS.txt">All published checksums</a></p></section>
+</div></main>
 """ + FOOT
 
 
@@ -512,18 +377,18 @@ def library():
 
 <section class="pack-comparison" aria-label="Compare library sizes">
   <article class="card">
-    <h2>Small</h2><p class="pack-status">Available · 8.2 GB download</p>
+    <h2>Small</h2><p class="pack-status">Available · 7.7 GB download</p>
     <ul class="pack-facts">
       <li><strong>148</strong> PDF documents</li>
       <li><strong>12,894</strong> PDF pages</li>
       <li><strong>45</strong> saved web guides</li>
-      <li><strong>41</strong> videos</li>
+      <li><strong>41</strong> videos, including 10 on first aid</li>
       <li><strong>2</strong> encyclopedias</li>
     </ul>
     <p>US base map with main roads, towns and water.</p>
   </article>
   <article class="card">
-    <h2>Medium</h2><p class="pack-status">67.5 GB download · uploading</p>
+    <h2>Medium</h2><p class="pack-status">Available · 67.5 GB download</p>
     <ul class="pack-facts">
       <li><strong>4,450</strong> PDF documents</li>
       <li><strong>13</strong> slide decks</li>
@@ -531,21 +396,21 @@ def library():
       <li><strong>573</strong> videos</li>
       <li><strong>3</strong> encyclopedias</li>
     </ul>
-    <p>US base map plus California detail in the current build.</p>
+    <p>US base map plus California detail. Choose your local state map in Mac setup.</p>
   </article>
   <article class="card">
-    <h2>All</h2><p class="pack-status">About 388 GB · estimated</p>
+    <h2>All</h2><p class="pack-status">Available · 387.9 GB download</p>
     <ul class="pack-facts">
       <li><strong>4,451</strong> PDF documents</li>
       <li><strong>13</strong> slide decks</li>
       <li><strong>3,819</strong> saved web guides</li>
-      <li><strong>2,087</strong> videos</li>
+      <li><strong>2,324</strong> videos</li>
       <li><strong>4</strong> encyclopedias</li>
     </ul>
     <p>Expanded US maps, more videos and text-only Wikipedia.</p>
   </article>
 </section>
-<p class="fine pack-count-note">Sizes are rounded. All’s size and counts are provisional until its rebuild and packaging finish.</p>
+<p class="fine pack-count-note">Download sizes are rounded. State maps, address indexes and the optional AI are additional downloads.</p>
 
 <h2 class="section-h">In every library size</h2>
 <p class="lead">Examples from Small, also included in Medium and All. PDFs include books, manuals and selected chapters.</p>
@@ -580,7 +445,7 @@ def library():
   <div class="card plain">
     <h2>The map</h2>
     <p>A map of the whole US with main roads, towns and water. Find a town, ZIP code or place with no signal.</p>
-    <p>Small has only this base map. Hospitals, water taps and side streets are not in it. It shows what was mapped by 25 October 2026, not damage, closures or hazards.</p>
+    <p>Small includes this US base map. Mac setup also downloads your selected state’s detailed streets, buildings and local places. Available address indexes add offline street-address search. Coverage varies by state. The maps show recorded geography, not live damage, closures or hazards.</p>
   </div>
 
 </section>
@@ -602,28 +467,29 @@ def ph2(icon, text):
 
 def privacy():
     return head("Privacy and trust",
-                "Lastbook never uses the internet. This site has no cookies and no tracking. Version 1.0 isn’t signed yet, and here is why.",
+                "Lastbook works offline after setup. Learn about local data, downloads and app signing.",
                 "/privacy/") + bar("/privacy/") + f"""
 <main id="main" class="page">
 <div class="wrap narrow prose">
 
-{page_head("Privacy and trust", "Short version: Lastbook never uses the internet, and this site doesn’t track you.", "fig-lantern")}
+{page_head("Privacy and trust", "Lastbook works offline after setup. Your library and AI conversations stay on your computer.", "fig-lantern")}
 
-{ph2("p-nowifi", "The app never uses the internet")}
-<p>Everything is on your computer. Lastbook doesn’t check for updates, and it doesn’t send anything anywhere. There is no account to make.</p>
+{ph2("p-nowifi", "The app works offline after setup")}
+<p>Setup downloads your chosen library and optional AI model. After setup, the library and AI run on your computer. There is no account to make.</p>
 <p>What you save in Lastbook stays on your computer.</p>
 <p class="note"><strong>You can check:</strong> turn off Wi‑Fi and open Lastbook. Everything works the same.</p>
 
 {ph2("p-nocookie", "This site doesn’t track you")}
 <ul class="checks">
   <li>No cookies.</li>
-  <li>No analytics, ads or tracking.</li>
+  <li>No analytics or tracking scripts.</li>
   <li>No fonts, scripts or pictures from other companies. Everything on these pages comes from lastbook.org.</li>
 </ul>
+<p>The buying guide contains Amazon affiliate links. If you click one, Amazon receives the request and its own privacy and cookie policies apply. Lastbook may earn a commission on qualifying purchases.</p>
 <p>The site is hosted by Vercel, and the download files are stored on Cloudflare. Like any web host, they may keep standard request logs, such as IP addresses. We don’t add anything on top.</p>
 
-{ph2("p-envelope", "Not signed yet, and why")}
-<p>Apple and Microsoft expect app makers to register a digital signature. Lastbook doesn’t have one yet, so your computer shows a warning the first time you open it. A signed version comes later.</p>
+{ph2("p-envelope", "App signing")}
+<p>The Mac app is signed with our Developer ID and notarized by Apple. Windows signing is in progress. Your computer may ask you to confirm opening a downloaded app.</p>
 <p><a href="/download/#mac">What to click on a Mac</a> · <a href="/download/#windows">What to click on Windows</a></p>
 
 {ph2("p-magnifier", "Check your download")}
@@ -729,7 +595,8 @@ def notfound():
     <ul class="links ticks">
       <li><a href="/">Home</a></li>
       <li><a href="/download/">Download Lastbook</a></li>
-      <li><a href="/library/">What’s in the library</a></li>
+      <li><a href="/library/">What’s in the library</a>
+      <a href="/buying-guide/">Buying guide</a></li>
       <li><a href="/privacy/">Privacy and trust</a></li>
       <li><a href="/credits/">Credits</a></li>
     </ul>

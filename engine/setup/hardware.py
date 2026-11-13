@@ -75,7 +75,7 @@ def _windows_gpus():
     iid = _Guid(0x770aae78, 0xf26f, 0x4dba, (ctypes.c_ubyte * 8)(0xa8, 0x29, 0x25, 0x3c, 0x83, 0xd1, 0xb3, 0x87))   # IID_IDXGIFactory1
     factory = ctypes.c_void_p()
     try:
-        dxgi = ctypes.windll.dxgi
+        dxgi = ctypes.WinDLL('dxgi', winmode=0x800)     # LOAD_LIBRARY_SEARCH_SYSTEM32: never a dxgi.dll from a folder searched first (audit W2)
     except OSError:
         return []
     if dxgi.CreateDXGIFactory1(ctypes.byref(iid), ctypes.byref(factory)) != 0 or not factory:
@@ -94,17 +94,6 @@ def _windows_gpus():
                 _com(adapter, 2)()     # Release
     finally:
         _com(factory, 2)()
-    return out
-
-
-def _windows_drives():
-    mask = ctypes.windll.kernel32.GetLogicalDrives()
-    out = []
-    for i in range(26):
-        if mask & (1 << i):
-            root = f'{chr(65 + i)}:\\'
-            if ctypes.windll.kernel32.GetDriveTypeW(ctypes.c_wchar_p(root)) == 3:   # DRIVE_FIXED
-                out.append(Path(root))
     return out
 
 
@@ -140,15 +129,8 @@ def disk_name(path):
 
 
 def candidate_disks(extra=()):
-    """Places a library could go, one per disk: the home folder's disk first, then other fixed drives or mounted volumes."""
-    places = [Path.home(), *map(Path, extra)]
-    if sys.platform == 'win32':
-        places += _windows_drives()
-    elif sys.platform == 'darwin':
-        try:
-            places += [p for p in Path('/Volumes').iterdir() if p.is_dir() and not p.is_symlink() and os.access(p, os.W_OK)]
-        except OSError:
-            pass
+    """Disk capacity for app-owned or explicitly selected paths only."""
+    places = list(map(Path, extra))
     seen, out = set(), []
     for p in places:
         try:

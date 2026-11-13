@@ -27,8 +27,7 @@ class Lookup(unittest.TestCase):
         self.home.mkdir()
         env = {k: v for k, v in os.environ.items() if k not in ('LASTBOOK_DATA', 'APPDATA', 'LOCALAPPDATA', 'USERPROFILE')}
         env['HOME'] = env['USERPROFILE'] = str(self.home)   # Path.home(): HOME on a Mac, USERPROFILE on Windows
-        patches = [mock.patch.dict(os.environ, env, clear=True), mock.patch.object(main, 'beside', lambda: self.tmp / 'app' / 'LastbookData'),
-                   mock.patch.object(main.sys, 'platform', 'darwin')]
+        patches = [mock.patch.dict(os.environ, env, clear=True), mock.patch.object(main.sys, 'platform', 'darwin')]
         for p in patches:
             p.start()
             self.addCleanup(p.stop)
@@ -48,30 +47,39 @@ class Lookup(unittest.TestCase):
         self.assertIsNone(main.data_folder(None))
 
     def test_order(self):
-        app_data = library(self.home / 'Library' / 'Application Support' / 'Lastbook' / 'LastbookData')
-        one_down_home = library(self.home / 'Lastbook-Small' / 'LastbookData')
-        in_home = library(self.home / 'LastbookData')
-        one_down = library(self.home / 'Downloads' / 'Lastbook-Small' / 'LastbookData')
-        downloads = library(self.home / 'Downloads' / 'LastbookData')
-        docs_down = library(self.home / 'Documents' / 'Lastbook-Medium' / 'LastbookData')
-        documents = library(self.home / 'Documents' / 'LastbookData')
-        by_app = library(self.tmp / 'app' / 'LastbookData')
-        chosen = library(self.tmp / 'elsewhere' / 'Mine')
+        app_data = library(main.default_parent() / 'LastbookData')
+        chosen = library(self.home / 'Documents' / 'Mine')
         main.remember(chosen)
-        order = [chosen, by_app, downloads, one_down, documents, docs_down, in_home, one_down_home, app_data]
-        for want in order:
-            self.assertEqual(main.data_folder(None), want)
-            shutil.rmtree(want)
-        self.assertIsNone(main.data_folder(None))
+        self.assertEqual(main.data_folder(None), chosen)
+        shutil.rmtree(chosen)
+        self.assertEqual(main.data_folder(None), app_data)
 
-    def test_extract_all_one_down(self):
-        found = library(self.home / 'Downloads' / 'Lastbook-Small' / 'LastbookData')
-        self.assertEqual(main.data_folder(None), found)
+    def test_fresh_start_does_not_probe_personal_folders(self):
+        for name in ('Downloads', 'Documents', 'Desktop'):
+            library(self.home / name / 'LastbookData')
+        original_stat, original_iterdir, original_open = Path.stat, Path.iterdir, Path.open
+        protected = [self.home / name for name in ('Downloads', 'Documents', 'Desktop')]
 
-    def test_hidden_and_two_down_skipped(self):
-        library(self.home / 'Downloads' / '.hidden' / 'LastbookData')
-        library(self.home / 'Downloads' / 'a' / 'b' / 'LastbookData')
-        self.assertIsNone(main.data_folder(None))
+        def guard(path):
+            self.assertFalse(any(path == root or root in path.parents for root in protected), str(path))
+
+        def stat(path, *args, **kwargs):
+            guard(path)
+            return original_stat(path, *args, **kwargs)
+
+        def iterdir(path):
+            guard(path)
+            return original_iterdir(path)
+
+        def read(path, *args, **kwargs):
+            guard(path)
+            return original_open(path, *args, **kwargs)
+
+        with mock.patch.object(Path, 'stat', stat), mock.patch.object(Path, 'iterdir', iterdir), mock.patch.object(Path, 'open', read):
+            self.assertIsNone(main.data_folder(None))
+            self.assertEqual(main.libraries_here(), [])
+            with mock.patch.object(sys, 'argv', ['Lastbook']), mock.patch.object(main, 'run_setup', return_value=7):
+                self.assertEqual(main.main(), 7)
 
     def test_named_folder_wins(self):
         library(self.home / 'Downloads' / 'LastbookData')
@@ -81,11 +89,12 @@ class Lookup(unittest.TestCase):
             self.assertEqual(main.data_folder(None), given)
 
     def test_not_writable_skipped(self):
-        locked = library(self.home / 'Downloads' / 'LastbookData')
+        locked = library(self.tmp / 'locked' / 'LastbookData')
+        main.remember(locked)
         locked.chmod(stat.S_IRUSR | stat.S_IXUSR)
         if os.access(locked, os.W_OK):
             self.skipTest('running as a user who can write anywhere')
-        found = library(self.home / 'Documents' / 'LastbookData')
+        found = library(main.default_parent() / 'LastbookData')
         self.assertEqual(main.data_folder(None), found)
         self.assertIn('cannot save', main.check(locked)[1])
 
@@ -103,7 +112,7 @@ class Lookup(unittest.TestCase):
         main.remember(gone)
         self.assertEqual(json.loads(self.settings().read_text())['library'], str(gone))
         shutil.rmtree(gone)
-        found = library(self.home / 'Downloads' / 'LastbookData')
+        found = library(main.default_parent() / 'LastbookData')
         self.assertEqual(main.data_folder(None), found)
         shutil.rmtree(found)
         self.assertIsNone(main.data_folder(None))
@@ -111,7 +120,7 @@ class Lookup(unittest.TestCase):
     def test_bad_settings_ignored(self):
         self.settings().parent.mkdir(parents=True)
         self.settings().write_text('not json')
-        found = library(self.home / 'Downloads' / 'LastbookData')
+        found = library(main.default_parent() / 'LastbookData')
         self.assertEqual(main.data_folder(None), found)
 
     def test_ask_until_good_then_remember(self):
@@ -144,16 +153,119 @@ class Lookup(unittest.TestCase):
                 self.assertEqual(main.main(), 7)       # no library: the window opens on setup (engine/setup/)
         self.assertFalse(self.settings().exists())
 
+    def test_windows_default_fits(self):
+        """A long Windows user name made the default too deep for the library's longest file (1.1.4, Windows)."""
+        from engine.setup import api as setup_api, install
+        deep = lambda t, windows=None: len(str(t)) + 191 > 259
+        long_local = Path('C:/Users/a-much-longer-windows-user-name/AppData/Local/Lastbook')
+        with mock.patch.object(main.sys, 'platform', 'win32'), mock.patch.object(main, 'app_folders', lambda: (long_local, long_local)), \
+                mock.patch.dict(os.environ, {'SystemDrive': 'C:'}), mock.patch.object(setup_api, 'path_too_deep', deep):
+            with mock.patch.object(install, 'private_folder', lambda p: True):
+                folder, why = main.default_choice()
+                self.assertEqual(folder, Path('C:\\') / 'Lastbook')
+                self.assertIn('your user folder’s path is too long', why)
+            with mock.patch.object(install, 'private_folder', lambda p: False):     # cannot make it: the person chooses
+                self.assertEqual(main.default_choice(), (long_local, None))
+        short_local = Path('C:/Users/al/AppData/Local/Lastbook')
+        with mock.patch.object(main.sys, 'platform', 'win32'), mock.patch.object(main, 'app_folders', lambda: (short_local, short_local)), \
+                mock.patch.object(setup_api, 'path_too_deep', deep):
+            self.assertEqual(main.default_choice(), (short_local, None))
+
     def test_windows_places(self):
         with mock.patch.object(main.sys, 'platform', 'win32'), mock.patch.dict(os.environ, {'APPDATA': str(self.tmp / 'Roaming'), 'LOCALAPPDATA': str(self.tmp / 'Local')}):
             self.assertEqual(main.app_folders(), (self.tmp / 'Roaming' / 'Lastbook', self.tmp / 'Local' / 'Lastbook'))
-            with mock.patch.object(main, 'home_places', lambda: [self.home / 'Downloads', self.home / 'Documents', self.home]):
-                local = library(self.tmp / 'Local' / 'Lastbook' / 'LastbookData')
-                self.assertEqual(main.data_folder(None), local)
-                chosen = library(self.tmp / 'D' / 'LastbookData')
-                main.remember(chosen)
-                self.assertTrue((self.tmp / 'Roaming' / 'Lastbook' / 'settings.json').is_file())
-                self.assertEqual(main.data_folder(None), chosen)
+            self.assertEqual(main.default_parent(), self.tmp / 'Local' / 'Lastbook')
+            local = library(main.default_parent() / 'LastbookData')
+            self.assertEqual(main.data_folder(None), local)
+            chosen = library(self.tmp / 'D' / 'LastbookData')
+            main.remember(chosen)
+            self.assertTrue((self.tmp / 'Roaming' / 'Lastbook' / 'settings.json').is_file())
+            self.assertEqual(main.data_folder(None), chosen)
+
+
+    def test_mac_file_picker_starts_in_app_storage(self):
+        from types import SimpleNamespace
+        panel = mock.Mock()
+        panel.runModal.return_value = 1
+        panel.URL.return_value.path.return_value = str(self.tmp / 'model.gguf')
+        appkit = SimpleNamespace(NSOpenPanel=SimpleNamespace(openPanel=lambda: panel), NSModalResponseOK=1,
+                                 NSURL=SimpleNamespace(fileURLWithPath_=lambda p: p))
+        helper = SimpleNamespace(AppHelper=SimpleNamespace(callAfter=lambda action: action()))
+        with mock.patch.dict(sys.modules, {'AppKit': appkit, 'PyObjCTools': helper}):
+            self.assertEqual(main.pick_folder(files=True), str(self.tmp / 'model.gguf'))
+        panel.setCanChooseFiles_.assert_called_once_with(True)
+        panel.setCanChooseDirectories_.assert_called_once_with(False)
+        panel.setDirectoryURL_.assert_called_once_with(str(main.app_folders()[1]))
+
+    def test_windows_file_picker_starts_in_app_storage(self):
+        from types import SimpleNamespace
+        picker = mock.Mock(return_value=str(self.tmp / 'model.gguf'))
+        with mock.patch.object(sys, 'platform', 'win32'), \
+                mock.patch.dict(sys.modules, {'shell_windows': SimpleNamespace(pick_folder=picker)}):
+            self.assertEqual(main.pick_folder(files=True), str(self.tmp / 'model.gguf'))
+            picker.assert_called_once_with('Choose a library zip or model file', main.app_folders()[1], files=True)
+
+    def test_model_discovery_stays_inside_selected_library(self):
+        import llm_local
+        data = self.home / 'Downloads' / 'LastbookData'
+        (data / 'models').mkdir(parents=True)
+        outside = self.home / 'Downloads' / llm_local.FILE
+        outside.write_bytes(b'not selected')
+        original_stat = Path.stat
+
+        def stat(path, *args, **kwargs):
+            if path == data or data in path.parents:
+                return original_stat(path, *args, **kwargs)
+            self.assertFalse(any(path == self.home / name or self.home / name in path.parents
+                                 for name in ('Downloads', 'Documents', 'Desktop')), str(path))
+            return original_stat(path, *args, **kwargs)
+
+        with mock.patch.object(llm_local.paths, 'DATA', data), \
+                mock.patch.dict(os.environ, {'LASTBOOK_MODEL_DIR': ''}), \
+                mock.patch.object(llm_local, '_load', return_value={}), \
+                mock.patch.object(Path, 'stat', stat):
+            self.assertEqual(llm_local.places(), [data / 'models', data])
+            local = llm_local.Local()
+            local.runner = self.tmp / 'runner'
+            local.discover()
+            self.assertEqual(local.state, 'absent')
+
+    def test_explicit_model_directory_is_kept(self):
+        import llm_local
+        chosen = self.home / 'Documents' / 'Models'
+        with mock.patch.dict(os.environ, {'LASTBOOK_MODEL_DIR': str(chosen)}):
+            self.assertEqual(llm_local.places()[0], chosen)
+
+
+class SetupRelaunch(unittest.TestCase):
+    def test_relaunch_discards_previous_library_overrides(self):
+        def restarted(executable, argv):
+            self.assertEqual(argv, [sys.executable])
+            self.assertNotIn('LASTBOOK_DATA', os.environ)
+
+        with mock.patch.object(main, 'FROZEN', True), \
+                mock.patch.object(sys, 'platform', 'darwin'), \
+                mock.patch.object(sys, 'argv', ['Lastbook', '--data', '/old/library', '--ask']), \
+                mock.patch.dict(os.environ, {'LASTBOOK_DATA': '/old/library'}), \
+                mock.patch.object(os, 'execv', side_effect=restarted) as restart:
+            main.relaunch()
+            restart.assert_called_once()
+
+    def test_windows_relaunch_discards_previous_library_overrides(self):
+        def restarted(argv, **kwargs):
+            self.assertEqual(argv, [sys.executable])
+            self.assertNotIn('LASTBOOK_DATA', os.environ)
+
+        with mock.patch.object(main, 'FROZEN', True), \
+                mock.patch.object(sys, 'platform', 'win32'), \
+                mock.patch.object(sys, 'argv', ['Lastbook', '--data=/old/library']), \
+                mock.patch.dict(os.environ, {'LASTBOOK_DATA': '/old/library'}), \
+                mock.patch('subprocess.Popen', side_effect=restarted) as restart, \
+                mock.patch.object(os, '_exit', side_effect=SystemExit) as stop:
+            with self.assertRaises(SystemExit):
+                main.relaunch()
+            restart.assert_called_once()
+            stop.assert_called_once_with(0)
 
 
 if __name__ == '__main__':

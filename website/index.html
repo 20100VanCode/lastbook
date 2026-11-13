@@ -10,7 +10,9 @@
 <meta property="og:site_name" content="Lastbook">
 <meta property="og:title" content="Lastbook">
 <meta property="og:description" content="A free library for when the internet or power is gone.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" as="font" type="font/woff2" href="fonts/AtkinsonHyperlegibleNext-Regular.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="fonts/AtkinsonHyperlegibleNext-SemiBold.woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
@@ -121,12 +123,12 @@
           <label class="row">
             <input type="radio" name="size" value="all">
             <span class="rowbody">
-              <span class="rowhead"><span class="name">All</span> <span class="size">About 428 GB</span></span>
-              <span class="line">Everything, with maps for the whole US. No aerial photos. Like 86,000 phone photos.</span>
+              <span class="rowhead"><span class="name">All</span> <span class="size">About 388 GB</span></span>
+              <span class="line">Everything, with maps for the whole US. No aerial photos. Like 77,600 phone photos.</span>
             </span>
           </label>
         </div>
-        <p class="small below">Available now: Small and Medium. All and extra video packs are planned.</p>
+        <p class="small below">Available now: Small, Medium and All. Separate extra video packs are planned.</p>
         <p class="small below">In the Small download: 148 PDF guides, 45 saved web guides, 41 videos, the MDWiki medical encyclopedia and Appropedia.</p>
         <p class="small below">Not clinically reviewed. Lastbook doesn't replace trained care. In an emergency, call 911 if you can.</p>
       </fieldset>
@@ -176,7 +178,7 @@
     <div class="stick">
       <div class="total">
         <div class="bar" aria-hidden="true"><i class="fill" id="fill"></i></div>
-        <div class="barlabels small" aria-hidden="true"><span>0</span><span id="barmax">All: about 428 GB</span></div>
+        <div class="barlabels small" aria-hidden="true"><span>0</span><span id="barmax">All: about 388 GB</span></div>
         <p id="total">About 6 GB + a map</p>
         <p class="small note" id="totalnote">Like 1,200 phone photos. An estimate.</p>
       </div>
@@ -199,6 +201,10 @@
           <div id="library-download-medium" hidden>
             <a class="btn" href="https://downloads.lastbook.org/Lastbook-Medium.zip">Download Medium library · 67.5 GB</a>
             <p class="fine">Allow about 135 GB of free space to download and unzip the library. It includes a detailed map of California; other states' maps are planned.</p>
+          </div>
+          <div id="library-download-all" hidden>
+            <a class="btn" href="https://downloads.lastbook.org/Lastbook-All.zip">Download All library · 387.9 GB</a>
+            <p class="fine">Allow about 780 GB of free space to download and unzip the library.</p>
           </div>
           <p class="fine" id="library-unavailable" role="status" hidden></p>
           <p class="also"><a href="https://downloads.lastbook.org/download.html">First-time opening instructions</a></p>
@@ -229,7 +235,7 @@
     <h2>How to open Lastbook</h2>
     <ol>
       <li>Download and install the app for your Mac or Windows computer.</li>
-      <li>Download a library (Small or Medium) separately. Unzip it in Downloads, then open Lastbook. Choose the LastbookData folder if asked.</li>
+      <li>Download a library (Small, Medium or All) separately. Unzip it in Downloads, then open Lastbook. Choose the LastbookData folder if asked.</li>
       <li>Read, search and watch with no internet. Local AI is an optional separate download; app integration is in progress.</li>
     </ol>
   </section>

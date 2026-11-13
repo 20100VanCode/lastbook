@@ -19,13 +19,14 @@ import json
 import os
 import socket
 import ssl
+import sys
 import threading
 import time
 import urllib.parse
+from pathlib import Path
 
 ALLOWED_HOSTS = frozenset({
     'downloads.lastbook.org',
-    'pub-28c3cc06eb774c5cac057e6c9343efbd.r2.dev',   # the bucket's r2.dev address, until downloads.lastbook.org is live
     'huggingface.co',
     'cas-bridge.xethub.hf.co',
 })
@@ -50,9 +51,9 @@ class Stopped(Exception):
 class Failed(Exception):
     """A plain sentence for the person, and a code from docs/SETUP-API.md."""
 
-    def __init__(self, code, message):
+    def __init__(self, code, message, **extra):
         super().__init__(message)
-        self.code, self.message = code, message
+        self.code, self.message, self.extra = code, message, extra
 
 
 class BadChecksum(Failed):
@@ -85,17 +86,24 @@ def url_allowed(url, allowed=None):
     return host_allowed(u.hostname, allowed)
 
 
+def roots_path():
+    """engine/setup/roots.pem, beside this file (in the packaged app, where the packaging puts it: engine/setup/ under _MEIPASS)."""
+    here = Path(__file__).with_name('roots.pem')
+    if not here.is_file() and getattr(sys, 'frozen', False):
+        here = Path(getattr(sys, '_MEIPASS', '')) / 'engine' / 'setup' / 'roots.pem'
+    return here
+
+
 def tls_context():
-    ctx = ssl.create_default_context()
-    if not ctx.cert_store_stats().get('x509_ca'):     # a Python whose OpenSSL looks somewhere empty: try the system's own list
-        for f in ('/etc/ssl/cert.pem',):
-            if os.path.isfile(f):
-                ctx.load_verify_locations(f)
-        try:
-            import certifi
-            ctx.load_verify_locations(certifi.where())
-        except ImportError:
-            pass
+    """TLS 1.2 or later, hostname checked, and trust in the roots of roots.pem only: never the system's store (see
+    packaging/setup_roots.py for why and which). With the file missing, nothing is downloaded."""
+    roots = roots_path()
+    if not roots.is_file():
+        raise Failed('network', 'This copy of Lastbook is missing its list of trusted download servers, so it cannot download. '
+                                'Download Lastbook again.')
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)          # check_hostname on and CERT_REQUIRED; no default certificates loaded
+    ctx.minimum_version = ssl.TLSVersion.TLSv1_2
+    ctx.load_verify_locations(cafile=str(roots))
     return ctx
 
 
@@ -242,6 +250,7 @@ class Download:
         h, start = self._rehash(start) if start else (hashlib.sha256(), 0)
         etag = meta.get('etag')
         tries = 0
+        ignored_once = False
         while start < self.size:
             self.control.check()
             try:
@@ -253,13 +262,18 @@ class Download:
             except Failed:
                 raise
             except _Restart as r:
+                if r.whole and not ignored_once:      # one 200 to a Range can be a passing hiccup at the edge: ask once more first
+                    ignored_once = True
+                    print(f'setup: the server sent the whole of {os.path.basename(self.dest)} to a resume; asking again', flush=True)
+                    self.control.sleep(1)
+                    continue
                 print(f'setup: the file on the server changed or ignores Range; starting {os.path.basename(self.dest)} over', flush=True)
                 with open(self.part, 'r+b') as f:
                     f.truncate(0)
                 h, start, etag = hashlib.sha256(), 0, None
                 continue
             except ssl.SSLCertVerificationError:
-                raise Failed('network', 'Lastbook could not confirm it was talking to the real download server, so it stopped. '
+                raise Failed('network', 'Lastbook could not confirm it is talking to the download server, so it stopped. '
                                         'A network that intercepts secure connections (some offices, hotels) can cause this.')
             except (OSError, http.client.HTTPException, ValueError) as e:
                 if disk_full(e):
@@ -297,7 +311,7 @@ class Download:
                     raise _Restart(new_etag)
             elif r.status == 200:
                 if start:
-                    raise _Restart(new_etag)    # the server sent the whole file again: its copy changed, or it ignores Range
+                    raise _Restart(new_etag, whole=True)    # the server sent the whole file again: its copy changed, or it ignores Range
                 length = r.getheader('Content-Length')
                 if length is not None and length.isdigit() and int(length) != self.size:
                     raise BadChecksum(f'The file on the server is {int(length):,} bytes, not the {self.size:,} Lastbook expects.')
@@ -336,6 +350,6 @@ class Download:
 
 
 class _Restart(Exception):
-    def __init__(self, etag):
+    def __init__(self, etag, whole=False):
         super().__init__('restart')
-        self.etag = etag
+        self.etag, self.whole = etag, whole

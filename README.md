@@ -10,31 +10,66 @@ Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 > This repository is private for now. It will be opened later, under a licence that has not been chosen yet (see
 > [LICENSE](LICENSE)).
 
-## How it is built
+## Release status
 
-- **Offline.** After setup, the app needs no network. Its windows block all web loads, the assistant talks only to a
-  local program over pipes, and nothing is ever sent anywhere: no telemetry, no update check, no account.
-- **No port.** The desktop app opens no network port. The window and the engine talk through an in-memory bridge
+| Platform | Version | Status |
+|---|---|---|
+| macOS (Apple Silicon, macOS 14 or later) | 1.1.8 | Live on lastbook.org, signed |
+| Windows (64-bit, Windows 10 or later) | 1.1.8 | Built, waiting for Authenticode signing (Azure) before release |
+
+## What it does
+
+- **Guides first.** Short, curated guides for urgent needs (`content/topics/`), each pointing to real pages in the library
+  with page numbers, plus what curators looked for and did not find (`content/gaps.json`).
+- **The full library.** Manuals and PDFs (with a whole-PDF view), videos, and offline encyclopedias (ZIM files), with
+  keyword search everywhere and meaning-based search on Windows.
+- **Offline map.** A base map of the world and the US, and an optional detailed map of one US state: local streets,
+  buildings, terrain, crops, and water, help and resource points. Addresses in that state can be found offline. The person
+  picks the state; Lastbook never detects location.
+- **Optional local AI.** Ask questions in plain words and get answers that cite library pages, from a model that runs on
+  the computer itself (see "The local AI" below). Without it, Ask still finds the right pages.
+- **One-download setup.** On first run, setup recommends a library size (Small, Medium or All) for the computer's disk and
+  memory, downloads it with the AI and a state map if wanted, checks every file and installs it. A library already on the
+  computer (a folder or a pack zip) can be used instead of downloading.
+- **Check for updates, only when asked.** About has a Check for updates button (and the Mac menu has Lastbook > Check for
+  Updates…). It only says whether a newer version is on the website; nothing is downloaded or installed.
+
+## Privacy and network use
+
+- **No listening port.** The desktop app opens no network port. The window and the engine talk through an in-memory bridge
   (`app/bridge.py`): WKURLSchemeHandler on macOS (`app/shell_macos.py`), WebView2 `WebResourceRequested` on Windows
   (`app/shell_windows.py`). The local AI runner speaks JSON lines on standard input and output and opens no socket either.
-- **One way out.** First-run setup (`engine/setup/`) is the only code that may reach the internet, and only when the
-  person starts or resumes a download. It uses HTTPS to an allow-listed set of hosts and checks every file against the
-  SHA-256 in the manifest. See [docs/SETUP-API.md](docs/SETUP-API.md).
+- **Two uses of the network, both started by the person.** (1) Setup's downloader (`engine/setup/`), when the person
+  starts or resumes a download. (2) The update check (`engine/update.py`, `web/update.js`), when the person presses
+  the button. Both go through `engine/setup/download.py`, the only module that opens a connection: HTTPS on port 443 only,
+  to allow-listed hosts only (`downloads.lastbook.org` for packs, maps, the manifest and update information; Hugging Face's
+  download hosts for the AI model; the update check accepts `downloads.lastbook.org` alone), no proxy from the system, and a
+  redirect is followed only to another allowed host.
+- **Pinned trust.** The downloader trusts only the root certificates in `engine/setup/roots.pem` (11 roots from Mozilla's
+  bundle), never the system's trust store. The builds refuse to finish if those roots no longer cover the allowed hosts
+  (`packaging/check_tls_roots.py`).
+- **Checked files.** Every download is checked against the SHA-256 in the manifest before it is used. Zips are checked
+  for unsafe paths, links and sizes before anything is written.
+- **Nothing else.** The windows block all web loads, there is no telemetry, no account, and nothing runs on a timer or at
+  startup that reaches the network.
 - **A working library is never broken.** New data is unpacked beside the old one, checked, and then switched in with a
-  single rename.
+  single rename. A failure at any step leaves the old library as it was.
+
+The setup contract, including state maps, is in [docs/SETUP-API.md](docs/SETUP-API.md); the engine side is described in
+[engine/setup/README.md](engine/setup/README.md).
 
 ## What's where
 
 | Path | What it is |
 |---|---|
 | `app/` | The desktop app: entry point (`main.py`), the no-port bridge, the macOS and Windows shells, and tests (`app/tests/`). |
-| `engine/` | Paths and data-folder lookup, library access, saved pages, and first-run setup (`engine/setup/`). `engine/vendor-macos/` holds pypdfium2 for the Mac build. |
-| `server.py`, `assistant.py`, `retrieval.py`, `llm_local.py` | The engine: request handler, the assistant and its citation checks, keyword plus meaning-based search, and the optional local AI. |
-| `web/` | The interface, in plain HTML, CSS and JavaScript with no build step and nothing loaded from the web. `setup.*` is the first-run setup screen. |
+| `engine/` | Paths and data-folder lookup, library access, saved pages, offline address search (`address_search.py`), the update check (`update.py`) and first-run setup (`engine/setup/`). `engine/vendor-macos/` holds pypdfium2 for the Mac build. |
+| `server.py`, `assistant.py`, `retrieval.py`, `llm_local.py` | The engine: request handler, the assistant and its citation checks, keyword plus meaning-based search, and the local AI (model pins, fit check, runner control). |
+| `web/` | The interface, in plain HTML, CSS and JavaScript with no build step and nothing loaded from the web. `setup.*` is the setup screen, `update.js` the update check in About. |
 | `content/` | The curated guides (`topics/*.json`) and what curators looked for and did not find (`gaps.json`). Format: `content/SCHEMA.md`. |
-| `packaging/` | App builds (macOS and Windows), pack builder, release manifest, package scans, and `packaging/llm/` (the local AI runner). |
-| `derived/packs/pack-spec.json` | What goes into each download pack (Small, Medium, All and add-ons). Everything else under `derived/` is generated and not kept here. |
-| `tools/` | Builders for the offline map and place finder, plus curator helpers (`libq.py`, `validate_topics.py`). |
+| `packaging/` | App builds (macOS and Windows), the Windows installer and its front (`setup_stub/`), signing helper (`sign_windows.ps1`), icons (`icon/`), pack and state-map builders, release manifest, TLS roots tools, package scans, and `packaging/llm/` (the local AI runner). |
+| `derived/packs/pack-spec.json` | What goes into each download pack (Small, Medium, All and add-ons) and each state map. Everything else under `derived/` is generated and not kept here. |
+| `tools/` | Builders for the offline map, addresses and place finder, plus curator helpers (`libq.py`, `validate_topics.py`). |
 | `website/`, `website-next/` | The lastbook.org website: the current site and the next one, both static. |
 | `docs/` | The setup contract (`SETUP-API.md`) and notes on the library server version (`LIBRARY-SERVER.md`). |
 
@@ -61,44 +96,60 @@ LASTBOOK_DATA=/path/to/LastbookData python3 server.py          # then open http:
 ```
 
 See [docs/LIBRARY-SERVER.md](docs/LIBRARY-SERVER.md). It was written for the household library this project grew out of,
-so some of its paths and ports describe that setup.
+so some of its paths and ports describe that setup. The desktop app does not use this port.
 
 ## Build the apps
 
 The builds write into `derived/app-build/` and refuse to finish if the package scan finds something that must not ship:
-test code, a network call, a web address in our own pages, or a word from the private list (see below).
+test code, a network call outside setup's downloader, a web address in our own pages, or a word from the private list
+(see below). Both builds also run the TLS roots gate.
 
 **macOS (Apple Silicon, needs [uv](https://github.com/astral-sh/uv)):**
 
 ```bash
 bash packaging/llm/build_llm_macos.sh    # optional: the local AI runner, llama.cpp at a pinned tag, Metal
-bash packaging/build_app_macos.sh        # Lastbook.app, ad-hoc signed, not notarized
+bash packaging/build_app_macos.sh        # Lastbook.app
 ```
+
+The build uses CPython 3.11.18 exactly (earlier 3.11 releases lack the block on the compromised eMudhra CA keys). It makes
+an ad-hoc signed app. Release copies are then signed with the project's Developer ID in a separate release step; its keys
+and settings are not in this repository. The build reads the release manifest from a release folder under
+`derived/release/`, which is not in this repository either; see `packaging/release_manifest.py`.
 
 **Windows (64-bit, in Git Bash):**
 
 ```bash
 TOOLS='C:\path\to\tools' bash packaging/llm/build_llm_windows.sh                 # the runner: llama.cpp with Vulkan, CPU fallbacks
 PY=/c/path/to/python.exe OUT='C:\path\to\output' bash packaging/build_app_windows.sh
+PY=/c/path/to/python.exe DIST='C:\path\to\output\dist\Lastbook' OUT='C:\path\to\output' bash packaging/build_setup_windows.sh
 ```
 
-`PY` is CPython 3.12 with `packaging/requirements_app.txt` installed. The script header lists each tool it needs, with its
-version and checksum. The three WebView2 files come from the NuGet package `Microsoft.Web.WebView2` 1.0.3856.49 and are
-checked against the hashes in `build_app_windows.sh`. `packaging/build_setup_windows.sh` builds the installer.
+`PY` is CPython 3.14.10 or a later 3.14 (python.org's NuGet package) with `packaging/requirements_app.txt` installed. Each
+script header lists the tools it needs, with versions and checksums. The three WebView2 files come from the NuGet package
+`Microsoft.Web.WebView2` 1.0.3856.49 and are checked against the hashes in `build_app_windows.sh`. libzim is pinned to
+3.13.0 on Windows because Smart App Control refuses 3.13.1's `zim-9.dll`.
 
-The Mac build reads the release manifest from a release folder under `derived/release/`, which is not in this repository;
-see `packaging/release_manifest.py`.
+`build_setup_windows.sh` makes a per-user installer (no administrator prompt). Its front, `packaging/setup_stub/`, is a
+small C program with no C runtime that loads DLLs from System32 only, so a DLL planted in Downloads cannot run. To sign,
+`packaging/sign_windows.ps1` signs the app folder, the uninstaller and the installer with Microsoft's signing tool and the
+signer's own Azure session; no credentials are kept here.
 
-## Packs and the local AI
+## Packs, state maps and the local AI
 
 - **Packs** are data folders: a library plus its catalog, search index and map. `packaging/build_packs.py` builds them
   from a frozen snapshot of a full library according to `derived/packs/pack-spec.json`, and `packaging/verify_packs.py` and
   `packaging/scan_pack.py` check them. The published packs are on `downloads.lastbook.org`. Setup downloads the one the
-  person picks and checks it against `setup/manifest-v1.json`, which `packaging/release_manifest.py` writes at build time.
+  person picks and checks it against `setup/manifest-v1.json`, which `packaging/release_manifest.py` writes at build time
+  (a newer copy is fetched from `downloads.lastbook.org` when setup opens and used only if it validates).
+- **State maps** are one US state's detailed map set, built by `packaging/build_packs.py map <ST>` and published by
+  `packaging/state_maps.py`, with per-state address indexes from `packaging/address_indexes.py`. A state map replaces the
+  library's map set; it never merges with it. Medium already holds California and All the whole US.
 - **The local AI** is optional: Gemma 4 26B A4B (Unsloth's `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`, about 17 GB). The file
-  name, size, SHA-256 and Hugging Face revision are pinned in `llm_local.py`. Setup downloads it directly from Hugging
-  Face, and only on computers where llama.cpp's own measurement says it fits. The model is never part of the app or of
-  this repository. The runner is our own small program (`packaging/llm/lastbook_llm.cpp`) on llama.cpp.
+  name, size, SHA-256 and Hugging Face revision are pinned in `llm_local.py`. Setup offers it only where the measured fit
+  says it fits (about 18 GB of memory for model and context, plus a reserve) and says why in plain words when it does not.
+  Setup downloads it directly from Hugging Face. The model is never part of the app or of this repository. The runner,
+  `lastbook-llm`, is our own small program (`packaging/llm/lastbook_llm.cpp`) on llama.cpp tag b12032: Metal on a Mac,
+  Vulkan with CPU fallbacks on Windows.
 - **Meaning-based search** uses BAAI's bge-small-en-v1.5 (ONNX) through onnxruntime, on Windows only; the Mac build uses
   keyword search.
 
@@ -106,22 +157,26 @@ see `packaging/release_manifest.py`.
 
 - **The library** (`library-data/`): hundreds of gigabytes of third-party manuals, videos and encyclopedias, each under
   its own terms. It is distributed as packs, with a Sources and permissions page in each pack.
-- **Models** (GGUF, ONNX): large, and published by their makers. Setup fetches them, and the checksums and pins are here.
+- **Models and maps** (GGUF, ONNX, map data): large, and published by their makers or built from public data. Setup
+  fetches them, and the checksums and pins are here.
 - **Generated data** (`derived/`, builds, installers): everything there can be rebuilt with the scripts here.
+- **Release and signing material**: signing keys and certificates, notarization and Azure settings, deploy settings and
+  the release folders.
 - **Private data**: the household's own home area (`web/home-area.json`), the private word lists the scans use, machine
-  and user names, keys and deploy settings. The guides here are already in their shipped, general wording. To keep your
-  own home-area words out of a build, put them in a local copy of `packaging/ship_edits.json` (`forbidden`) and never
-  commit it.
+  and user names, keys and internal security-audit notes. The guides here are already in their shipped, general wording.
+  To keep your own home-area words out of a build, put them in a local copy of `packaging/ship_edits.json` (`forbidden`)
+  and never commit it.
 
 ## Tests
 
 ```bash
-python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships
+python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships app.tests.test_update app.tests.test_address_search
 ```
 
-These run without a library. `packaging/test_pack_tools.py SAMPLE WORK` checks the pack tools against a pack sample
-(`build_packs.py build <pack> --sample N`). The `mac_*` and `win_*` scripts in `app/tests/` drive a real build against a real data
-folder, and their paths are placeholders (`/path/to/lastbook`, `C:\Users\you\app-test`) to set for your own machine.
+`test_bridge` needs a data folder (`LASTBOOK_DATA`); the others run without a library. `packaging/test_pack_tools.py SAMPLE
+WORK` checks the pack tools against a pack sample (`build_packs.py build <pack> --sample N`). The `mac_*` and `win_*`
+scripts in `app/tests/` drive a real build against a real data folder, and their paths are placeholders
+(`/path/to/lastbook`, `C:\Users\you\app-test`) to set for your own machine.
 
 ## Contributing and licence
 

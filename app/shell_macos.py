@@ -669,6 +669,9 @@ class _Go(Foundation.NSObject):
     def help_(self, item):
         self.view.evaluateJavaScript_completionHandler_("location.hash='#/about'", None)
 
+    def checkUpdates_(self, item):
+        self.view.evaluateJavaScript_completionHandler_("window.LBUpdate && LBUpdate.fromMenu()", None)    # web/update.js: About, then one check
+
     @objc.python_method
     def _side_title(self, shown):
         if self.side_item is not None:
@@ -695,7 +698,7 @@ class _Go(Foundation.NSObject):
         self.view.evaluateJavaScript_completionHandler_("document.dispatchEvent(new KeyboardEvent('keydown',{key:'f',code:'KeyF',metaKey:true}))", None)
 
 
-GO = [('Home', '#/'), ('Ask', '#/ask'), ('Videos', '#/videos'), ('Map', '#/map'), ('Library', '#/library')]
+GO = [('Videos', '#/videos'), ('Map', '#/map'), ('Chat', '#/ask')]
 CTRL_CMD = AppKit.NSEventModifierFlagControl | AppKit.NSEventModifierFlagCommand
 OPT_CMD = AppKit.NSEventModifierFlagOption | AppKit.NSEventModifierFlagCommand
 
@@ -709,7 +712,7 @@ def _menu(title, items, target=None):
         item = menu.addItemWithTitle_action_keyEquivalent_(name, action, key)
         if mods:
             item.setKeyEquivalentModifierMask_(mods[0])
-        if target is not None and action in ('go:', 'toggleSidebar:', 'find:', 'help:'):
+        if target is not None and action in ('go:', 'toggleSidebar:', 'find:', 'help:', 'checkUpdates:'):
             item.setTarget_(target)
     holder = AppKit.NSMenuItem.alloc().init()
     holder.setSubmenu_(menu)
@@ -752,9 +755,9 @@ def install_menu(app, go=None):
     window = _menu('Window', [('Minimize', 'performMiniaturize:', 'm'), ('Zoom', 'performZoom:', ''), (None, None, None), ('Close', 'performClose:', 'w'),
                               (None, None, None), ('Bring All to Front', 'arrangeInFront:', '')])
     helps = _menu('Help', [('Lastbook Help', 'help:', '?')], go)
-    for holder in (_menu('Lastbook', [('About Lastbook', 'orderFrontStandardAboutPanel:', ''), (None, None, None),
+    for holder in (_menu('Lastbook', [('About Lastbook', 'orderFrontStandardAboutPanel:', ''), ('Check for Updates\u2026', 'checkUpdates:', ''), (None, None, None),
                                       ('Hide Lastbook', 'hide:', 'h'), ('Hide Others', 'hideOtherApplications:', 'h', OPT_CMD), ('Show All', 'unhideAllApplications:', ''),
-                                      (None, None, None), ('Quit Lastbook', 'terminate:', 'q')]),
+                                      (None, None, None), ('Quit Lastbook', 'terminate:', 'q')], go),
                    edit,
                    view,
                    _menu('Go', [('Back', 'goBack:', '['), ('Forward', 'goForward:', ']'), (None, None, None)] + [(name, 'go:', str(i + 1)) for i, (name, _) in enumerate(GO)], go),

@@ -26,7 +26,7 @@ import llm_local                                   # noqa: E402  (constants only
 from engine.setup import download, manifest        # noqa: E402
 
 MEASURED_MEMORY = 18_160_150_464 + 867_233_792     # Mac Studio M3 Ultra, 12 Nov 2026, --ctx 16384: device_bytes + host_bytes
-BASE = 'https://downloads.lastbook.org'     # live since 12 Nov 2026 (session download-domain); the r2.dev address stays allowed
+BASE = 'https://downloads.lastbook.org'     # live since 12 Nov 2026; packs and maps are accepted from this host only
 SMALL_SUMMARY = 'The essentials: first aid, water, food, shelter and repair, with the maps of this area.'
 
 
@@ -76,16 +76,23 @@ def main():
     packs = list(src.get('packs') or [])
     if a.small_from and not any(p.get('id') == 'small' for p in packs):
         packs.insert(0, small_from(a.small_from))
+    for p in packs:      # the detailed map a pack already holds ("CA", "us"), from the pack as built, when its entry does not say
+        if 'map' not in p:
+            try:
+                p['map'] = json.loads((ROOT / 'derived' / 'packs' / p['id'] / 'pack.json').read_text(encoding='utf-8')).get('map')
+            except (OSError, ValueError):
+                pass
     if not packs:
         sys.exit(f'no packs: {a.packs} is missing or empty (publish-packs writes it); --small-from builds Small alone')
-    out = {'version': 1, 'published': src.get('published') or time.strftime('%Y-%m-%d'), 'packs': packs,
+    out = {'version': 1, 'published': src.get('published') or time.strftime('%Y-%m-%d'), 'packs': packs, 'maps': list(src.get('maps') or []),
+           'address_indexes': list(src.get('address_indexes') or []),
            'models': [model_entry(measure(a.measure) if a.measure else MEASURED_MEMORY)]}
     if manifest.validate(out) is None:
         bad = [f.get('url') for p in packs for f in p.get('files', []) if not download.url_allowed(f.get('url'))]
         sys.exit('the manifest does not pass engine/setup/manifest.validate' + (f'; addresses not allowed: {bad}' if bad else ''))
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(out, indent=1) + '\n', encoding='utf-8')
-    print(f'{a.out}: {len(packs)} packs ({", ".join(p["id"] + ("" if p.get("available") else " later") for p in packs)}), 1 model')
+    print(f'{a.out}: {len(out["maps"])} maps, {len(packs)} packs ({", ".join(p["id"] + ("" if p.get("available") else " later") for p in packs)}), 1 model')
 
 
 if __name__ == '__main__':

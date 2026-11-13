@@ -10,7 +10,8 @@ set -euo pipefail
 HERE="$(dirname "$(/bin/realpath "$0")")"
 ROOT="$(dirname "$HERE")"
 BUILD="$ROOT/derived/app-build"
-VENV="$BUILD/mac-venv"
+PYVER=3.11.18   # 3.11.18 or later: earlier 3.11 releases lack the block on the compromised eMudhra CA keys (security audit, 12 Nov 2026)
+VENV="$BUILD/mac-venv-$PYVER"
 OUT="$BUILD/mac/$(date +%Y%m%d-%H%M%S)"
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPYCACHEPREFIX="$BUILD/mac/pycache"
@@ -20,11 +21,14 @@ if [ "$(uname -m)" != arm64 ]; then
   exit 1
 fi
 mkdir -p "$OUT"
-[ -x "$VENV/bin/python" ] || uv venv --python 3.11 "$VENV"
+[ -x "$VENV/bin/python" ] || uv venv --python "$PYVER" "$VENV"
+"$VENV/bin/python" -c "import sys; v = '.'.join(map(str, sys.version_info[:3])); sys.exit(None if v == '$PYVER' else f'build Python is {v}, not $PYVER')"
 uv pip install --python "$VENV/bin/python" -r "$HERE/requirements_macos.txt"
 "$VENV/bin/python" -I -B "$HERE/ship_app_files.py" "$OUT/ship"   # web/ and content/ as they ship: see ship_edits.json
 # What setup can install (docs/SETUP-API.md): the packs publish-packs has verified, with Small from the 1.0.0 release, and the model
 "$VENV/bin/python" -I -B "$HERE/release_manifest.py" --small-from "$ROOT/derived/release/1.0.0-20261104-1507" --out "$OUT/ship/setup/manifest-v1.json"
+# Release gate: setup's downloader verifies every download host through engine/setup/roots.pem only (no system trust store)
+"$VENV/bin/python" -I -B "$HERE/check_tls_roots.py" || { echo "TLS roots gate failed: refresh engine/setup/roots.pem (packaging/setup_roots.py)" >&2; exit 1; }
 export LASTBOOK_SHIP="$OUT/ship"
 "$VENV/bin/python" -m PyInstaller --noconfirm --distpath "$OUT/dist" --workpath "$OUT/work" "$HERE/lastbook_macos.spec" 2>&1 | tee "$OUT/build.log"
 BUNDLE="$OUT/dist/Lastbook.app"

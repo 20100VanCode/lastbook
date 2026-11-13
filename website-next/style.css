@@ -49,6 +49,7 @@ p{margin:0 0 1em}
 .bar-over::after{display:none}
 .bar-in{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
 .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;background:none;padding:0;font:900 1.5rem/1 var(--display);letter-spacing:-.01em;margin-right:auto}
+.brand:hover{background:none}
 .brand img{width:36px;height:36px}
 .nav{display:flex;gap:26px;flex-wrap:wrap}
 .nav a{color:var(--ink);text-decoration:none;font:800 1.0625rem/1 var(--body);padding:10px 2px 12px;background:none}
@@ -491,3 +492,5 @@ p{margin:0 0 1em}
 .community-actions .github-button{background:#24292f;border-radius:8px;padding:16px 30px;box-shadow:none;min-width:190px;min-height:62px}.community-actions .github-button img{width:110px;height:32px;object-fit:contain}.community-actions .github-button:hover{background:#32383f}
 
 .essentials .feature-shots .real-ai-shot{aspect-ratio:598/584;object-fit:contain;background:#222;padding:10px}
+
+.buying-guide-cta{text-align:center}

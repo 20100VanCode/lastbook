@@ -33,7 +33,7 @@ if __name__ == '__main__':  # --data must be known before the paths below are wo
 
 import engine.paths as lastbook_paths  # noqa: E402  (data folder and program folder can differ in the packaged app)
 from engine.paths import ro_uri  # noqa: E402
-from engine import saved_pages  # noqa: E402
+from engine import saved_pages, address_search  # noqa: E402
 from engine.setup import api as setup_api  # noqa: E402  (the one module that may download: only when the person asks)
 HERE = lastbook_paths.DATA  # holds derived/
 APP = lastbook_paths.APP  # holds web/ and content/
@@ -1393,6 +1393,8 @@ def water_places(q, limit=10, near=None):
 
 
 def places(q, limit=20, near=None):
+    if address_search.is_address_query(q):
+        return address_search.find_addresses(q, HERE / 'derived' / 'geo', limit=min(limit, 8), near=near)
     if not PLACEDB.exists():
         return []
     db = sqlite3.connect(ro_uri(PLACEDB), uri=True)
@@ -1885,6 +1887,9 @@ class Handler(library.Handler):
         rpath = urllib.parse.urlsplit(self.path).path
         if rpath.startswith('/api/setup/'):  # first-run setup and Library and local AI: engine/setup/api.py, this computer only
             return setup_api.handle(self, 'POST', rpath)
+        if rpath.startswith('/api/update/'):  # Check for updates, when the person asks: engine/update.py, this computer only
+            from engine import update
+            return update.handle(self, 'POST', rpath)
         if rpath.startswith('/api/tool/'):  # the assistant's read-only tools, for other local DeepSeek clients
             name = rpath[10:]
             if name not in {t['function']['name'] for t in assistant.TOOLS}:
@@ -1973,6 +1978,9 @@ class Handler(library.Handler):
             qs = {k: v[0] for k, v in urllib.parse.parse_qs(url.query).items()}
             if path.startswith('/api/setup/'):
                 return setup_api.handle(self, 'GET', path)
+            if path.startswith('/api/update/'):
+                from engine import update
+                return update.handle(self, 'GET', path)
             if path in ('/', '/index.html'):
                 return self.send_static(WEB / 'index.html')
             if path.startswith('/ui/'):

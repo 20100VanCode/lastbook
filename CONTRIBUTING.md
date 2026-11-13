@@ -16,7 +16,7 @@ The README explains the layout and how to build the apps.
 ## Test
 
 ```bash
-python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships
+python3 -B -m unittest app.tests.test_bridge app.tests.test_setup app.tests.test_data_folder app.tests.test_what_ships app.tests.test_update app.tests.test_address_search
 ```
 
 Run these before you open a pull request. If you change the packaging, also run the build for your platform: it ends
@@ -25,10 +25,12 @@ against a library, so every id, page and encyclopedia path it cites still exists
 
 ## Rules that keep Lastbook what it is
 
-**No network.** The app opens no port and makes no connection, with one exception: the downloader in `engine/setup/`,
-which runs only when the person starts a download and only to the hosts in `ALLOWED_HOSTS`.
+**No network.** The app opens no port and makes no connection, with two exceptions, both started by the person and both
+through `engine/setup/download.py` to the hosts in `ALLOWED_HOSTS` only: setup's downloads, and the Check for updates
+button (`engine/update.py`, `downloads.lastbook.org` only).
 
-- No telemetry, analytics, crash reporting, update checks, fonts or scripts from the web, or "phone home" of any kind.
+- No telemetry, analytics, crash reporting, fonts or scripts from the web, or "phone home" of any kind. The one update check
+  (`engine/update.py`) runs only when the person presses its button, and only says whether a newer version exists.
 - Our own pages (`web/`) contain no web address. The build fails if they do.
 - A new dependency must work fully offline, and must not open a socket or start a server. Say in the pull request what
   it is, its licence, and why it is needed, and add it to `THIRD_PARTY_NOTICES.md`.

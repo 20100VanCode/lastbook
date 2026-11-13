@@ -3,7 +3,7 @@
   "_ASSOCIATE_TAG": "Amazon Associates tracking ID supplied by the owner. An empty value generates ordinary Amazon links.",
   "marketplace": "https://www.amazon.com",
   "updated": "12 November 2026",
-  "_products": "Products include name, maker_url, feature, checked (ISO date), and query. Optional asin requires seen_url identifying the published Amazon product link. Descriptions are paraphrased from manufacturer pages. Prices and ratings are omitted.",
+  "_products": "Products include name, maker_url, feature, checked (ISO date), and query. Optional asin requires seen_url identifying the published Amazon product link. Descriptions are paraphrased from manufacturer pages. Prices and ratings are omitted. Optional image, image_fallback and image_alt point to local 600 px manufacturer photos; their sources and terms are in buying-guide/IMAGE-SOURCES.md.",
   "sources": {
     "kit": {
       "name": "Build a Kit",
@@ -132,7 +132,10 @@
               "maker_url": "https://www.redcross.org/store/deluxe-family-first-aid-kit/321275.html",
               "feature": "115 pieces in a portable soft case, with latex-free contents.",
               "checked": "2026-11-12",
-              "query": "American Red Cross Deluxe Family First Aid Kit 115 piece"
+              "query": "American Red Cross Deluxe Family First Aid Kit 115 piece",
+              "image": "/img/buying-guide/red-cross-deluxe-family-first-aid-kit.webp",
+              "image_fallback": "/img/buying-guide/red-cross-deluxe-family-first-aid-kit.jpg",
+              "image_alt": "American Red Cross Deluxe Family First Aid Kit in its red zip-up soft case"
             }
           ],
           "search": "first aid kit"
@@ -192,7 +195,10 @@
               "maker_url": "https://relianceoutdoors.com/products/aqua-tainer-4g-15l",
               "feature": "Rigid food-safe container with a carry handle and a spigot that stores inside the cap.",
               "checked": "2026-11-12",
-              "query": "Reliance Aqua Tainer 7 gallon 9410"
+              "query": "Reliance Aqua Tainer 7 gallon 9410",
+              "image": "/img/buying-guide/reliance-aqua-tainer-7-gallon.webp",
+              "image_fallback": "/img/buying-guide/reliance-aqua-tainer-7-gallon.jpg",
+              "image_alt": "Reliance Aqua-Tainer 7-gallon blue water container with a red cap"
             }
           ],
           "search": "food grade water storage container"
@@ -222,7 +228,10 @@
               "checked": "2026-11-12",
               "query": "Sawyer MINI SP128 blue",
               "asin": "B00FA2RLX2",
-              "seen_url": "https://www.ovs.org/wp-content/uploads/2024/07/Outdoor-Ed.-Equipment-Links-Amazon.com_.pdf"
+              "seen_url": "https://www.ovs.org/wp-content/uploads/2024/07/Outdoor-Ed.-Equipment-Links-Amazon.com_.pdf",
+              "image": "/img/buying-guide/sawyer-mini-blue.webp",
+              "image_fallback": "/img/buying-guide/sawyer-mini-blue.jpg",
+              "image_alt": "Sawyer MINI water filter in blue, with its squeeze pouch, drinking straw and cleaning syringe"
             }
           ],
           "search": "water filter NSF 53 cyst reduction"
@@ -274,7 +283,10 @@
               "maker_url": "https://www.oxo.com/soft-handled-can-opener-433.html",
               "feature": "Manual opener with cushioned handles, an oversized knob and a stainless-steel cutting wheel.",
               "checked": "2026-11-12",
-              "query": "OXO Good Grips Soft Handled Can Opener"
+              "query": "OXO Good Grips Soft Handled Can Opener",
+              "image": "/img/buying-guide/oxo-good-grips-soft-handled-can-opener.webp",
+              "image_fallback": "/img/buying-guide/oxo-good-grips-soft-handled-can-opener.jpg",
+              "image_alt": "OXO Good Grips Soft-Handled Can Opener with black handles and a black turning knob"
             }
           ],
           "search": "manual can opener"
@@ -386,7 +398,10 @@
               "maker_url": "https://www.firstalert.com/collections/home-fire-extinguishers",
               "feature": "Rechargeable home extinguisher rated 1-A:10-B:C.",
               "checked": "2026-11-12",
-              "query": "First Alert HOME1 FE1A10GR fire extinguisher"
+              "query": "First Alert HOME1 FE1A10GR fire extinguisher",
+              "image": "/img/buying-guide/first-alert-home1.webp",
+              "image_fallback": "/img/buying-guide/first-alert-home1.jpg",
+              "image_alt": "First Alert HOME1 red rechargeable home fire extinguisher, rated 1-A:10-B:C"
             }
           ],
           "search": "ABC fire extinguisher UL listed"
@@ -418,7 +433,10 @@
               "maker_url": "https://energizer.com/product/lighting/hands-free-lighting/energizer-vision-hd-led-headlamp/",
               "feature": "Hands-free light powered by three AAA batteries, with four light modes.",
               "checked": "2026-11-12",
-              "query": "Energizer Vision HD LED headlamp 300 lumens 3 AAA"
+              "query": "Energizer Vision HD LED headlamp 300 lumens 3 AAA",
+              "image": "/img/buying-guide/energizer-vision-hd-headlamp.webp",
+              "image_fallback": "/img/buying-guide/energizer-vision-hd-headlamp.jpg",
+              "image_alt": "Energizer Vision HD headlamp, 300 lumens, in its retail pack with three AAA batteries"
             }
           ],
           "search": "LED flashlight"
@@ -504,7 +522,10 @@
               "checked": "2026-11-12",
               "query": "Midland ER310 emergency crank weather radio",
               "asin": "B015QIC1PW",
-              "seen_url": "https://new.janeterjung.org/docs/Cool%20Gadgets%20For%20PSPS.pdf"
+              "seen_url": "https://new.janeterjung.org/docs/Cool%20Gadgets%20For%20PSPS.pdf",
+              "image": "/img/buying-guide/midland-er310.webp",
+              "image_fallback": "/img/buying-guide/midland-er310.jpg",
+              "image_alt": "Midland ER310 emergency crank weather radio in black and red"
             }
           ],
           "search": "NOAA weather radio hand crank"

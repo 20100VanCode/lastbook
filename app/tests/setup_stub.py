@@ -6,6 +6,7 @@ Scenarios (see SCENARIOS): mac, mac-small (AI does not fit), win, found, low-dis
 network, checksum, unpack, activate (each fails once at that step; Retry then goes through), manage, manage-ai, upgraded.
 The page itself never knows it talks to a stub.
 """
+import copy
 import json
 import mimetypes
 import os
@@ -17,6 +18,7 @@ from urllib.parse import urlparse
 WEB = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'web')
 GB = 1000 ** 3
 GiB = 1024 ** 3
+X = '<img src=x onerror="window.PWN=1">'
 
 MANIFEST = {
     'source': 'bundled',
@@ -35,7 +37,26 @@ MANIFEST = {
         {'id': 'gemma-4-26b-a4b', 'title': 'Gemma 4 26B A4B', 'file': 'gemma-4-26B-A4B-it-UD-Q4_K_M.gguf',
          'size': 16947541728, 'memory_bytes': 19027384256, 'available': True},
     ],
+    'maps': [   # as docs/SETUP-API.md "State maps"; sizes are made up until map-packages lists the real ones
+        {'id': st, 'title': t, 'kind': 'state', 'installed_bytes': inst, 'available': ok,
+         'includes': 'Local streets, buildings, terrain and crops, plus water, help and resource points',
+         'files': [{'name': f'Lastbook-Map-{st}.zip', 'size': dl, 'kind': 'zip'}]}
+        for st, t, dl, inst, ok in [('AZ', 'Arizona', 1600000000, 3900000000, True), ('CA', 'California', 2100000000, 5000000000, True),
+                                    ('NV', 'Nevada', 900000000, 2200000000, True), ('OR', 'Oregon', 1100000000, 2700000000, True),
+                                    ('RI', 'Rhode Island', 120000000, 300000000, True), ('TX', 'Texas', 0, 0, False)]
+    ],
 }
+
+def _hostile():
+    m = copy.deepcopy(MANIFEST)
+    for e in m['packs'] + m['models'] + m['maps']:
+        e.update(title=X, summary=X, includes=X)
+    m['maps'][0]['installed_bytes'] = X
+    m['maps'][1]['id'] = X
+    return m
+
+
+HOSTILE = _hostile()
 
 MAC = '/Users/you/Library/Application Support/Lastbook/LastbookData'
 WIN = 'C:\\Users\\you\\Documents\\LastbookData'
@@ -61,21 +82,34 @@ SCENARIOS = {
     'found': dict(hardware=hw(), recommend={'pack': 'small', 'ai': True, 'why': 'You already downloaded Small, so it can be used straight away.'},
                   found=[{'path': '/Users/you/Downloads/Lastbook-Small.zip', 'kind': 'pack', 'id': 'small', 'name': 'Lastbook-Small.zip', 'size': 8236931672, 'size_ok': True},
                          {'path': '/Users/you/Downloads/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf', 'kind': 'model', 'id': 'gemma-4-26b-a4b', 'name': 'gemma-4-26B-A4B-it-UD-Q4_K_M.gguf', 'size': 16947541728, 'size_ok': True}]),
+    'found-bad': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': 'You already downloaded Small.'}, fault=('verifying', 'found_mismatch'),
+                      found=[{'path': '/Users/you/Downloads/Lastbook-Small.zip', 'kind': 'pack', 'id': 'small', 'name': 'Lastbook-Small.zip', 'size': 8236931672, 'size_ok': True}]),
+    'paused-found': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': ''},   # killed while unpacking the person's own zip
+                         found=[{'path': '/Users/you/Downloads/Lastbook-Small.zip', 'kind': 'pack', 'id': 'small', 'name': 'Lastbook-Small.zip', 'size': 8236931672, 'size_ok': True}],
+                         job={'pack': 'small', 'ai': False, 'state': 'paused', 'done0': 0, 'source': 'found', 'paused_from': 'unpacking'}),
     'low-disk': dict(hardware=hw(free=30), recommend={'pack': 'small', 'ai': False, 'why': 'This disk has 30 GB free, so only Small fits.'}),
     'paused': dict(hardware=hw(), recommend={'pack': 'medium', 'ai': True, 'why': ''}, job={'pack': 'medium', 'ai': True, 'state': 'paused', 'done0': 0.37}),
     'network': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': 'Small fits.'}, fault=('downloading', 'network')),
     'checksum': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': 'Small fits.'}, fault=('verifying', 'checksum')),
     'unpack': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': 'Small fits.'}, fault=('unpacking', 'unpack')),
     'activate': dict(hardware=hw(), recommend={'pack': 'small', 'ai': False, 'why': 'Small fits.'}, fault=('activating', 'activate')),
-    'manage': dict(mode='manage', hardware=hw(), current={'folder': MAC, 'pack': 'small', 'model': None},
+    'manage': dict(mode='manage', hardware=hw(), current={'folder': MAC, 'pack': 'small', 'model': None, 'map': 'base'},
                    recommend={'pack': 'medium', 'ai': True, 'why': 'There is room for Medium and memory for the local AI.'}),
     'manage-ai': dict(mode='manage', hardware=hw('windows', ram=32, free=300, gpus=[{'name': 'NVIDIA GeForce RTX 4070', 'vram_bytes': 12 * GiB}]),
-                      current={'folder': WIN, 'pack': 'medium', 'model': 'gemma-4-26b-a4b'},
+                      current={'folder': WIN, 'pack': 'medium', 'model': 'gemma-4-26b-a4b', 'map': 'CA'},
                       recommend={'pack': 'medium', 'ai': True, 'why': 'You have Medium and the local AI.'}),
+    # every string the engine or a fetched manifest hands the page carries markup; nothing may come out live (security audit C)
+    'hostile': dict(hardware={**hw(gpus=[{'name': X, 'vram_bytes': 8 * GiB}], why=X), 'unified_memory': False},
+                    recommend={'pack': 'small', 'ai': True, 'why': X}, manifest='hostile',
+                    found=[{'path': '/Users/you/Downloads/' + X + '.zip', 'kind': 'pack', 'id': 'small', 'name': X, 'size': X, 'size_ok': True},
+                           {'path': '/Users/you/' + X, 'kind': 'library', 'name': X, 'size': 5, 'rejected': True}],
+                    fault=('downloading', 'hostile')),
     'upgraded': dict(mode='manage', hardware=hw(), current={'folder': MAC, 'pack': 'medium', 'model': None,
                      'old': [MAC + '.old-2026-11-12']},
                      recommend={'pack': 'medium', 'ai': True, 'why': ''}),
 }
+
+SCENARIOS['hostile']['hardware']['disks'][0]['name'] = X
 
 RATE = 2.2 * GB        # pretend bytes per second, so a whole run takes about half a minute
 STEP_S = 2.5           # seconds each of checking, unpacking and finishing takes
@@ -84,8 +118,9 @@ STEP_S = 2.5           # seconds each of checking, unpacking and finishing takes
 class Stub:
     def __init__(self, name):
         self.name = name
-        s = SCENARIOS[name]
+        s = copy.deepcopy(SCENARIOS[name])   # each reset starts clean
         self.s = s
+        self.M = HOSTILE if s.get('manifest') == 'hostile' else MANIFEST
         self.current = s.get('current')
         self.job = None
         self.fault = s.get('fault')
@@ -96,23 +131,29 @@ class Stub:
             self._make(j['pack'], j['ai'])
             it = self.job['items'][0]
             it['bytes_done'] = int(it['bytes_total'] * j['done0'])
+            if j.get('source'):
+                it.update(source=j['source'], paused_from=j['paused_from'], bytes_done=1700000000, bytes_total=8236695548)   # as the engine: unpack progress
             self._set_all('paused')
 
     def state(self):
         self.tick()
-        return {'mode': self.s.get('mode', 'first-run'), 'hardware': self.s['hardware'], 'manifest': MANIFEST,
+        return {'mode': self.s.get('mode', 'first-run'), 'hardware': self.s['hardware'], 'manifest': self.M,
                 'current': self.current, 'found': self.found, 'recommend': {**self.s['recommend'], 'folder': self.folder.rsplit('\\' if '\\' in self.folder else '/', 1)[0]},
                 'job': self.public()}
 
-    def _make(self, pack, ai, use=None):
+    def _make(self, pack, ai, use=None, map_=None):
         items = []
         cur = self.current or {}
         if pack and pack != cur.get('pack'):
-            p = next(p for p in MANIFEST['packs'] if p['id'] == pack)
+            p = next(p for p in self.M['packs'] if p['id'] == pack)
             items.append({'id': pack, 'kind': 'pack', 'title': p['title'], 'state': 'waiting', 'bytes_done': 0,
                           'bytes_total': sum(f['size'] for f in p['files']), 'rate_bps': 0, 'eta_s': None, 'error': None})
+        if map_ and map_ != cur.get('map'):
+            m = next(m for m in self.M['maps'] if m['id'] == map_)
+            items.append({'id': map_, 'kind': 'map', 'title': m['title'], 'state': 'waiting', 'bytes_done': 0,
+                          'bytes_total': sum(f['size'] for f in m['files']), 'rate_bps': 0, 'eta_s': None, 'error': None})
         if ai and not cur.get('model'):
-            m = MANIFEST['models'][0]
+            m = self.M['models'][0]
             items.append({'id': m['id'], 'kind': 'model', 'title': m['title'], 'state': 'waiting', 'bytes_done': 0,
                           'bytes_total': m['size'], 'rate_bps': 0, 'eta_s': None, 'error': None})
         if use:
@@ -130,14 +171,17 @@ class Stub:
                 it['state'] = st
         self.job['state'] = st
 
-    def need(self, pack, ai):
+    def need(self, pack, ai, map_=None):
         cur = self.current or {}
         n = 2 * GB
+        if map_ and map_ != cur.get('map'):
+            m = next(m for m in self.M['maps'] if m['id'] == map_)
+            n += sum(f['size'] for f in m['files']) + m['installed_bytes']
         if pack and pack != cur.get('pack'):
-            p = next(p for p in MANIFEST['packs'] if p['id'] == pack)
+            p = next(p for p in self.M['packs'] if p['id'] == pack)
             n += sum(f['size'] for f in p['files']) + p['installed_bytes']
         if ai and not cur.get('model'):
-            n += MANIFEST['models'][0]['size']
+            n += self.M['models'][0]['size']
         return n
 
     def free(self):
@@ -147,17 +191,17 @@ class Stub:
         pack, ai = body.get('pack'), bool(body.get('ai'))
         if body.get('folder'):
             self.folder = body['folder']
-        need = self.need(pack, ai)
+        need = self.need(pack, ai, body.get('map'))
         if body.get('repair'):
             self._make(None, False)
-            p = next(p for p in MANIFEST['packs'] if p['id'] == self.current['pack'])
+            p = next(p for p in self.M['packs'] if p['id'] == self.current['pack'])
             self.job['items'] = [{'id': p['id'], 'kind': 'pack', 'title': p['title'], 'state': 'verifying', 'bytes_done': 0, 'repair': True,
                                   'bytes_total': p['installed_bytes'], 'rate_bps': 0, 'eta_s': None, 'error': None}]
             self.job['state'] = 'verifying'
             return self.public()
         if need > self.free():
             return {'error': 'There is not enough room on this disk.', 'code': 'no_space', 'need_bytes': need, 'free_bytes': self.free()}
-        self._make(pack, ai)
+        self._make(pack, ai, map_=body.get('map'))
         if not self.job['items']:
             return {'error': 'Nothing to add: this is what you have.', 'code': 'nothing'}
         return self.public()
@@ -182,12 +226,12 @@ class Stub:
                 if self.fault and self.fault[0] == 'downloading' and it['bytes_done'] > it['bytes_total'] * 0.4:
                     return self._fail(it)
                 if it['bytes_done'] >= it['bytes_total']:
-                    it['state'], it['rate_bps'], it['eta_s'] = 'verifying', 0, None
+                    it['state'], it['rate_bps'], it['eta_s'] = 'unpacking' if it['kind'] == 'map' else 'verifying', 0, None
                     self.phase_t = 0
             else:
                 self.phase_t += dt
                 if it['state'] == 'unpacking':     # as the engine: unpack progress in bytes, total = installed size
-                    p = next((p for p in MANIFEST['packs'] if p['id'] == it['id']), None)
+                    p = next((p for p in self.M['packs' if it['kind'] == 'pack' else 'maps'] if p['id'] == it['id']), None)
                     if p:
                         it['bytes_total'] = p['installed_bytes']
                         it['bytes_done'] = int(p['installed_bytes'] * min(1, self.phase_t / STEP_S))
@@ -196,7 +240,7 @@ class Stub:
                     self.phase_t = 0
                     if self.fault and self.fault[0] == it['state']:
                         return self._fail(it)
-                    order = ['verifying', 'unpacking', 'activating', 'done'] if it['kind'] == 'pack' else ['verifying', 'activating', 'done']
+                    order = ['verifying', 'unpacking', 'activating', 'done'] if it['kind'] == 'pack' else ['unpacking', 'done'] if it['kind'] == 'map' else ['verifying', 'activating', 'done']
                     if it.get('repair'):
                         order = ['verifying', 'done']
                     it['state'] = order[order.index(it['state']) + 1]
@@ -209,10 +253,16 @@ class Stub:
         code = self.fault[1]
         msg = {'network': 'The download stopped: the connection to the internet was lost.',
                'checksum': 'The file was damaged twice in a row.', 'unpack': 'The library could not be unpacked.',
-               'activate': 'The new library could not be switched in.'}[code]
+               'activate': 'The new library could not be switched in.',
+               'hostile': X,
+               'found_mismatch': 'The Lastbook-Small.zip in Downloads doesn’t match the published file, so it was not used.'}[code]
+        if code == 'found_mismatch':      # as the engine: the person's file is left alone, no longer offered, and retry downloads it
+            for f in self.found:
+                f.update(rejected=True, size_ok=False)
+            it['bytes_done'] = 0
         it['state'], it['error'], it['rate_bps'], it['eta_s'] = 'failed', {'code': code, 'message': msg}, 0, None
         self.job['state'] = 'failed'
-        self.job['error'] = {'code': code, 'message': msg}
+        self.job['error'] = {'code': code, 'message': msg, **({'file': self.found[0]['path']} if code == 'found_mismatch' else {})}
         self.fault = None   # it fails once; Retry goes through
 
     def act(self, a):
@@ -228,6 +278,9 @@ class Stub:
             for it in j['items']:
                 if it['state'] == 'paused':
                     it['state'] = 'waiting'
+                    if it.get('source') == 'found':
+                        it['bytes_done'] = it['bytes_total']
+                    it.pop('paused_from', None)
             j['state'] = 'waiting'
             self.last = time.time()
         elif a == 'cancel':
@@ -331,19 +384,23 @@ class H(BaseHTTPRequestHandler):
         if a == 'remove-ai':
             if STUB.current:
                 STUB.current['model'] = None
-            return self.send(200, {'ok': True, 'freed_bytes': MANIFEST['models'][0]['size']})
+            return self.send(200, {'ok': True, 'freed_bytes': STUB.M['models'][0]['size']})
         if a == 'delete-old':
             if STUB.current:
                 STUB.current['old'] = [o for o in STUB.current.get('old', []) if o != body.get('path')]
             return self.send(200, {'ok': True})
         if a == 'finish':
             if STUB.job and STUB.job['state'] == 'done':
-                cur = STUB.current or {'folder': STUB.folder, 'pack': None, 'model': None}
+                cur = STUB.current or {'folder': STUB.folder, 'pack': None, 'model': None, 'map': 'base'}
                 for it in STUB.job['items']:
                     if it['kind'] == 'pack' and it['id'] != 'repair':
                         cur['pack'] = it['id']
+                        if not any(i['kind'] == 'map' for i in STUB.job['items']):
+                            cur['map'] = next(p for p in STUB.M['packs'] if p['id'] == it['id']).get('map') or 'base'
                     if it['kind'] == 'model':
                         cur['model'] = it['id']
+                    if it['kind'] == 'map':
+                        cur['map'] = it['id']
                 STUB.current, STUB.job = cur, None
             return self.send(200, {'ok': True})
         return self.send(404, {'error': 'Not here.'})

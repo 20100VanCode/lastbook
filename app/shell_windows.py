@@ -20,6 +20,24 @@ from pathlib import Path
 
 import bridge as B
 
+# Audit W6: in the packaged app, nothing outside may steer WebView2 or pythonnet. WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS could open a
+# debugging port on this no-port app, WEBVIEW2_BROWSER_EXECUTABLE_FOLDER could swap the runtime, PYTHONNET_* the .NET runtime.
+# Removed here, before either starts, from Python's copy and from the Win32 environment their loaders read.
+if getattr(sys, 'frozen', False):
+    for _k in [k for k in os.environ if k.upper().startswith(('WEBVIEW2_', 'PYTHONNET_'))]:
+        os.environ.pop(_k, None)
+        ctypes.windll.kernel32.SetEnvironmentVariableW(_k, None)
+
+_SYSTEM32_ONLY = 0x00000800    # LOAD_LIBRARY_SEARCH_SYSTEM32
+_dlls = {}
+
+
+def system_dll(name):
+    """A Windows DLL that is not a known DLL, from System32 only, never from a folder searched first (audit W2)."""
+    if name not in _dlls:
+        _dlls[name] = ctypes.WinDLL(name, winmode=_SYSTEM32_ONLY)
+    return _dlls[name]
+
 TITLE = 'Lastbook'
 WIDTH, HEIGHT = 1280, 860
 SURFACE = {True: (0xf3, 0xf3, 0xf3), False: (0x20, 0x20, 0x20)}   # the page's pane colour, light and dark: the caption takes it too, so they read as one surface
@@ -44,9 +62,11 @@ TOO_BIG = 'A page was using too much memory, so it was closed.'
 # msOneAuthWAM: without it the runtime makes outbound connections for account sign-in even with everything else here off.
 # Measured on runtime 156.0.4314.50. An Evergreen update could change it.
 # The WebRTC policy: a peer connection's UDP packets are never seen by the host rule or the request filter. There is no proxy, so this leaves it nothing to send.
-BROWSER_ARGS = ('--disable-features=ElasticOverscroll,msOneAuthWAM --disable-background-networking --disable-component-update '
-                '--disable-domain-reliability --no-pings --host-resolver-rules="MAP * ~NOTFOUND" '
-                '--webrtc-ip-handling-policy=disable_non_proxied_udp')
+# msForceOneAuthWAM: without it, WebView2 loads Office's sign-in library (oneauth.dll) and the Windows account broker and fetches the
+# signed-in Microsoft account's profile and picture from substrate.office.com. Measured 12 Nov 2026, WebView2 157.0.4341.46.
+BROWSER_ARGS = ('--disable-features=ElasticOverscroll,msOneAuthWAM,msForceOneAuthWAM --disable-background-networking --disable-component-update '
+                '--disable-domain-reliability --no-pings --host-resolver-rules="MAP * ^NOTFOUND" '    # ^NOTFOUND: Chromium's token since 120 (audit X1)
+                '--webrtc-ip-handling-policy=disable_non_proxied_udp --force-webrtc-ip-handling-policy=disable_non_proxied_udp')   # both layers' spelling
 NO_RUNTIME = ('Lastbook needs the Microsoft Edge WebView2 Runtime, and it was not found on this computer.\n\n'
               'Windows 11 normally includes it. Install "WebView2 Runtime" from Microsoft, then start Lastbook again.')
 BLOCKED_SCHEMES = ('http', 'https', 'ws', 'wss', 'ftp')
@@ -73,7 +93,7 @@ def caption(hwnd, light):
                         (35, r | g << 8 | b << 16),            # DWMWA_CAPTION_COLOR, as COLORREF
                         (36, ink)):                            # DWMWA_TEXT_COLOR
         v = ctypes.c_int(value)
-        ctypes.windll.dwmapi.DwmSetWindowAttribute(wt.HWND(hwnd), attr, ctypes.byref(v), ctypes.sizeof(v))
+        system_dll('dwmapi').DwmSetWindowAttribute(wt.HWND(hwnd), attr, ctypes.byref(v), ctypes.sizeof(v))
 
 
 def dark_menus():
@@ -83,7 +103,7 @@ def dark_menus():
     if sys.getwindowsversion().build < 18362:
         return
     try:
-        ux = ctypes.WinDLL('uxtheme')
+        ux = system_dll('uxtheme')
         ux[135](ctypes.c_int(1))      # SetPreferredAppMode(AllowDark)
         ux[136]()                     # FlushMenuThemes
     except Exception:
@@ -171,7 +191,7 @@ class Frame:
         u.CallWindowProcW.restype = ctypes.c_ssize_t
         u.CallWindowProcW.argtypes = (ctypes.c_void_p, wt.HWND, wt.UINT, wt.WPARAM, wt.LPARAM)
         u.GetWindowLongW.restype = ctypes.c_long
-        self.dwm = ctypes.windll.dwmapi
+        self.dwm = ctypes.WinDLL('dwmapi', winmode=_SYSTEM32_ONLY)    # its own handle: argtypes are set on it below
         self.dwm.DwmDefWindowProc.argtypes = (wt.HWND, wt.UINT, wt.WPARAM, wt.LPARAM, ctypes.POINTER(ctypes.c_ssize_t))
 
     def attach(self, hwnd):
@@ -352,37 +372,6 @@ ACCENT_SCRIPT = """(() => { if (window.top !== window || location.origin !== %s)
 })()"""
 
 
-def app_icon(n):
-    """Lastbook's mark (web/icon.svg), drawn here at 256 pixels: the build carries no icon file, and Windows' blank program icon reads as unfinished."""
-    D = n.Drawing
-    import System.Drawing.Drawing2D as D2
-    bmp = D.Bitmap(256, 256)
-    g = D.Graphics.FromImage(bmp)
-    g.SmoothingMode = D2.SmoothingMode.AntiAlias
-    g.Clear(D.Color.Transparent)
-    tile = D2.GraphicsPath()
-    r = 112     # the corner's diameter: rx 14 of 64
-    for x, y, a in ((0, 0, 180), (256 - r, 0, 270), (256 - r, 256 - r, 0), (0, 256 - r, 90)):
-        tile.AddArc(x, y, r, r, a, 90)
-    tile.CloseFigure()
-    g.FillPath(D.SolidBrush(D.Color.FromArgb(0x1f, 0x5a, 0x46)), tile)
-    pen = D.Pen(D.Color.White, 16)
-    pen.LineJoin = D2.LineJoin.Round
-    pen.StartCap = pen.EndCap = D2.LineCap.Round
-    P = lambda x, y: D.PointF(x * 4, y * 4)
-    shield = D2.GraphicsPath()
-    shield.AddLine(P(32, 10), P(14, 18))
-    shield.AddLine(P(14, 18), P(14, 30))
-    shield.AddBezier(P(14, 30), P(14, 41), P(21.6, 49.6), P(32, 52))
-    shield.AddBezier(P(32, 52), P(42.4, 49.6), P(50, 41), P(50, 30))
-    shield.AddLine(P(50, 30), P(50, 18))
-    shield.CloseFigure()
-    g.DrawPath(pen, shield)
-    g.DrawLines(pen, n.System.Array[D.PointF]([P(23, 32), P(29, 38), P(41, 25)]))
-    g.Dispose()
-    return D.Icon.FromHandle(bmp.GetHicon())
-
-
 def note(**kw):
     """One decision of the shell. Nothing in the product listens."""
 
@@ -423,8 +412,8 @@ def downloads():
         ctypes.windll.ole32.CoTaskMemFree(p)
 
 
-def pick_folder(prompt, start):
-    """Windows' own Explorer-style folder picker (IFileOpenDialog, FOS_PICKFOLDERS), opened at start: the chosen path, or None."""
+def pick_folder(prompt, start, *, files=False):
+    """Windows' native folder or existing-file picker, opened at the requested location."""
     vp, wstr = ctypes.c_void_p, ctypes.c_wchar_p
     ctypes.windll.ole32.CoInitializeEx(None, 0x2)    # COINIT_APARTMENTTHREADED; already so on this thread is fine
     dialog = vp()
@@ -434,7 +423,8 @@ def pick_folder(prompt, start):
     try:
         options = ctypes.c_uint32()
         _com(dialog, 10, ctypes.POINTER(ctypes.c_uint32))(ctypes.byref(options))                       # GetOptions
-        _com(dialog, 9, ctypes.c_uint32)(options.value | 0x20 | 0x40 | 0x800 | 0x8)                   # SetOptions: PICKFOLDERS, FORCEFILESYSTEM, PATHMUSTEXIST, NOCHANGEDIR
+        pick_kind = 0x1000 if files else 0x20   # FILEMUSTEXIST or PICKFOLDERS
+        _com(dialog, 9, ctypes.c_uint32)(options.value | pick_kind | 0x40 | 0x800 | 0x8)  # FORCEFILESYSTEM, PATHMUSTEXIST, NOCHANGEDIR
         _com(dialog, 17, wstr)(prompt)                                                                 # SetTitle
         _com(dialog, 18, wstr)('Choose')                                                               # SetOkButtonLabel
         folder = vp()
@@ -637,7 +627,7 @@ class _Processes:
         k.CreateToolhelp32Snapshot.argtypes = (wt.DWORD, wt.DWORD)
         k.Process32FirstW.argtypes = k.Process32NextW.argtypes = (wt.HANDLE, ctypes.POINTER(_ProcessEntry))
         k.GlobalMemoryStatusEx.argtypes = (ctypes.POINTER(_MemoryStatus),)
-        self.psapi = ctypes.WinDLL('psapi')
+        self.psapi = system_dll('psapi')
         self.psapi.GetProcessMemoryInfo.argtypes = (wt.HANDLE, ctypes.POINTER(_PageMemory), wt.DWORD)
         self.handles = {}
 
@@ -647,7 +637,7 @@ class _Processes:
         return m.ullTotalPhys if self.k.GlobalMemoryStatusEx(ctypes.byref(m)) else 0
 
     def refresh(self):
-        parents = {}
+        parents, names = {}, {}
         snap = self.k.CreateToolhelp32Snapshot(2, 0)     # TH32CS_SNAPPROCESS
         if snap in (None, wt.HANDLE(-1).value):
             return
@@ -657,13 +647,16 @@ class _Processes:
             ok = self.k.Process32FirstW(snap, ctypes.byref(e))
             while ok:
                 parents[e.th32ProcessID] = e.th32ParentProcessID
+                names[e.th32ProcessID] = e.szExeFile.lower()
                 ok = self.k.Process32NextW(snap, ctypes.byref(e))
         finally:
             self.k.CloseHandle(snap)
         mine = {os.getpid()}
         grew = True
         while grew:
-            more = {pid for pid, parent in parents.items() if parent in mine and pid not in mine}
+            # The local AI's runner is not the web view's: its memory is the model's (about 19 GB of commit with a GPU), which
+            # llm_local fits to this computer before it starts. Counted here, it ended the page over and over once the model loaded.
+            more = {pid for pid, parent in parents.items() if parent in mine and pid not in mine and names.get(pid) != 'lastbook-llm.exe'}
             mine |= more
             grew = bool(more)
         for pid in list(self.handles):
@@ -742,7 +735,8 @@ class Shell:
         area = Forms.Screen.PrimaryScreen.WorkingArea
         form.Size = Drawing.Size(min(int(WIDTH * scale), area.Width), min(int(HEIGHT * scale), area.Height))     # Size, not ClientSize: the border counts against the screen
         try:
-            form.Icon = app_icon(n)
+            icon_dir = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parent.parent / 'packaging' / 'icon'))
+            form.Icon = Drawing.Icon(str(icon_dir / 'Lastbook.ico'))
         except Exception:
             traceback.print_exc()
             try:
@@ -904,7 +898,7 @@ class Shell:
         """Opens the window's menu where Windows opens it for Alt+Space: under the top-left corner of the title bar."""
         hwnd = int(self.form.Handle.ToInt64())
         f = wt.RECT()
-        ctypes.windll.dwmapi.DwmGetWindowAttribute(wt.HWND(hwnd), 9, ctypes.byref(f), ctypes.sizeof(f))     # DWMWA_EXTENDED_FRAME_BOUNDS: the visible frame
+        system_dll('dwmapi').DwmGetWindowAttribute(wt.HWND(hwnd), 9, ctypes.byref(f), ctypes.sizeof(f))     # DWMWA_EXTENDED_FRAME_BOUNDS: the visible frame
         scale = (ctypes.windll.user32.GetDpiForWindow(wt.HWND(hwnd)) or 96) / 96
         cap = self.frame.cap_h if self.frame is not None else 31
         system_menu(hwnd, f.left + int(8 * scale), f.top + int(cap * scale))

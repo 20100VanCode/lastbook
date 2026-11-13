@@ -18,8 +18,10 @@ Program Policies, 14 Apr 2026, read 12 Nov 2026):
   shortener, redirect or cloaking;
 - no prices, ratings, review counts, availability or Amazon images (those need
   Amazon's own API), and no claims beyond what the listing or maker states.
+  Product photos are local copies of the makers' own images (sources and terms in
+  buying-guide/IMAGE-SOURCES.md); nothing is loaded from Amazon or hotlinked.
 """
-import hashlib, html, json, pathlib, re, sys
+import hashlib, html, json, pathlib, re, sys, urllib.parse
 
 TOOLS = pathlib.Path(__file__).resolve().parent
 ROOT = TOOLS.parent
@@ -43,6 +45,11 @@ def product_url(market, asin, tag):
     return f"{url}?tag={tag}" if tag else url
 
 
+def search_url(market, query, tag):
+    q = urllib.parse.urlencode({"k": query, **({"tag": tag} if tag else {})})
+    return f"{market.rstrip('/')}/s?{q}"
+
+
 def page(d):
     tag = d.get("ASSOCIATE_TAG", "").strip()
     if tag and not TAG.match(tag):
@@ -53,7 +60,7 @@ def page(d):
     src = d["sources"]
     rel = "sponsored noopener" if tag else "noopener"
 
-    shown = 0
+    shown = searches = 0
     navs, secs = [], []
     for s in d["sections"]:
         navs.append(f'<li><a href="#{e(s["id"])}"><img src="{e(s["icon"])}" width="40" height="40" alt=""><span><span class="u">{e(s["title"])}</span></span></a></li>')
@@ -64,15 +71,40 @@ def page(d):
                 so = src[key]
                 looks.append(f'<li>{e(text)} <a class="bg-src" href="{e(so["url"])}">{e(so["by"])}</a></li>')
             prods = []
-            for p in it.get("products", []):
-                if not p.get("checked"):
-                    continue  # not opened by a person yet: leave it out rather than guess
-                if not ASIN.match(p["asin"]):
-                    sys.exit(f"Bad ASIN {p['asin']!r} under {it['name']!r}")
-                says = f'<small>{e(p["maker_says"])}</small>' if p.get("maker_says") else ""
-                prods.append(f'<li><a href="{e(product_url(market, p["asin"], tag))}" rel="{rel}">{e(p["name"])}</a>{says}</li>')
+            for product in it.get("products", []):
+                if not product.get("checked") or not product.get("maker_url"):
+                    sys.exit(f"Missing manufacturer source or checked date for {product['name']!r}")
+                if product.get("asin"):
+                    if not ASIN.fullmatch(product["asin"]) or not product.get("seen_url"):
+                        sys.exit(f"Missing ASIN evidence for {product['name']!r}")
+                    destination = product_url(market, product["asin"], tag)
+                    label = "View on Amazon"
+                else:
+                    destination = search_url(market, product["query"], tag)
+                    label = "Find on Amazon"
+                    searches += 1
+                photo = ""
+                if product.get("image"):
+                    for k in ("image", "image_fallback"):
+                        ref = product.get(k, "")
+                        if not ref.startswith("/img/buying-guide/") or not (ROOT / ref.lstrip("/")).is_file():
+                            sys.exit(f"{k} for {product['name']!r} must be a local file under /img/buying-guide/")
+                    if not product.get("image_alt"):
+                        sys.exit(f"Missing image_alt for {product['name']!r}")
+                    photo = (f'\n        <picture class="bg-photo"><source srcset="{e(product["image"])}" type="image/webp">'
+                             f'<img src="{e(product["image_fallback"])}" width="600" height="600" loading="lazy" decoding="async" alt="{e(product["image_alt"])}"></picture>')
+                prods.append(f'''<div class="bg-product">{photo}
+        <h4>{e(product["name"])}</h4>
+        <p>{e(product["feature"])}</p>
+        <a class="bg-maker" href="{e(product["maker_url"])}">Manufacturer details</a>
+        <p class="bg-search"><a class="btn-2 bg-shop" href="{e(destination)}" rel="{rel}">{label}</a></p>
+      </div>''')
                 shown += 1
-            buy = (f'<p class="bg-on">On Amazon</p><ul class="bg-prods">{"".join(prods)}</ul>') if prods else ""
+            buy = "".join(prods)
+            if not prods and it.get("search"):
+                buy = (f'<p class="bg-search"><a class="btn-2 bg-shop" href="{e(search_url(market, it["search"], tag))}" rel="{rel}">'
+                       f'<span><b>Search Amazon</b><small>for {e(it["search"])}</small></span></a></p>')
+                searches += 1
             cards.append(f"""<article class="card bg-item">
       <h3>{e(it["name"])}</h3>
       <p class="bg-why">{e(it["why"])}</p>
@@ -122,11 +154,11 @@ def page(d):
   <h2 id="how-h">How this guide works</h2>
   <ul class="checks">
     <li>Each point comes from an official guide. Most of them are also in the Lastbook library.</li>
-    <li>No prices, ratings or stock here. Check those on Amazon before you buy.</li>
-    <li>Nobody paid to be listed.</li>
-    <li>The Lastbook app has no shop and no links. It never goes online.</li>
+    <li>Product descriptions use manufacturer information. Compare the model, size, seller and current price before buying.</li>
+    <li>“Find on Amazon” and “Search Amazon” open search results. “View on Amazon” opens a specific listing.</li>
+    <li>Lastbook has not tested these products. Nobody paid to be listed.</li>
   </ul>
-  <p class="fine">This page sets no cookies. Amazon sets its own when you open amazon.com.</p>
+  <p class="fine">Shopping links take you to Amazon, which has its own privacy and cookie policies.</p>
 </section>
 
 <section class="block narrow bg-sources" id="sources" aria-labelledby="src-h">
@@ -138,13 +170,13 @@ def page(d):
 </div>
 </main>
 """ + build.FOOT
-    return body, tag, shown
+    return body, tag, shown, searches
 
 
 if __name__ == "__main__":
     d = json.loads(DATA.read_text())
-    text, tag, shown = page(d)
+    text, tag, shown, searches = page(d)
     p = ROOT / OUT
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(text)
-    print(f"{OUT}: {len(text.encode())} bytes · products shown: {shown} · Associates tag: {'set' if tag else 'not set (plain links)'}")
+    print(f"{OUT}: {len(text.encode())} bytes · products shown: {shown} · search links: {searches} · Associates tag: {'set' if tag else 'not set (plain links)'}")

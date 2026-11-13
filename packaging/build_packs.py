@@ -247,7 +247,13 @@ def select(pack, catalog, snap, sample):
     guide_videos = [r for r in ordinary if pack_id(r['id']) in guides]
     if pack == 'small':
         chapters = tuple(SIZES['small']['with_chapters'])
-        docs, videos = [r for r in doc if pack_id(r['id']) in guides or r['path'].startswith(chapters)], guide_videos
+        docs = [r for r in doc if pack_id(r['id']) in guides or r['path'].startswith(chapters)]
+        include = set(SIZES['small'].get('video_include', []))
+        exclude = set(SIZES['small'].get('video_exclude', []))
+        eligible = {r['id']: r for r in ordinary}
+        if include - eligible.keys():
+            raise SystemExit(f'Small video additions are not eligible: {sorted(include - eligible.keys())}')
+        videos = [r for r in ordinary if (r in guide_videos or r['id'] in include) and r['id'] not in exclude]
     elif pack == 'medium':
         docs = [r for r in doc if r['id'] not in filters['firearms_documents']] + course_tx
         videos = [r for r in ordinary if r['category'] in filters['medium_topic_categories'] and verdicts[r['id']]['verdict'] == 'keep']
@@ -1129,6 +1135,9 @@ def build_pack(args):
     b.write(pack_dir / 'pack-contents.tsv', ('\n'.join(lines) + '\n').encode('utf-8'), 'generated')
     info = {'name': pack_name, 'size': args.pack, 'map': map_set, 'built': datetime.date.today().isoformat(), 'snapshot': snap.name, 'sample': bool(args.sample), 'add_ons': [],
             'counts': {k: sum(r['kind'] == k for r in records) for k in sorted({r['kind'] for r in records})}, 'known_gaps': SPEC['known_gap_documents'], 'incomplete': len(missing)}
+    revision = SIZES.get(args.pack, {}).get('content_revision')
+    if revision:
+        info['content_revision'] = revision
     b.write(pack_dir / 'pack.json', json.dumps(info, indent=1).encode('utf-8'), 'generated')
     removed = 0
     for root, dirs, files in os.walk(pack_dir, topdown=False):
@@ -1278,7 +1287,8 @@ def geo_source():
 
 def state_box(src, code):
     db = sqlite3.connect(f'file:{src}/profiles.sqlite?immutable=1', uri=True)
-    row = db.execute('SELECT min(lon),min(lat),max(lon),max(lat),count(*) FROM zcta WHERE state=?', (code,)).fetchone()
+    blank = {'CT': '09'}.get(code, '-')     # Connecticut's ZIPs carry its 2022 planning-region county codes and no state
+    row = db.execute("SELECT min(lon),min(lat),max(lon),max(lat),count(*) FROM zcta WHERE state=? OR (coalesce(state,'')='' AND substr(county,1,2)=?)", (code, blank)).fetchone()
     if not row[4]:
         raise SystemExit(f'no ZIP centres for state {code}')
     return row[0] - .15, row[1] - .15, row[2] + .15, row[3] + .15

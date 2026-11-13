@@ -4,8 +4,8 @@ const MAP = {ca:4.6, tx:5.05, vt:0.25, ak:null};   // others: 5
 const OTHER_MAP = 5;
 const BASE = {small:6, medium:62.07};   // Medium measured 12 Nov: 67.48 GB with its 5.40 GB California map
 const ADD = {cc:96.3, fa:2.94};
-const ALL_GB = 428;
-const LIBRARY_READY = {small:true, medium:true};   // packs published and verified on downloads.lastbook.org
+const ALL_GB = 387.88;   // All measured 12 Nov: Lastbook-All.zip 387,878,571,619 bytes
+const LIBRARY_READY = {small:true, medium:true, all:true};   // packs published and verified on downloads.lastbook.org
 const AI_GB = 16947541728 / 1e9;
 
 const $ = id => document.getElementById(id);
@@ -126,7 +126,7 @@ function render(opts){
   totalEl.textContent = result.text;
   $('totalnote').textContent = 'Like ' + photos(result.gb) + ' phone photos. An estimate.';
   $('fill').style.transform = 'scaleX(' + (result.gb / Math.ceil(ALL_GB + (c.ai ? AI_GB : 0))) + ')';
-  $('barmax').textContent = c.ai ? 'All + AI: about 445 GB' : 'All: about 428 GB';
+  $('barmax').textContent = c.ai ? 'All + AI: about 405 GB' : 'All: about 388 GB';
   $('ai-download').hidden = !c.ai;
 
   recapEl.textContent = choiceWords(c) + '.';
@@ -138,12 +138,15 @@ function render(opts){
         ? 'Download the app and Medium library separately. The Medium library includes a detailed map of California.'
         : c.size === 'medium'
           ? 'The Medium library is available. Extra video packs are planned.'
-          : sizeName(c.size) + ' is planned and is not available to download yet.';
+          : c.size === 'all'
+            ? 'Download the app and All library separately. All includes every video pack and maps for the whole US.'
+            : sizeName(c.size) + ' is planned and is not available to download yet.';
   const ready = c.size in LIBRARY_READY;
   $('library-download').hidden = c.size !== 'small';
   $('library-download-medium').hidden = c.size !== 'medium';
+  $('library-download-all').hidden = c.size !== 'all';
   $('library-unavailable').hidden = ready;
-  $('library-unavailable').textContent = sizeName(c.size) + ' library coming later. Choose Small or Medium to download an available library.';
+  $('library-unavailable').textContent = sizeName(c.size) + ' library coming later. Choose Small, Medium or All to download an available library.';
   if(!opts.quiet) announce(choiceWords(c) + '. ' + result.text + '.', 300);
 
   const hash = hashFor(c);

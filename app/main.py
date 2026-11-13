@@ -2,11 +2,9 @@
 
   Lastbook --data "<folder>"
 
-The data folder comes from --data, then the LASTBOOK_DATA environment variable, then the folder the person last chose, then a
-folder named LastbookData beside the program (from source: the project folder), then LastbookData in Downloads, Documents or the
-home folder, or one folder down in any of them (where unzipping puts it), then LastbookData in this person's app data. It must hold
-library-data/catalog.json and be writable. If none is found, the app opens setup (engine/setup/, web/setup.html) in its window: it downloads a library, or
-the person points it at one they already have. The answer is remembered in settings.json.
+The data folder comes from --data, then LASTBOOK_DATA, then the person's remembered selection, then the app's own data
+folder. Existing libraries elsewhere are opened only when the person chooses them. If no library is available, the app opens
+setup (engine/setup/, web/setup.html) to download one or choose an existing library.
 Output goes to <data>/derived/logs/lastbook.log, rotated by size, because a packaged app has no console.
 
 Sharing with a phone, a chosen port and running with no window all belong to the server version: python server.py.
@@ -35,15 +33,6 @@ ASK_TITLE = 'Find your Lastbook library'
 ASK = 'Lastbook needs its library folder, called LastbookData. Unzip the library you downloaded, then choose that folder.'
 
 
-def beside():
-    if not FROZEN:
-        return Path(__file__).resolve().parents[1]
-    exe = Path(sys.executable).resolve()
-    if sys.platform == 'darwin':  # <folder>/Lastbook.app/Contents/MacOS/Lastbook
-        return exe.parents[3] / DATA_NAME
-    return exe.parent.parent / DATA_NAME
-
-
 def app_folders():
     """(settings, this computer's app data): roaming and local on Windows, one place on a Mac."""
     if sys.platform == 'win32':
@@ -51,22 +40,6 @@ def app_folders():
         return Path(os.environ.get('APPDATA') or Path.home() / 'AppData' / 'Roaming') / 'Lastbook', local / 'Lastbook'
     mine = Path.home() / 'Library' / 'Application Support' / 'Lastbook'
     return mine, mine
-
-
-def home_places():
-    """Downloads, then Documents, where Windows says they are (OneDrive can move Documents), then the home folder.
-    Downloads first: the steps say to leave the library there, and on a Mac each place looked into can bring up a question."""
-    home = Path.home()
-    places = [home / 'Downloads', home / 'Documents']
-    if sys.platform == 'win32':
-        import winreg
-        for i, name in enumerate(('{374DE290-123F-4565-9164-39C4925E467B}', 'Personal')):
-            try:
-                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders') as key:
-                    places[i] = Path(os.path.expandvars(winreg.QueryValueEx(key, name)[0]))
-            except OSError:
-                pass
-    return places + [home]
 
 
 def remembered():
@@ -86,17 +59,8 @@ def remember(folder):
 
 
 def places():
-    """Where a library may be, in order, each looked at only if the ones before it hold none."""
+    """The remembered selection and app-owned data only."""
     yield remembered()
-    yield beside()
-    for place in home_places():
-        yield place / DATA_NAME
-        try:
-            subs = sorted(p for p in place.iterdir() if not p.name.startswith('.') and p.is_dir())
-        except OSError:
-            subs = []
-        for sub in subs:
-            yield sub / DATA_NAME
     yield app_folders()[1] / DATA_NAME
 
 
@@ -123,7 +87,7 @@ def check(folder):
             continue
         if writable(f):
             return f, None
-        return None, f'Lastbook cannot save in “{shown(f)}”. Move the LastbookData folder somewhere you can save to, such as Downloads, then choose it there.'
+        return None, f'Lastbook cannot save in “{shown(f)}”. Move the LastbookData folder somewhere you can save to, then choose it there.'
     return None, f'“{shown(folder)}” is not a Lastbook library. Choose the folder called LastbookData, inside the library you unzipped.'
 
 
@@ -168,8 +132,23 @@ def ask_for_library():
 
 # ---------------------------------------------------------------------------------------------------------------- setup --
 def default_parent():
-    """Where setup puts LastbookData unless the person chooses: Documents on Windows, this person's app data on a Mac."""
-    return home_places()[1] if sys.platform == 'win32' else app_folders()[1]
+    """Where setup puts LastbookData unless the person chooses (default_choice has the reason when it is not the usual place)."""
+    return default_choice()[0]
+
+
+def default_choice():
+    """(folder, why or None). The app's own data folder until the person chooses another. On Windows the library's longest file
+    must fit in an ordinary path (engine/setup/api.py path_too_deep): when a long user name makes the per-user folder too deep,
+    <system drive>:\\Lastbook instead, made and closed to other accounts (install.private_folder). If even that cannot be made,
+    the per-user folder stays and setup asks the person to choose."""
+    parent = app_folders()[1]
+    if sys.platform == 'win32':
+        from engine.setup import api as setup_api, install
+        if setup_api.path_too_deep(parent / DATA_NAME):
+            short = Path((os.environ.get('SystemDrive') or 'C:') + '\\') / 'Lastbook'
+            if install.private_folder(short):
+                return short, f'Saves to {short} because your user folder’s path is too long for the library’s longest file names.'
+    return parent, None
 
 
 def libraries_here():
@@ -180,8 +159,8 @@ def libraries_here():
     return out
 
 
-def pick_folder():
-    """The system's folder picker, from a request's worker thread: the chosen path, or None."""
+def pick_folder(files=False):
+    """The native folder or file picker, opened only at the person's request."""
     out, done = [], threading.Event()
     if sys.platform == 'darwin':
         import AppKit
@@ -190,10 +169,11 @@ def pick_folder():
         def ask():
             try:
                 panel = AppKit.NSOpenPanel.openPanel()
-                panel.setCanChooseDirectories_(True)
-                panel.setCanChooseFiles_(False)
+                panel.setCanChooseDirectories_(not files)
+                panel.setCanChooseFiles_(files)
+                panel.setDirectoryURL_(AppKit.NSURL.fileURLWithPath_(str(app_folders()[1])))
                 panel.setAllowsMultipleSelection_(False)
-                panel.setCanCreateDirectories_(True)
+                panel.setCanCreateDirectories_(not files)
                 panel.setPrompt_('Choose')
                 if panel.runModal() == AppKit.NSModalResponseOK:
                     out.append(str(panel.URL().path()))
@@ -205,7 +185,7 @@ def pick_folder():
 
         def ask():
             try:
-                out.append(shell_windows.pick_folder('Choose a folder', shell_windows.downloads()))
+                out.append(shell_windows.pick_folder('Choose a library zip or model file' if files else 'Choose a folder', app_folders()[1], files=files))
             except Exception:
                 traceback.print_exc()
             finally:
@@ -219,7 +199,10 @@ def pick_folder():
 
 def relaunch():
     """Start again, as the person would by opening the app: it then finds the library setup has just put in place."""
-    argv = [sys.executable] + ([] if FROZEN else [str(Path(__file__).resolve())]) + sys.argv[1:]
+    argv = [sys.executable] + ([] if FROZEN else [str(Path(__file__).resolve())])
+    # The engine's current folder and startup flags must not override the
+    # library switch staged by setup on the next normal launch.
+    os.environ.pop('LASTBOOK_DATA', None)
     print(f'{time.strftime("%Y-%m-%d %H:%M:%S")} setup finished: starting again', flush=True)
     if sys.platform == 'win32':
         import subprocess
@@ -234,7 +217,8 @@ def setup_finished(folder):
 
 
 def setup_options():
-    return {'settings_dir': app_folders()[0], 'default_parent': default_parent(), 'on_finish': setup_finished,
+    parent, why = default_choice()
+    return {'settings_dir': app_folders()[0], 'default_parent': parent, 'default_why': why, 'on_finish': setup_finished,
             'pick_folder': pick_folder, 'look_for_libraries': libraries_here}
 
 
@@ -329,12 +313,11 @@ def main():
     ap.add_argument('--ask', action='store_true', help='ask for the library folder in a dialog instead of opening setup')
     a = ap.parse_args()
     note = None
-    given = bool(a.data or os.environ.get('LASTBOOK_DATA'))    # a folder named outright is opened as it is, with no setup step
-    if not given:
-        from engine.setup import api as setup_api
-        lib, note = setup_api.startup(app_folders()[0])    # a switch setup staged happens now, before anything is open
-        if lib:
-            remember(lib)
+    given = a.data or os.environ.get('LASTBOOK_DATA')    # a folder named outright is opened as it is: only its own staged switch is made
+    from engine.setup import api as setup_api
+    lib, note = setup_api.startup(app_folders()[0], only=Path(given) if given else None)   # before anything is open
+    if lib and not given:
+        remember(lib)
     data = data_folder(a.data)
     if data is None:
         if a.ask:
@@ -361,8 +344,7 @@ def main():
             return 3
     import server
     server.init()
-    from engine.setup import api as setup_api
-    if not given:
+    if not given or note:
         setup_api.opened(app_folders()[0], data, note)
     setup_api.configure(mode='manage', current=data, **setup_options())
     import bridge as B

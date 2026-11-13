@@ -10,11 +10,9 @@ Everything goes inside this user's profile: the program in %LOCALAPPDATA%\\Progr
 desktop shortcut, and one registry key under HKCU for Apps & features. Nothing reaches the network. Uninstalling removes exactly what
 was installed, as listed in installed-files.txt, and never LastbookData or Lastbook's settings.
 
-At build time only:  python lastbook_setup.py --write-icon Lastbook.ico
 """
 import ctypes
 import os
-import struct
 import subprocess
 import sys
 import threading
@@ -23,7 +21,7 @@ import winreg
 import zipfile
 from pathlib import Path
 
-VERSION = '1.0.0'
+VERSION = '1.1.4'
 NAME = 'Lastbook'
 APP_EXE = 'Lastbook.exe'
 UNINSTALLER = 'Uninstall Lastbook.exe'
@@ -77,9 +75,34 @@ def payload():
 
 
 def lastbook_running():
-    out = subprocess.run(['tasklist', '/FI', f'IMAGENAME eq {APP_EXE}', '/FO', 'CSV', '/NH'], capture_output=True, text=True,
-                         creationflags=NO_WINDOW).stdout
-    return f'"{APP_EXE.lower()}"' in out.lower()
+    """Asks Windows for its process list directly. Never a program by bare name: Windows would look beside Setup.exe first
+    (usually Downloads), so a planted tasklist.exe there would run (audit W1)."""
+    import ctypes
+    from ctypes import wintypes as wt
+
+    class Entry(ctypes.Structure):
+        _fields_ = [('dwSize', wt.DWORD), ('cntUsage', wt.DWORD), ('th32ProcessID', wt.DWORD), ('th32DefaultHeapID', ctypes.c_size_t),
+                    ('th32ModuleID', wt.DWORD), ('cntThreads', wt.DWORD), ('th32ParentProcessID', wt.DWORD), ('pcPriClassBase', ctypes.c_long),
+                    ('dwFlags', wt.DWORD), ('szExeFile', ctypes.c_wchar * 260)]
+    k = ctypes.WinDLL('kernel32', use_last_error=True)
+    k.CreateToolhelp32Snapshot.restype = wt.HANDLE
+    k.CreateToolhelp32Snapshot.argtypes = (wt.DWORD, wt.DWORD)
+    k.Process32FirstW.argtypes = k.Process32NextW.argtypes = (wt.HANDLE, ctypes.POINTER(Entry))
+    k.CloseHandle.argtypes = (wt.HANDLE,)
+    snap = k.CreateToolhelp32Snapshot(2, 0)     # TH32CS_SNAPPROCESS
+    if snap in (None, wt.HANDLE(-1).value):
+        return False
+    try:
+        e = Entry()
+        e.dwSize = ctypes.sizeof(e)
+        ok = k.Process32FirstW(snap, ctypes.byref(e))
+        while ok:
+            if e.szExeFile.lower() == APP_EXE.lower():
+                return True
+            ok = k.Process32NextW(snap, ctypes.byref(e))
+        return False
+    finally:
+        k.CloseHandle(snap)
 
 
 def powershell(script, **env):
@@ -111,13 +134,21 @@ def read_manifest(d):
 
 
 def remove_installed(d, keep=None):
-    """Removes what the manifest in d lists, then folders left empty. Anything else in d stays."""
+    """Removes what the manifest in d lists, then folders left empty. Anything else in d stays. The manifest is only a list:
+    a name outside the install folder, or a link other than the two this installer makes, is skipped (audit W3)."""
     files, links = read_manifest(d)
+    ours = {str(start_menu_link()).lower(), str(desktop_link()).lower()}
     for link in links:
-        link.unlink(missing_ok=True)
-    for name in files + [MANIFEST]:
+        if str(link).lower() in ours and link.suffix.lower() == '.lnk':
+            link.unlink(missing_ok=True)
+    root = d.resolve()
+    for name in [n for n in files if safe_name(n)] + [MANIFEST]:
         p = d / name
-        if keep and p.resolve() == keep:
+        try:
+            inside = p.resolve().is_relative_to(root) and p.resolve() != root
+        except OSError:
+            continue
+        if not inside or (keep and p.resolve() == keep):
             continue
         p.unlink(missing_ok=True)
     if d.is_dir():
@@ -133,8 +164,11 @@ def remove_installed(d, keep=None):
 
 
 def safe_name(name):
-    p = Path(name)
-    return not p.is_absolute() and not p.drive and '..' not in p.parts and name != MANIFEST
+    """A plain relative name inside the install folder, judged as a Windows path: no drive, no leading slash, no '..', no ':'."""
+    from pathlib import PureWindowsPath
+    p = PureWindowsPath(name)
+    return (bool(name) and not p.drive and not p.root and not name.startswith(('/', '\\')) and '..' not in p.parts
+            and ':' not in name and name != MANIFEST)
 
 
 def install(desktop, progress=lambda f: None):
@@ -238,61 +272,14 @@ def net():
     clr.AddReference('System.Drawing')
     import System
     import System.Drawing as D
-    import System.Drawing.Drawing2D as D2
     import System.Threading as T
     import System.Windows.Forms as F
-    return System, D, D2, T, F
-
-
-def draw_mark(D, D2, System, size):
-    """Lastbook's mark (web/icon.svg) as a bitmap: the green tile with the white shield and tick."""
-    bmp = D.Bitmap(size, size)
-    g = D.Graphics.FromImage(bmp)
-    g.SmoothingMode = D2.SmoothingMode.AntiAlias
-    g.PixelOffsetMode = D2.PixelOffsetMode.HighQuality
-    g.Clear(D.Color.Transparent)
-    s = size / 64
-    tile, r = D2.GraphicsPath(), 28 * s
-    for x, y, a in ((0, 0, 180), (size - r, 0, 270), (size - r, size - r, 0), (0, size - r, 90)):
-        tile.AddArc(D.RectangleF(x, y, r, r), a, 90)
-    tile.CloseFigure()
-    g.FillPath(D.SolidBrush(D.Color.FromArgb(0x1f, 0x5a, 0x46)), tile)
-    pen = D.Pen(D.Color.White, max(1.0, 4 * s))
-    pen.LineJoin = D2.LineJoin.Round
-    pen.StartCap = pen.EndCap = D2.LineCap.Round
-    P = lambda x, y: D.PointF(x * s, y * s)
-    shield = D2.GraphicsPath()
-    shield.AddLine(P(32, 10), P(14, 18))
-    shield.AddLine(P(14, 18), P(14, 30))
-    shield.AddBezier(P(14, 30), P(14, 41), P(21.6, 49.6), P(32, 52))
-    shield.AddBezier(P(32, 52), P(42.4, 49.6), P(50, 41), P(50, 30))
-    shield.AddLine(P(50, 30), P(50, 18))
-    shield.CloseFigure()
-    g.DrawPath(pen, shield)
-    g.DrawLines(pen, System.Array[D.PointF]([P(23, 32), P(29, 38), P(41, 25)]))
-    g.Dispose()
-    return bmp
-
-
-def write_icon(path):
-    """The .ico for the two programs, the shortcuts and Apps & features: PNG images at the sizes Windows asks for."""
-    System, D, D2, T, F = net()
-    import System.IO as IO
-    pngs = []
-    for size in (16, 20, 24, 32, 40, 48, 64, 256):
-        ms = IO.MemoryStream()
-        draw_mark(D, D2, System, size).Save(ms, D.Imaging.ImageFormat.Png)
-        pngs.append((size, bytes(ms.ToArray())))
-    out, offset = [struct.pack('<HHH', 0, 1, len(pngs))], 6 + 16 * len(pngs)
-    for size, data in pngs:
-        out.append(struct.pack('<BBBBHHII', size % 256, size % 256, 0, 0, 1, 32, len(data), offset))
-        offset += len(data)
-    Path(path).write_bytes(b''.join(out) + b''.join(data for _, data in pngs))
+    return System, D, T, F
 
 
 def dark_caption(hwnd, light):
     v = ctypes.c_int(0 if light else 1)
-    ctypes.windll.dwmapi.DwmSetWindowAttribute(ctypes.c_void_p(hwnd), 20, ctypes.byref(v), ctypes.sizeof(v))   # DWMWA_USE_IMMERSIVE_DARK_MODE
+    ctypes.WinDLL('dwmapi', winmode=0x800).DwmSetWindowAttribute(ctypes.c_void_p(hwnd), 20, ctypes.byref(v), ctypes.sizeof(v))   # DWMWA_USE_IMMERSIVE_DARK_MODE
 
 
 def system_dpi():
@@ -305,7 +292,7 @@ def system_dpi():
 def run_window():
     k = system_dpi() / 96    # the layout below is in 96-DPI pixels; main() made this process DPI aware, so it is scaled here. Fonts, in points, scale by themselves.
     S = lambda v: int(round(v * k))
-    System, D, D2, T, F = net()
+    System, D, T, F = net()
     light = light_theme()
     C = lambda h: D.ColorTranslator.FromHtml(h)
     body, foot = (C('#ffffff'), C('#f3f3f3')) if light else (C('#2b2b2b'), C('#202020'))
@@ -323,7 +310,7 @@ def run_window():
         form.Text, form.Font, form.BackColor, form.ForeColor = 'Lastbook Setup', font, body, ink
         form.FormBorderStyle, form.MaximizeBox, form.MinimizeBox = F.FormBorderStyle.FixedSingle, False, True
         form.StartPosition, form.ClientSize = F.FormStartPosition.CenterScreen, D.Size(S(500), S(300))
-        form.Icon = D.Icon.FromHandle(draw_mark(D, D2, System, 64).GetHicon())
+        form.Icon = D.Icon.ExtractAssociatedIcon(sys.executable)
 
         def add(ctrl, x, y, w, h, parent=form):
             ctrl.Location, ctrl.Size = D.Point(S(x), S(y)), D.Size(S(w), S(h))
@@ -337,14 +324,14 @@ def run_window():
             return add(l, x, y, w, h)
 
         mark = F.PictureBox()
-        mark.Image, mark.SizeMode = draw_mark(D, D2, System, 96), F.PictureBoxSizeMode.Zoom
+        mark.Image, mark.SizeMode = form.Icon.ToBitmap(), F.PictureBoxSizeMode.Zoom
         add(mark, 28, 28, 48, 48)
         title = label('Install Lastbook', 92, 26, 380, 32, 15.0, True)
         sub = label(f'Version {VERSION}', 94, 58, 380, 20, colour=quiet)
         where_head = label('Install folder', 28, 100, 444, 18, colour=quiet)
         where = label(str(install_dir()), 28, 120, 444, 20)
         desk = F.CheckBox()
-        desk.Text, desk.Checked, desk.ForeColor = 'Add a desktop shortcut', False, ink
+        desk.Text, desk.Checked, desk.ForeColor = 'Add a desktop shortcut', desktop_link().exists(), ink    # an update keeps the shortcut the person has
         add(desk, 28, 152, 300, 24)
         bar = F.Panel()     # drawn in the window's own colours: the system progress bar stays light on a dark window
         bar.BackColor, bar.Visible = track, False
@@ -464,9 +451,6 @@ def message(text, flags):
 def main(argv):
     ctypes.windll.user32.SetProcessDPIAware()    # first: the uninstaller's message boxes would otherwise be stretched and blurry
     args = {a.lower() for a in argv}
-    if '--write-icon' in args:
-        write_icon(argv[argv.index('--write-icon') + 1])
-        return OK
     quiet = '/s' in args
     if '/uninstall' in args or payload() is None:
         if not quiet and message('Remove Lastbook from this computer?\n\nYour library (LastbookData) and settings stay.', 0x24) != 6:   # MB_YESNO | MB_ICONQUESTION, IDYES

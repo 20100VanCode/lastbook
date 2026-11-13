@@ -139,17 +139,17 @@
   "sizes": {
     "small": {
       "documents": "catalog records named by a shipped guide (doc field) with kind pdf, html or pptx, minus known_gap_documents; plus with_chapters",
-      "videos": "videos named by a guide; all 41 are verdict keep, none flagged, Corporals or firearms",
+      "videos": "Guide videos plus the reviewed essential-video inclusion list, minus the Small-only exclusion list.",
       "zim": [
         "mdwiki_en_all_maxi_2025-11.zim",
         "appropedia_en_all_maxi_2026-02.zim"
       ],
       "map": "base",
-      "expected_gb": 7.8,
+      "expected_gb": 7.69,
       "expected": {
         "documents_gb": 0.73,
         "videos": 41,
-        "videos_gb": 2.74,
+        "videos_gb": 2.2,
         "zim_gb": 2.88,
         "text_gb": 0.04,
         "search_gb_est": 0.07,
@@ -157,6 +157,23 @@
       },
       "with_chapters": [
         "pages/engineering/water-lifting-ah810e"
+      ],
+      "content_revision": "2026-11-13-small-v2",
+      "video_include": [
+        "video-5zz9o_wy-Y0",
+        "video-bsP45AXQGC4",
+        "video-W-Us9IP33Gs",
+        "video-OfSsPwil0kw",
+        "video-0kmzYQ6EuKI",
+        "video-p9HpupGtYME"
+      ],
+      "video_exclude": [
+        "video-XGNrYnGc3PU",
+        "video-XmB_WEdU1kU",
+        "video-7hB5oXYsTuQ",
+        "video-ZJQsUshlemI",
+        "video--5JZmKMprJY",
+        "video-UnbBYaO25Gg"
       ]
     },
     "medium": {
@@ -613,7 +630,7 @@
   },
   "disk": {
     "free_gb_now": 855,
-    "floor_gb": 100,
+    "floor_gb": 50,
     "new_bytes_gb_est": 110,
     "note": "100.5 GB of All's videos are on the Studios and 2.4 GB on the external drive; these cannot be clones"
   },

@@ -134,6 +134,9 @@ def main():
     for where in remote_hits:
         if where not in ALLOWED_REMOTE:
             problems.append(f'remote_storage named in {where}')
+    roots = [a.app / 'Contents' / d / 'engine' / 'setup' / 'roots.pem' for d in ('Resources', 'Frameworks')]
+    if not any(r.is_file() for r in roots):    # setup's downloader trusts only these roots; without them it downloads nothing
+        problems.append('missing from the package: engine/setup/roots.pem')
     print(f'files {n_files}, native binaries {n_macho}, modules looked inside {n_mods}')
     print(f'remote_storage string: {remote_hits or "nowhere"} (the module itself is refused above)')
     print(f'/Users/... strings: { {u: w[:3] for u, w in user_paths.items()} or "none"}')
