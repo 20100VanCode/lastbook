@@ -6,8 +6,8 @@ Chat answers questions using the library and links to its sources.
 
 Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 
-> This repository is private for now. It will be opened later, under a licence that has not been chosen yet (see
-> [LICENSE](LICENSE)).
+> Lastbook’s original code and documentation are licensed under the [MIT License](LICENSE).
+> This repository is private until the public release.
 
 ## Release status
 
@@ -188,8 +188,11 @@ scripts in `app/tests/` drive a real build against a real data folder, and their
 
 ## Contributing and licence
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). The licence is still to be decided
-([LICENSE](LICENSE)). Third-party software and models are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Lastbook’s original code and
+documentation use the [MIT License](LICENSE), permitting commercial use, modification and redistribution with the
+copyright and license notice. Third-party software, models, media and library content retain their own licenses,
+listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and each library pack. Distributed app bundles include
+GPL-covered components such as python-libzim and libzim and must also meet those components’ license obligations.
 
 ## Website maintenance
 
