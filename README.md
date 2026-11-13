@@ -7,7 +7,7 @@ Chat answers questions using the library and links to its sources.
 Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 
 > Lastbook’s original code and documentation are licensed under the [MIT License](LICENSE).
-> This repository is private until the public release.
+> Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
 ## Release status
 
