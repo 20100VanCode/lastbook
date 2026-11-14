@@ -128,6 +128,7 @@ p{margin:0 0 1em}
 .dl-item{display:flex;flex-direction:column;align-items:center;max-width:380px}
 .dl-item .cap{margin:9px 0 0;font:700 1.0625rem/1.35 var(--body);color:var(--ink);text-shadow:0 0 6px var(--paper),0 0 2px var(--paper);text-wrap:balance}
 [data-os="win"] .dl-win{order:-1}
+[data-os="linux"] .dl-linux{order:-1}
 .then{margin:16px 0 0;font:700 1.0625rem/1.45 var(--body);color:var(--ink);text-shadow:0 0 6px var(--paper),0 0 2px var(--paper);animation:up .4s .2s ease both}
 .then .sep{margin:0 .3em;color:var(--ink-3)}
 .then a{display:inline-block;padding:10px 0 6px;margin:-10px 0 -6px;background-position:0 calc(100% - 4px)}
@@ -241,7 +242,7 @@ p{margin:0 0 1em}
   background:radial-gradient(closest-side,rgba(22,21,15,.16),rgba(22,21,15,.1) 55%,rgba(22,21,15,0))}
 .block{margin:72px 0}
 .section-h{margin-top:72px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:56px 0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:34px;margin:56px 0}
 .card.plain h2{font-size:clamp(1.45rem,1.2rem + .8vw,1.8rem)}
 .card.later,.file-later{box-shadow:none;background:transparent}
 .card.later::before,.file-later::before{border-style:dashed;border-color:var(--line-2)}
@@ -249,7 +250,7 @@ p{margin:0 0 1em}
 
 /* download page */
 .os-note{margin:0 0 30px;max-width:none}
-.files{list-style:none;padding:0;margin:10px 0 18px;display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.files{list-style:none;padding:0;margin:10px 0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:34px}
 .file{display:flex;flex-direction:column}
 .file h2{font-size:2rem;margin-bottom:.2em}
 .file-name{font-weight:800}
@@ -259,7 +260,7 @@ p{margin:0 0 1em}
 .file .req:last-of-type{margin-bottom:22px}
 .host{margin:0 0 48px}
 .page .ready{margin:0 0 40px;text-align:left;max-width:none}
-.os{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.os{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:34px;align-items:start}
 .os-side{display:grid;gap:34px}
 .os-card{padding:32px 30px 28px}
 .os-card h2{display:flex;align-items:center;gap:12px;font-size:2.1rem}

@@ -5,7 +5,7 @@
   var p = (n.userAgentData && n.userAgentData.platform) || n.platform || "";
   d.className += " js";
   var phone = /Android|iPhone|iPod|iPad/i.test(ua) || (/Mac/.test(p) && n.maxTouchPoints > 1);
-  var os = phone ? "phone" : /Win/i.test(p + ua) ? "win" : /Mac/i.test(p + ua) ? "mac" : "";
+  var os = phone ? "phone" : /Win/i.test(p + ua) ? "win" : /Mac/i.test(p + ua) ? "mac" : /Linux/i.test(p + ua) ? "linux" : "";
   if (os) d.setAttribute("data-os", os);
   // CSS already draws Windows first; this moves it first in the page too,
   // so keyboard and screen-reader order match what is on screen.

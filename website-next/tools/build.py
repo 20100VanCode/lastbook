@@ -19,6 +19,7 @@ SITE = "https://lastbook.org"
 R2 = "https://downloads.lastbook.org"
 MAC = R2 + "/Lastbook-1.1.8-mac.dmg"
 WIN = R2 + "/Lastbook-1.1.8-Setup.exe"
+LINUX = R2 + "/Lastbook_1.1.9_amd64.deb"
 LIB = R2 + "/Lastbook-Small-20261113.zip"
 DATE = "13 November 2026"
 
@@ -137,11 +138,12 @@ def pic(stem, w, h, alt, widths=(720, 1280), sizes="92vw", fallback=None, eager=
 
 MAC_BTN = btn(MAC, APPLE, "Download for Mac", "Lastbook 1.1.8 · 28.5 MB")
 WIN_BTN = btn(WIN, WINDOWS, "Download for Windows", "Lastbook 1.1.8 · 105 MB")
+LINUX_BTN = btn(LINUX, BOX, "Download for Linux", "Lastbook 1.1.9 · 29.9 MB")
 LIB_BTN = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
 LIB_BTN_SHORT = btn(LIB, BOX, "Download the library", "Small · 7.7 GB", "btn-2")
 MAC_FINE = "Free · Apple M1 or newer · macOS 14 or newer"
 WIN_FINE = "Free · Windows 10 or 11, 64-bit"
-PHONE = '<p class="os-note fine">Lastbook runs on Mac and Windows computers. It doesn’t run on iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></p>'
+PHONE = '<p class="os-note fine">Lastbook runs on Mac, Windows and Linux computers. It doesn’t run on iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></p>'
 
 MAC_CHECK = "To check: Apple menu &gt; <b>About This Mac</b>. <b>Chip</b> should say Apple M1 or later (M2, M3 and so on), and <b>macOS</b> should be 14 or higher."
 WIN_CHECK = "To check: <b>Settings</b> &gt; <b>System</b> &gt; <b>About</b>. <b>System type</b> should say 64-bit."
@@ -164,12 +166,13 @@ AGAIN = f"""<section class="band band-lamp" aria-labelledby="again-h">
   <div class="wrap again-in">
     {ink("foot-crowd", 210, 104, "again-fig")}
     <h2 id="again-h">Set it up now, while you have internet and power.</h2>
-    <p>Then it’s ready when you need it. Free for Mac and Windows.</p>
+    <p>Then it’s ready when you need it. Free for Mac, Windows and Linux.</p>
     <p class="again">
       <a class="btn-2 dl-mac" href="{MAC}">Download for Mac</a>
       <a class="btn-2 dl-win" href="{WIN}">Download for Windows</a>
+      <a class="btn-2 dl-linux" href="{LINUX}">Download for Linux</a>
     </p>
-    <p class="fine">Mac 1.1.8 · 28.5 MB · Windows 1.1.8 · 105 MB</p>
+    <p class="fine">Mac 1.1.8 · 28.5 MB · Windows 1.1.8 · 105 MB · Linux 1.1.9 · 29.9 MB</p>
   </div>
 </section>
 """
@@ -192,7 +195,7 @@ GRAIN = ('<svg class="grain" aria-hidden="true" focusable="false"><filter id="gr
 
 def home():
     return head("Lastbook: a free survival library that works with no internet",
-                "Survival and repair guides, medical books, encyclopedias, how-to videos and a map, on your own Mac or Windows computer. Free. Never uses the internet.",
+                "Survival and repair guides, medical books, encyclopedias, how-to videos and a map, on your own Mac, Windows or Linux computer. Free. Never uses the internet.",
                 "/", extra=f'\n<script src="{CROWD}" defer></script>') + bar("/", over=True) + f"""
 <main id="main">
 
@@ -211,10 +214,11 @@ def home():
     <h1 class="wm" id="h1"><span class="vh">Lastbook</span>
       {WORDMARK}
     </h1>
-    <p class="lead">Everything you need to survive and rebuild society.<br>Free, local, offline and private.<span class="phone-note"> It’s for Mac and Windows computers, not iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></span></p>
+    <p class="lead">Everything you need to survive and rebuild society.<br>Free, local, offline and private.<span class="phone-note"> It’s for Mac, Windows and Linux computers, not iPhone, iPad or Android. <strong>Open lastbook.org on your computer.</strong></span></p>
     <div class="dl">
       <div class="dl-item dl-mac"><a class="btn" href="{MAC}">{APPLE}<span>Download for Mac</span></a><p class="cap">28.5 MB · Apple M1 or newer · macOS 14+</p></div>
       <div class="dl-item dl-win"><a class="btn-2" href="{WIN}">{WINDOWS}<span>Download for Windows</span></a><p class="cap">105 MB · Windows 10 or 11, 64-bit</p></div>
+      <div class="dl-item dl-linux"><a class="btn-2" href="{LINUX}">{BOX}<span>Download for Linux</span></a><p class="cap">29.9 MB · Ubuntu 24.04 · Intel/AMD 64-bit</p></div>
     </div>
   </div>
 
@@ -279,7 +283,7 @@ def home():
         <p>Internet is needed to download the app, library and optional AI. Once setup finishes, reading, maps, videos and AI work offline.</p>
       </div></details>
       <details><summary>What is Chat?</summary><div>
-        <p>Chat uses the optional local Gemma model to answer questions from your library and link to its sources. It is available in the Mac and Windows apps.</p>
+        <p>Chat uses the optional local Gemma model to answer questions from your library and link to its sources. It is available in the Mac, Windows and Linux apps.</p>
       </div></details>
       <details><summary>Is the medical information checked?</summary><div>
         <p>It comes from published guides, such as Hesperian, the World Health Organization and the Red Cross. Lastbook itself is not clinically reviewed, and it doesn’t replace trained care. In an emergency, call 911 if you can.</p>
@@ -309,13 +313,14 @@ def home():
 
 # ---------------------------------------------------------------- Download
 def download():
-    return head("Download", "Download Lastbook for Mac or Windows. Setup downloads your library, local map and optional local AI.", "/download/") + bar("/download/") + f"""
+    return head("Download", "Download Lastbook for Mac, Windows or Linux. Setup downloads your library, local map and optional local AI.", "/download/") + bar("/download/") + f"""
 <main id="main" class="page"><div class="wrap">
 {page_head("Download Lastbook", "Install the app, then choose your library, local map and optional AI.", "fig-laptop")}
 {PHONE}
 <ul class="files" id="need">
 <li class="card file dl-mac"><h2>Mac</h2><p class="file-name">Lastbook 1.1.8 · 28.5 MB</p><p class="req">Apple Silicon (M1 or newer) · macOS 14 or newer</p>{MAC_BTN}<p>Setup checks your storage and downloads your library and optional local AI.</p></li>
 <li class="card file dl-win"><h2>Windows</h2><p class="file-name">Lastbook 1.1.8 · 105 MB</p><p class="req">Windows 10 or 11 · 64-bit</p>{WIN_BTN}<p>Setup lets you choose your library size, local map and optional local AI.</p></li>
+<li class="card file dl-linux"><h2>Linux</h2><p class="file-name">Lastbook 1.1.9 · 29.9 MB</p><p class="req">Ubuntu 24.04 · Intel/AMD 64-bit</p>{LINUX_BTN}<p>Choose your library, state map and optional local AI during setup.</p></li>
 </ul>
 <div class="os">
 <section class="card os-card dl-mac" id="mac" aria-labelledby="mac-h">
@@ -325,6 +330,7 @@ def download():
 <p>Once setup finishes, the library and AI work offline.</p>
 </section>
 <section class="card os-card dl-win" id="windows" aria-labelledby="win-h"><h2 id="win-h">{WINDOWS} Install on Windows</h2><ol class="list"><li>Download and run <b>Lastbook-1.1.8-Setup.exe</b>.</li><li>Follow the installer, then open Lastbook.</li><li>Choose your library size, state map and optional local AI in setup.</li></ol><p>If Windows blocks the installer, contact <a href="mailto:hello@lastbook.org">hello@lastbook.org</a> with the message you see.</p></section>
+<section class="card os-card dl-linux" id="linux" aria-labelledby="linux-h"><h2 id="linux-h">Install on Linux</h2><ol class="list"><li>Download the Ubuntu package.</li><li>In the folder containing it, run <code>sudo apt install ./Lastbook_1.1.9_amd64.deb</code>.</li><li>Open Lastbook from your applications menu and choose your library, state map and optional local AI.</li></ol><p>Ubuntu 24.04 on Intel/AMD 64-bit computers. Setup downloads the content; Videos, Map and Chat work offline afterwards.</p></section>
 </div>
 <section class="card plain" id="check"><h2>Check your download</h2><p>Mac 1.1.8 SHA-256</p><p><code style="overflow-wrap:anywhere">626e3b451d5a1a6855ed2b2fc2e4147d070153ca2d803f544c828a1447dfab08</code></p><p><a href="/SHA256SUMS.txt">All published checksums</a></p></section>
 </div></main>
