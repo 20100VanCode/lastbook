@@ -41,10 +41,13 @@
 #  include <windows.h>
 #  include <fcntl.h>
 #  include <io.h>
-#else
+#elif defined(__APPLE__)
 #  include <unistd.h>
 #  include <sys/sysctl.h>
 #  include <mach/mach.h>
+#else
+#  include <unistd.h>
+#  include <sys/sysinfo.h>
 #endif
 
 using json = nlohmann::ordered_json;
@@ -74,10 +77,13 @@ static uint64_t ram_total() {
 #ifdef _WIN32
     MEMORYSTATUSEX m = { sizeof(m) };
     return GlobalMemoryStatusEx(&m) ? m.ullTotalPhys : 0;
-#else
+#elif defined(__APPLE__)
     uint64_t v = 0;
     size_t n = sizeof(v);
     return sysctlbyname("hw.memsize", &v, &n, nullptr, 0) == 0 ? v : 0;
+#else
+    struct sysinfo si;
+    return sysinfo(&si) == 0 ? (uint64_t) si.totalram * si.mem_unit : 0;
 #endif
 }
 
@@ -85,13 +91,26 @@ static uint64_t ram_free() {   // what could be had without pushing other progra
 #ifdef _WIN32
     MEMORYSTATUSEX m = { sizeof(m) };
     return GlobalMemoryStatusEx(&m) ? m.ullAvailPhys : 0;
-#else
+#elif defined(__APPLE__)
     vm_statistics64_data_t s;
     mach_msg_type_number_t count = HOST_VM_INFO64_COUNT;
     if (host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t) &s, &count) != KERN_SUCCESS) {
         return 0;
     }
     return (uint64_t) (s.free_count + s.inactive_count + s.purgeable_count) * (uint64_t) vm_page_size;
+#else
+    FILE * f = fopen("/proc/meminfo", "r");     // Linux's own estimate of the same: MemAvailable
+    unsigned long long kb = 0;
+    char line[256];
+    while (f && fgets(line, sizeof(line), f)) {
+        if (sscanf(line, "MemAvailable: %llu kB", &kb) == 1) {
+            break;
+        }
+    }
+    if (f) {
+        fclose(f);
+    }
+    return (uint64_t) kb * 1024;
 #endif
 }
 

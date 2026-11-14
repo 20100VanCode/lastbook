@@ -38,7 +38,7 @@ def runner_path():
     exe = 'lastbook-llm.exe' if os.name == 'nt' else 'lastbook-llm'
     here = [paths.APP / 'llm' / exe]                         # in the packaged app
     if not paths.FROZEN:
-        here.append(paths.APP / 'derived' / 'llm' / ('bin-win' if os.name == 'nt' else 'bin-mac') / exe)
+        here.append(paths.APP / 'derived' / 'llm' / {'win32': 'bin-win', 'darwin': 'bin-mac'}.get(sys.platform, 'bin-linux') / exe)
     return next((p for p in here if p.is_file()), None)
 
 

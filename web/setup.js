@@ -118,7 +118,7 @@
     return best || (path ? null : ds[0] || null);   // a folder on a disk the engine did not report: its free space is not known here
   }
   const diskName = d => !d ? 'this disk' : d.name || (WIN ? (String(d.path).match(/^[A-Z]:/i) || ['this disk'])[0].toUpperCase()   // C:, D:
-    : /^\/Volumes\/[^/]+/.test(d.path) ? d.path.split('/')[2] : 'this Mac');
+    : /^\/Volumes\/[^/]+/.test(d.path) ? d.path.split('/')[2] : /Linux/.test(navigator.platform || '') ? 'this computer' : 'this Mac');
 
   function plan() {   // what the current choice adds: bytes to download, space it needs (download + unpacked + 2 GB, as the engine counts)
     const c = cur() || {};

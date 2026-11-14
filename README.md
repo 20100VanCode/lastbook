@@ -1,6 +1,6 @@
 # Lastbook
 
-Lastbook is an offline survival library for Mac and Windows. It puts manuals, videos, encyclopedias, an offline map and
+Lastbook is an offline survival library for Mac, Windows and Linux. It puts manuals, videos, encyclopedias, an offline map and
 short practical guides on one computer. After setup, it works offline. The desktop sidebar opens Videos, Map and Chat.
 Chat answers questions using the library and links to its sources.
 
@@ -15,6 +15,24 @@ Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 |---|---|---|
 | macOS (Apple Silicon, macOS 14 or later) | 1.1.8 | Live on lastbook.org, signed |
 | Windows (64-bit, Windows 10 or later) | 1.1.8 | Live on lastbook.org, Authenticode signed |
+| Linux (Ubuntu 24.04 LTS, x86_64) | 1.1.9 | Ubuntu package; installation instructions below |
+
+## Install on Linux
+
+The Linux package targets **Ubuntu 24.04 LTS on Intel/AMD x86_64 computers**. Download
+[Lastbook for Ubuntu](https://downloads.lastbook.org/Lastbook_1.1.9_amd64.deb), then install it with apt so Ubuntu resolves its dependencies.
+
+```bash
+sudo apt install ./Lastbook_1.1.9_amd64.deb
+```
+
+Open Lastbook from the application menu. First-run setup downloads your chosen library, state map and optional local AI.
+The app uses Ubuntu's GTK, WebKitGTK and media codecs. Its own files install under `/opt/lastbook`, and your library and
+settings stay in your home folder. Removing the package leaves those downloaded files and settings in place.
+
+The Linux release was tested on Ubuntu 24.04.5 in WSL2, including installation, setup, video playback, maps, address search,
+PDF reading, offline AI with citations, shutdown and uninstall. AI tests used the CPU. Native Linux GPU performance and
+other Linux distributions have not been validated for this release.
 
 ## What it does
 
@@ -37,7 +55,7 @@ Website: <https://lastbook.org>. Contact: hello@lastbook.org.
 
 - **No listening port.** The desktop app opens no network port. The window and the engine talk through an in-memory bridge
   (`app/bridge.py`): WKURLSchemeHandler on macOS (`app/shell_macos.py`), WebView2 `WebResourceRequested` on Windows
-  (`app/shell_windows.py`). The local AI runner speaks JSON lines on standard input and output and opens no socket either.
+  (`app/shell_windows.py`), and WebKitGTK `URISchemeRequest` on Linux (`app/shell_linux.py`). The local AI runner speaks JSON lines on standard input and output and opens no socket either.
 - **Two uses of the network, both started by the person.** (1) Setup's downloader (`engine/setup/`), when the person
   starts or resumes a download. (2) The update check (`engine/update.py`, `web/update.js`), when the person presses
   the button. Both go through `engine/setup/download.py`, the only module that opens a connection: HTTPS on port 443 only,
@@ -61,12 +79,12 @@ The setup contract, including state maps, is in [docs/SETUP-API.md](docs/SETUP-A
 
 | Path | What it is |
 |---|---|
-| `app/` | The desktop app: entry point (`main.py`), the no-port bridge, the macOS and Windows shells, and tests (`app/tests/`). |
+| `app/` | The desktop app: entry point (`main.py`), the no-port bridge, the macOS, Windows and Linux shells, and tests (`app/tests/`). |
 | `engine/` | Paths and data-folder lookup, library access, saved pages, offline address search (`address_search.py`), the update check (`update.py`) and first-run setup (`engine/setup/`). `engine/vendor-macos/` holds pypdfium2 for the Mac build. |
 | `server.py`, `assistant.py`, `retrieval.py`, `llm_local.py` | The engine: request handler, the assistant and its citation checks, keyword plus meaning-based search, and the local AI (model pins, fit check, runner control). |
 | `web/` | The interface, in plain HTML, CSS and JavaScript with no build step and nothing loaded from the web. `setup.*` is the setup screen, `update.js` the update check in About. |
 | `content/` | The curated guides (`topics/*.json`) and what curators looked for and did not find (`gaps.json`). Format: `content/SCHEMA.md`. |
-| `packaging/` | App builds (macOS and Windows), the Windows installer and its front (`setup_stub/`), signing helper (`sign_windows.ps1`), icons (`icon/`), pack and state-map builders, release manifest, TLS roots tools, package scans, and `packaging/llm/` (the local AI runner). |
+| `packaging/` | App builds (macOS, Windows and Linux), the Windows installer and its front (`setup_stub/`), signing helper (`sign_windows.ps1`), icons (`icon/`), pack and state-map builders, release manifest, TLS roots tools, package scans, and `packaging/llm/` (the local AI runner). |
 | `derived/packs/pack-spec.json` | What goes into each download pack (Small, Medium, All and add-ons) and each state map. Everything else under `derived/` is generated and not kept here. |
 | `tools/` | Builders for the offline map, addresses and place finder, plus curator helpers (`libq.py`, `validate_topics.py`). |
 | `website/`, `website-next/` | The earlier website and the current static lastbook.org site, respectively. |
@@ -101,7 +119,7 @@ so some of its paths and ports describe that setup. The desktop app does not use
 
 The builds write into `derived/app-build/` and refuse to finish if the package scan finds something that must not ship:
 test code, a network call outside setup's downloader, a web address in our own pages, or a word from the private list
-(see below). Both builds also run the TLS roots gate.
+(see below). The builds also run the TLS roots gate.
 
 **macOS (Apple Silicon, needs [uv](https://github.com/astral-sh/uv)):**
 
@@ -142,6 +160,19 @@ The published Windows 1.1.8 installer passed installation and startup checks, an
 had valid signatures. The release is 104,960,408 bytes with SHA-256
 `0b31eea87fa05523ca710575e5939754fe10a65eb44ee7d88fe975fbbd161d74`.
 
+**Linux (build on Ubuntu 24.04 x86_64)**
+
+```bash
+bash packaging/llm/build_llm_linux.sh
+bash packaging/linux/build_app_linux.sh
+```
+
+The app build creates `derived/app-build/linux/<timestamp>/Lastbook_1.1.9_amd64.deb`. It bundles the local AI runner when
+`derived/llm/bin-linux/lastbook-llm` exists. The package uses the system Python 3.12 and pinned wheels from
+`packaging/linux/requirements_linux.txt`. `packaging/linux/smoke_deb.sh` checks the package in a fresh Ubuntu container.
+Linux integration-test helpers live under `app/tests/linux_*`; set `LASTBOOK_TEST_HOST` to a Windows SSH host with WSL2
+before running them. Their disposable test distro is named `LastbookTest`, with files under `C:\LastbookTest`.
+
 ## Packs, state maps and the local AI
 
 - **Packs** are data folders: a library plus its catalog, search index and map. `packaging/build_packs.py` builds them
@@ -157,7 +188,7 @@ had valid signatures. The release is 104,960,408 bytes with SHA-256
   says it fits (about 18 GB of memory for model and context, plus a reserve) and says why in plain words when it does not.
   Setup downloads it directly from Hugging Face. The model is never part of the app or of this repository. The runner,
   `lastbook-llm`, is our own small program (`packaging/llm/lastbook_llm.cpp`) on llama.cpp tag b12032: Metal on a Mac,
-  Vulkan with CPU fallbacks on Windows.
+  Vulkan with CPU fallbacks on Windows and Linux.
 - **Meaning-based search** uses BAAI's bge-small-en-v1.5 (ONNX) through onnxruntime, on Windows only; the Mac build uses
   keyword search.
 

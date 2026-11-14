@@ -37,7 +37,7 @@ def _ver(s):
 
 
 def platform_key():
-    return 'mac' if sys.platform == 'darwin' else 'windows' if sys.platform == 'win32' else None
+    return 'mac' if sys.platform == 'darwin' else 'windows' if sys.platform == 'win32' else 'linux' if sys.platform.startswith('linux') else None
 
 
 def _mac_bundle():
@@ -74,6 +74,9 @@ def app_version():
                 return str(plistlib.load(f).get('CFBundleShortVersionString') or '') or None
         if sys.platform == 'win32' and getattr(sys, 'frozen', False):
             return _windows_exe_version(sys.executable)
+        if sys.platform.startswith('linux') and getattr(sys, 'frozen', False):    # the .deb's /opt/lastbook/VERSION
+            v = (Path(sys._MEIPASS) / 'VERSION').read_text(encoding='utf-8').strip()
+            return v if VER.match(v) else None
     except Exception:
         traceback.print_exc()
     return os.environ.get('LASTBOOK_VERSION') or None
@@ -85,6 +88,11 @@ def os_version():
     if sys.platform == 'win32':
         w = sys.getwindowsversion()
         return f'{w.major}.{w.minor}.{w.build}'
+    if sys.platform.startswith('linux'):     # Ubuntu's 24.04, from os-release
+        try:
+            return platform.freedesktop_os_release().get('VERSION_ID') or '0'
+        except OSError:
+            return '0'
     return '0'
 
 
@@ -96,6 +104,17 @@ def validate(m, key):
     if not _ver(e.get('version')):
         return None
     return {'version': e['version'], 'min_os': e['min_os'] if _ver(e.get('min_os')) else None}
+
+
+OS_NAMES = {'mac': 'macOS', 'windows': 'Windows', 'linux': 'Ubuntu'}
+
+
+def _has_no_entry(data, key):
+    try:
+        m = json.loads(data)
+    except ValueError:
+        return False
+    return isinstance(m, dict) and m.get('version') == 1 and key not in m
 
 
 class Updater:
@@ -124,7 +143,7 @@ class Updater:
 
     def check(self):
         if not self.key:
-            return {'error': 'Updates are for the Mac and Windows app.', 'code': 'unsupported'}
+            return {'error': 'Updates are for the Mac, Windows and Linux app.', 'code': 'unsupported'}
         if self.thread is not None and self.thread.is_alive():
             return self.state()
         self._set(state='checking')
@@ -175,6 +194,8 @@ class Updater:
             offer = validate(json.loads(data), self.key)
         except ValueError:
             offer = None
+        if not offer and self.key == 'linux' and _has_no_entry(data, self.key):   # Linux is announced only once the site lists it
+            return self._set(state='not_published', message='No update information yet. Try again later.')
         if not offer:
             return self._set(state='error', code='bad_info', message='The update information on the download site could not be read. Try again later.')
         mine = _ver(self.version or '')
@@ -182,7 +203,7 @@ class Updater:
             return self._set(state='up_to_date', latest=offer['version'])
         if offer['min_os'] and _ver(os_version()) and _ver(os_version()) < _ver(offer['min_os']):
             return self._set(state='too_old_os', version=offer['version'],
-                             message=f"Version {offer['version']} needs {'macOS' if self.key == 'mac' else 'Windows'} {offer['min_os']} or later.")
+                             message=f"Version {offer['version']} needs {OS_NAMES.get(self.key, self.key)} {offer['min_os']} or later.")
         self._set(state='available', version=offer['version'])
 
 

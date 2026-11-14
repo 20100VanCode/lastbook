@@ -6,8 +6,10 @@
   const c = document.documentElement.classList;
   const inApp = location.protocol === 'lastbook:' || location.hostname === 'lastbook.invalid';
   const win = location.hostname === 'lastbook.invalid' || (!inApp && /^Win/.test(navigator.platform || ''));
+  // The Linux app: a GTK window with its own title bar, so the page takes the browser's look (no traffic lights, no window material).
+  const linuxApp = inApp && !win && /Linux/.test(navigator.platform || '');
   c.add(win ? 'plat-win' : 'plat-mac');
-  if (inApp) c.add('in-app');
+  if (inApp && !linuxApp) c.add('in-app');
   try { if (localStorage.getItem('sg.side-off') === '1') c.add('side-off') } catch { }
   const compact = () => c.toggle('compact', win && innerWidth >= 640 && (innerWidth < 900 || c.contains('side-off')));
   compact();

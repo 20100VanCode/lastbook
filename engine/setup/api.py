@@ -1218,6 +1218,8 @@ def _default():
         from engine import paths
         if sys.platform == 'win32':
             settings = Path(os.environ.get('APPDATA') or Path.home() / 'AppData' / 'Roaming') / 'Lastbook'
+        elif sys.platform.startswith('linux'):
+            settings = Path(os.environ.get('XDG_CONFIG_HOME') or Path.home() / '.config') / 'Lastbook'
         else:
             settings = Path.home() / 'Library' / 'Application Support' / 'Lastbook'
         SETUP = Setup('manage', settings, paths.DATA, current=paths.DATA)

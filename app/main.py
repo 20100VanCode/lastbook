@@ -34,7 +34,11 @@ ASK = 'Lastbook needs its library folder, called LastbookData. Unzip the library
 
 
 def app_folders():
-    """(settings, this computer's app data): roaming and local on Windows, one place on a Mac."""
+    """(settings, this computer's app data): roaming and local on Windows, one place on a Mac, XDG's config and data folders on Linux."""
+    if sys.platform.startswith('linux'):
+        home = Path.home()
+        return (Path(os.environ.get('XDG_CONFIG_HOME') or home / '.config') / 'Lastbook',
+                Path(os.environ.get('XDG_DATA_HOME') or home / '.local' / 'share') / 'Lastbook')
     if sys.platform == 'win32':
         local = Path(os.environ.get('LOCALAPPDATA') or Path.home() / 'AppData' / 'Local')
         return Path(os.environ.get('APPDATA') or Path.home() / 'AppData' / 'Roaming') / 'Lastbook', local / 'Lastbook'
@@ -110,6 +114,9 @@ def choose_folder(message):
     if sys.platform == 'win32':
         import shell_windows
         return shell_windows.choose_folder(ASK_TITLE, message)
+    if sys.platform.startswith('linux'):
+        import shell_linux
+        return shell_linux.choose_folder(ASK_TITLE, message)
     show_error(message)
     return None
 
@@ -191,15 +198,37 @@ def pick_folder(files=False):
             finally:
                 done.set()
         threading.Thread(target=ask, daemon=True, name='pick-folder').start()   # pick_folder makes its own thread a COM apartment
+    elif sys.platform.startswith('linux'):
+        import shell_linux
+        from gi.repository import GLib
+
+        def ask():
+            try:
+                chosen = shell_linux.pick(files, str(app_folders()[1]))
+                if chosen:
+                    out.append(chosen)
+            except Exception:
+                traceback.print_exc()
+            finally:
+                done.set()
+            return False
+        GLib.idle_add(ask)      # GTK's dialogs belong to the main thread
     else:
         return None
     done.wait()
     return out[0] if out else None
 
 
+def linux_dirs():
+    """(data, cache) for WebKit's own storage on Linux: the page's saved settings, and what it can rebuild."""
+    return str(app_folders()[1]), str(Path(os.environ.get('XDG_CACHE_HOME') or Path.home() / '.cache') / 'Lastbook')
+
+
 def relaunch():
     """Start again, as the person would by opening the app: it then finds the library setup has just put in place."""
     argv = [sys.executable] + ([] if FROZEN else [str(Path(__file__).resolve())])
+    if sys.platform.startswith('linux') and FROZEN:   # /usr/bin/python3 with its flags and Lastbook's launcher, without this run's arguments
+        argv = [sys.executable] + list(sys.orig_argv[1:len(sys.orig_argv) - len(sys.argv) + 1])
     # The engine's current folder and startup flags must not override the
     # library switch staged by setup on the next normal launch.
     os.environ.pop('LASTBOOK_DATA', None)
@@ -208,6 +237,8 @@ def relaunch():
         import subprocess
         subprocess.Popen(argv, close_fds=True, creationflags=0x00000008 | 0x00000200)   # DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
         os._exit(0)
+    if sys.platform.startswith('linux') and 'shell_linux' in sys.modules:
+        sys.modules['shell_linux'].before_exec()
     os.execv(argv[0], argv)     # same process, same Dock icon; pipes to helpers close on exec, so they end
 
 
@@ -243,6 +274,10 @@ def run_setup():
             show_error(problem)
             return 3
         return shell_windows.run(setup_api.SetupServer, work)
+    if sys.platform.startswith('linux'):
+        import shell_linux
+        shell_linux.run(B.Bridge(setup_api.SetupServer, 'stream', B.ORIGIN_MAC), linux_dirs())
+        return 0
     show_error('The Lastbook desktop app runs on Windows and macOS. Everywhere else, use the server version: python server.py')
     return 2
 
@@ -254,6 +289,12 @@ def show_error(message):
     elif sys.platform == 'win32':
         import ctypes
         ctypes.windll.user32.MessageBoxW(None, message, 'Lastbook', 0x10)  # MB_ICONERROR
+    elif sys.platform.startswith('linux'):
+        try:
+            import shell_linux
+            shell_linux.show_error(message)
+        except Exception:     # no GTK here: the terminal below still says it
+            pass
     if sys.stderr is not None:
         sys.stderr.write(message.rstrip('\n') + '\n')
 
@@ -312,6 +353,10 @@ def main():
     ap.add_argument('--data', help='data folder holding library-data/ and derived/ (or set LASTBOOK_DATA)')
     ap.add_argument('--ask', action='store_true', help='ask for the library folder in a dialog instead of opening setup')
     a = ap.parse_args()
+    if sys.platform.startswith('linux'):
+        import shell_linux
+        if not shell_linux.claim(str(app_folders()[1])):     # already open: that window comes to the front instead
+            return 0
     note = None
     given = a.data or os.environ.get('LASTBOOK_DATA')    # a folder named outright is opened as it is: only its own staged switch is made
     from engine.setup import api as setup_api
@@ -354,6 +399,9 @@ def main():
     elif sys.platform == 'win32':
         import shell_windows
         return shell_windows.run(server, data)
+    elif sys.platform.startswith('linux'):
+        import shell_linux
+        shell_linux.run(B.Bridge(server, 'stream', B.ORIGIN_MAC), linux_dirs())
     else:
         show_error('The Lastbook desktop app runs on Windows and macOS. Everywhere else, use the server version: python server.py')
         return 2
