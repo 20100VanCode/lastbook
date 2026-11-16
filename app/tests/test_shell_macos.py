@@ -5,8 +5,8 @@
 
 Issue #20: Lastbook 1.1.8 died at launch on macOS 15 inside -[WKWebView(WKTesting) _networkProcessIdentifier], which until WebKit
 313919@main (May 2026, bug 315599) RELEASE_ASSERTed when there was no network process. Nothing in Python can catch that, so the
-shell must never ask it. What the PIDs are for must still work: the memory limit (page and GPU), ending a stuck or too-big page with
-SIGKILL, and starting again at home. Never packaged."""
+shell must never ask it. What the PIDs are for must still work: the memory limit (page and GPU measured, the
+Networking process as the fixed NETWORK_SHARE), ending a stuck or too-big page with SIGKILL, and starting again at home. Never packaged."""
 import os, re, signal, sys, threading, unittest
 from pathlib import Path
 
@@ -140,6 +140,16 @@ class MemoryWatch(unittest.TestCase):
         app = int(0.4 * self.GB)
         self.assertEqual(self.watch({101: int(3.2 * self.GB), os.getpid(): app}, rounds=1), [])
         self.assertEqual(self.watch({101: int(3.2 * self.GB), 202: int(0.6 * self.GB), os.getpid(): app}, rounds=1), [S.TOO_BIG])
+
+    def test_the_network_share_is_counted_as_a_fixed_amount(self):
+        """Page and GPU 3 GB, app just under what is left: NETWORK_SHARE alone decides. 16 MB short of the limit is over with it;
+        48 MB short is under. Before issue #20 the measured Networking footprint (about 7 MB) stood here instead."""
+        MB = 1024 ** 2
+        self.assertEqual(S.NETWORK_SHARE, 32 * MB)
+        page, gpu = int(2.5 * self.GB), int(0.5 * self.GB)
+        just_under = lambda short: {101: page, 202: gpu, os.getpid(): S.MEMORY_LIMIT - page - gpu - short}
+        self.assertEqual(self.watch(just_under(16 * MB), rounds=1), [S.TOO_BIG])
+        self.assertEqual(self.watch(just_under(48 * MB), rounds=1), [])
 
     def test_a_small_page_is_not_ended(self):
         """Over the limit because of the app itself: ending a 0.5 GB page would give nothing back."""
