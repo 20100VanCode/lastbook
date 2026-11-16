@@ -49,7 +49,11 @@
   "low blood sugar",
   "triage",
   "911",
-  "emergency"
+  "emergency",
+  "poison",
+  "swallowed",
+  "overdose",
+  "pesticide"
  ],
  "choices": [
   {
@@ -325,6 +329,25 @@
    ]
   },
   {
+   "id": "poison",
+   "label": "Poisoning: swallowed a chemical, medicine or pesticide",
+   "hint": "Cleaning product, too many pills (overdose), fuel, button battery, a child got into something",
+   "read": [
+    {
+     "doc": "med-2e83e22162a9a006",
+     "page": 348,
+     "label": "First steps for any poisoning",
+     "note": "IFRC 2025 steps: stop the exposure, find out what was taken and how much, reach a poison centre or EMS and follow them. Do not make the person vomit."
+    },
+    {
+     "doc": "med-2e83e22162a9a006",
+     "page": 347,
+     "label": "Do not induce vomiting or give milk, water or charcoal",
+     "note": "IFRC 2025: do not induce vomiting, and do not give milk, water or activated charcoal unless a poison centre or poison expert says to. Also lists signs of poisoning."
+    }
+   ]
+  },
+  {
    "id": "diarrhea",
    "label": "Diarrhea, vomiting or dehydration",
    "hint": "Stomach bug, bad water, baby or older person drying out",
@@ -503,6 +526,11 @@
    "text": "A suspected stroke needs a hospital right away; treatment works best within the first hours.",
    "doc": "med-f0d080c42e81de5f",
    "page": 20
+  },
+  {
+   "text": "Do not make a poisoned person vomit, and do not give milk, water or activated charcoal unless a poison control centre or poison expert tells you to.",
+   "doc": "med-2e83e22162a9a006",
+   "page": 347
   },
   {
    "text": "The Basic Emergency Care course is written for frontline health providers; airway devices and other practical skills in it require training.",
