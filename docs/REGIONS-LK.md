@@ -4,7 +4,7 @@ This is a proposal for discussion, not a decision. It answers, for Sri Lanka, th
 coverage can go beyond the United States: which open source replaces each federal list, under what licence, what a
 "state" is there, and how addresses are written. It follows the shape of [REGIONS.md](REGIONS.md) and
 [REGIONS-AR.md](REGIONS-AR.md) and is meant to feed the same design discussion (issues #23, #25 and #31). The
-machine-readable version is [regions-lk-proposed.json](regions-lk-proposed.json).
+machine-readable version is [regions-lk-proposed.json](regions-lk-proposed.json); Sinhala and Tamil copies are [REGIONS-LK.si.md](REGIONS-LK.si.md) and [REGIONS-LK.ta.md](REGIONS-LK.ta.md).
 
 Nothing here changes the app, the engine or a build. No code reads the JSON, and nothing here ships: builds package
 `web/` and `content/` only.
