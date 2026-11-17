@@ -128,7 +128,7 @@ facilities, fire stations or dams were found.
 |---|---|---|---|---|---|
 | Roads, water, land (base map) | OSM extract | OSM extract `paraguay-latest.osm.pbf` (147 MB; the `.shp.zip` is 305 MB and the `.gpkg.zip` 312 MB), data up to 16 November 2026 21:22 UTC | OSM contributors via Geofabrik | ODbL 1.0 | opened |
 | Points of interest (`poi`) | OSM | OSM (counts below) | OSM contributors | ODbL 1.0 | computed |
-| Places (`places.sqlite`) | GNIS, Census gazetteers, OSM | OCHA COD-AB levels 1 to 4 (departments, districts, and two finer levels) and its `adminpoints` and `admincapitals` files; OSM named places | OCHA, from INE; OSM contributors | CC BY-IGO; ODbL 1.0 | opened (downloaded) |
+| Places (`places.sqlite`) | GNIS, Census gazetteers, OSM | OCHA COD-AB levels 1 to 4 (departments, districts, and two finer levels) and its `adminpoints` and `admincapitals` files; OSM named places | OCHA, from INE; OSM contributors | CC BY-IGO; ODbL 1.0 | HDX record opened. Admin0 and admin1 downloads confirmed. |
 | Places and streets, official | | INE "Cartografía Digital 2012": departments, districts, barrios and localities, cities, blocks (manzanas), roads, main roads, hydrography and indigenous communities, as Shape, KML and GeoJSON for the country and each department | INE | Licencia de Uso de la Información Pública del Gobierno Paraguayo | opened |
 | Terrain (`terrain.sqlite`) | USGS 3DEP | Copernicus DEM GLO-30, as proposed for Guyana | ESA / Airbus | Copernicus WorldDEM-30 licence | as in REGIONS.md |
 | Water (`water.sqlite`) | NHD | OSM waterways and water areas; INE 2012 hydrography to fill gaps | OSM contributors; INE | ODbL 1.0; INE licence | opened (INE layer list) |
@@ -229,9 +229,8 @@ Not checked against Correo Paraguayo's own pages. This part needs a Paraguayan r
   the corner of") or "Calle X esq. Calle Y" (*esquina*, "at the corner of"), and many homes have no number ("s/n",
   *sin número*). Street names often carry abbreviated titles such as "Avda.", "Mcal." (*Mariscal*) and "Gral."
   (*General*).
-- **Postal code.** Six digits: two for the department, two for the district, two for the barrio (search only). The
-  example above uses `110935` for Luque in Central. Older four-digit codes are still seen (general knowledge). Correo
-  Paraguayo (DINACOPA) has an online look-up (search only; not opened).
+- **Postal code.** Six digits: two for the department, two for the district, two for the barrio (search only). Older
+  four-digit codes are still seen (general knowledge). Correo Paraguayo (DINACOPA) has an online look-up (search only; not opened).
 - **What the current code does with that.**
   - `engine/address_search.py` reads a postcode only as five digits (`\d{5}`), so it would miss a six-digit code, and
     `tools/build_addresses.py` keeps the first five characters (`left(postcode, 5)`), which would cut off the last digit

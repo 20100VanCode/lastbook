@@ -140,7 +140,7 @@ nacionales abiertas de establecimientos de salud, cuarteles de bomberos ni repre
 |---|---|---|---|---|---|
 | Rutas, agua, tierra (mapa base) | Extracto de OSM | Extracto de OSM `paraguay-latest.osm.pbf` (147 MB; el `.shp.zip` pesa 305 MB y el `.gpkg.zip` 312 MB), datos hasta el 16 de noviembre de 2026, 21:22 UTC | Colaboradores de OSM vía Geofabrik | ODbL 1.0 | abierta |
 | Puntos de interés (`poi`) | OSM | OSM (conteos abajo) | Colaboradores de OSM | ODbL 1.0 | calculada |
-| Lugares (`places.sqlite`) | GNIS, nomencladores del Censo, OSM | Niveles 1 a 4 del COD-AB de OCHA (departamentos, distritos y dos niveles más finos) y sus archivos `adminpoints` y `admincapitals`; lugares con nombre de OSM | OCHA, a partir del INE; colaboradores de OSM | CC BY-IGO; ODbL 1.0 | abierta (descargada) |
+| Lugares (`places.sqlite`) | GNIS, nomencladores del Censo, OSM | Niveles 1 a 4 del COD-AB de OCHA (departamentos, distritos y dos niveles más finos) y sus archivos `adminpoints` y `admincapitals`; lugares con nombre de OSM | OCHA, a partir del INE; colaboradores de OSM | CC BY-IGO; ODbL 1.0 | Ficha de HDX consultada. Descargas de admin0 y admin1 confirmadas. |
 | Lugares y calles, oficial | | "Cartografía Digital 2012" del INE: departamentos, distritos, barrios y localidades, ciudades, manzanas, vías, vías principales, hidrografía y comunidades indígenas, en Shape, KML y GeoJSON para el país y cada departamento | INE | Licencia de Uso de la Información Pública del Gobierno Paraguayo | abierta |
 | Relieve (`terrain.sqlite`) | USGS 3DEP | Copernicus DEM GLO-30, como se propone para Guyana | ESA / Airbus | Licencia Copernicus WorldDEM-30 | como en REGIONS.md |
 | Agua (`water.sqlite`) | NHD | Cursos y superficies de agua de OSM; hidrografía del INE 2012 para completar | Colaboradores de OSM; INE | ODbL 1.0; licencia del INE | abierta (lista de capas del INE) |
@@ -244,7 +244,7 @@ Sin verificar en las páginas del propio Correo Paraguayo. Esta parte necesita l
   "Calle X esq. Calle Y" (*esquina*), y muchas casas no tienen número ("s/n", *sin número*). Los nombres de calles
   suelen llevar títulos abreviados como "Avda.", "Mcal." (*Mariscal*) y "Gral." (*General*).
 - **Código postal.** Seis dígitos: dos para el departamento, dos para el distrito y dos para el barrio (solo búsqueda).
-  El ejemplo de arriba usa `110935` para Luque, en Central. Todavía se ven los códigos anteriores de cuatro dígitos
+  Todavía se ven los códigos anteriores de cuatro dígitos
   (conocimiento general). El Correo Paraguayo (DINACOPA) tiene una consulta en línea (solo búsqueda; sin abrir).
 - **Qué hace hoy el código con eso.**
   - `engine/address_search.py` lee un código postal solo como cinco dígitos (`\d{5}`), así que no reconocería un código
