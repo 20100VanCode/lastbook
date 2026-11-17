@@ -105,6 +105,8 @@ what licence, what a "state" is elsewhere, and how addresses are written. That i
 issue before any code.
 
 [REGIONS.md](REGIONS.md) proposes answers for Ontario, British Columbia and Guyana, as a starting point for that issue.
+[REGIONS-AR.md](REGIONS-AR.md) does the same for Argentina's provinces and the Autonomous City of Buenos Aires.
+[REGIONS-LK.md](REGIONS-LK.md) does the same for Sri Lanka as one island-wide region.
 
 ## Checking a map change
 
