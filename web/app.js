@@ -629,7 +629,7 @@ async function watch(id, t, from) {
     // Say why when the reason is the format: some library videos are AV1, which a computer without an AV1 decoder (a Mac before the M3) can't play.
     const f = (await videoFormats(fileUrl(d.path)).catch(() => [])).map(x => UNPLAYABLE[x]).find(x => x && !vid.canPlayType(x[1]));
     if (!vid.isConnected) return;   // the person has gone to another page
-    say(f ? `This video is saved in the ${f[0]} format, which this computer can’t play in Lastbook. The file is not damaged. Another video player that handles ${f[0]}, such as VLC, can play it: the file is in your Lastbook data folder, at <b style="overflow-wrap:anywhere">library-data/${esc(d.path)}</b>.`
+    say(f ? `This video is saved in the ${f[0]} format, which this computer can’t play in Lastbook. Try another video player that supports ${f[0]}, such as VLC: the file is in your Lastbook data folder, at <b style="overflow-wrap:anywhere">library-data/${esc(d.path)}</b>.`
       : `This video file couldn’t be played here. <a href="${fileUrl(d.path)}" target="_blank" rel="noopener">Open the file directly</a>.`);
   }, { once: true });
   if (resumeAt) {
