@@ -579,6 +579,8 @@ html.plat-win.in-app body:not(.v-wiki) .tb-title b{display:none}
 .vtitle{font:750 clamp(20px,3.4vw,26px)/1.22 var(--display);margin:14px 0 6px}
 .vmeta{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;color:var(--ink3);font-size:15.5px}
 .vmeta b{color:var(--ink2)}
+.video-speed{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--ink2)}
+.video-speed select{min-height:40px;border-radius:var(--r-ctl);border:1px solid var(--line);background:var(--paper);padding:6px 12px}
 .vactions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .resume{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 12px;border-radius:var(--r2);background:var(--accent-soft);margin:12px 0;font-weight:600}
 .txpanel{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r);display:flex;flex-direction:column;max-height:calc(100vh - var(--bar-h) - 40px);position:sticky;top:calc(var(--bar-h) + 16px);box-shadow:var(--shadow)}
