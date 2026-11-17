@@ -276,6 +276,10 @@ other proposals.
 
 1. **Codes in setup.** Whether `ES-AN` and the others are acceptable as a manifest `id`, in `map-set.json` and in
    `Lastbook-Map-<id>.zip`, and how setup groups 19 Spanish regions.
+   One place this already matters: when a library is upgraded, `carry_over()` in `engine/setup/install.py` keeps only
+   address indexes named `[A-Z]{2}.sqlite` or `.json`, so an index named `ES-MD.sqlite` (or any hyphenated code in the
+   other proposals) would be left behind in the old library without a message (read in this repository on
+   17 November 2026).
 2. **The box rule**, as in REGIONS.md, here from IGN's administrative units.
 3. **Communities or provinces.** 19 regions, or 50 provinces, which match postcodes and Overture's data more closely.
 4. **Postcodes.** Correos owns the postcode areas, and its agreement with CNIG (BOE-A-2023-11522, opened) says the postcode
