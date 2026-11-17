@@ -106,6 +106,7 @@ issue before any code.
 
 [REGIONS.md](REGIONS.md) proposes answers for Ontario, British Columbia and Guyana, as a starting point for that issue.
 [REGIONS-AR.md](REGIONS-AR.md) does the same for Argentina's provinces and the Autonomous City of Buenos Aires.
+[REGIONS-TH.md](REGIONS-TH.md) does the same for Thailand's provinces and Bangkok.
 
 ## Checking a map change
 
