@@ -26,11 +26,12 @@ A native iPad app (Videos, Map and Chat, offline, with optional on-device AI) is
 
 ## Install on Linux
 
-The Linux package targets **Ubuntu 24.04 LTS on Intel/AMD x86_64 computers**. Download
+The Linux packages target **Ubuntu 24.04 LTS and Ubuntu 26.04 LTS on Intel/AMD x86_64 computers**, one package for each. Download
 [Lastbook for Ubuntu 24.04](https://downloads.lastbook.org/Lastbook_1.1.11_amd64.deb) (or [for Ubuntu 26.04](https://downloads.lastbook.org/Lastbook_1.1.11_ubuntu26.04_amd64.deb)), then install it with apt so Ubuntu resolves its dependencies.
 
 ```bash
-sudo apt install ./Lastbook_1.1.11_amd64.deb      # on 26.04: ./Lastbook_1.1.11_ubuntu26.04_amd64.deb
+sudo apt install ./Lastbook_1.1.11_amd64.deb                  # Ubuntu 24.04
+sudo apt install ./Lastbook_1.1.11_ubuntu26.04_amd64.deb      # Ubuntu 26.04
 ```
 
 Open Lastbook from the application menu. First-run setup downloads your chosen library, state map and optional local AI.
