@@ -15,11 +15,11 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2b** Carte | **fait (OSM)** | Martinique : 317 074 traits, 1 015 POI ; rendu vérifié dans l'appli |
 | **J2b** Couches IGN | en cours | terrain BD ALTI + noms BD TOPO (Martinique, rendu vérifié) |
 | **J3** Contenus | à faire | d'abord le catalogue FR, puis les 14 sujets et les écarts |
-| **J4** Site + packs | à faire | — |
+| **J4** Site + packs | en cours | pack FR-972 (carte + adresses) vérifié et installable par setup |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
-- **Prochain** : couches IGN d'un département (Martinique), puis assemblage d'un pack.
+- **Prochain** : hauteurs de bâtiments BD TOPO (schéma + rendu 3D), RPG, puis les 101 départements.
 
 ---
 
@@ -102,7 +102,11 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [ ] RPG (parcelles)
 - [ ] Unités métriques à l'affichage (la carte affiche encore les pieds)
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
-- [ ] Build complet d'un département (Martinique `FR-972`) + pack
+- [x] Build complet d'un département (Martinique `FR-972`) + pack —
+      `tools/build_pack_fr.py` : carte 19,7 Mo compressés / 59,3 Mo installés,
+      adresses 7,1 Mo / 21,2 Mo ; vérifié par `install.check_zip` + `check_map`,
+      installé dans une bibliothèque hôte, puis servi par l'appli (carte + adresse
+      BAN placée à l'écran)
 - [x] Crédit et date de la carte selon les données chargées (fini la liste US en dur)
 
 ### J3 — Contenus français
@@ -117,6 +121,7 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [ ] `content/gaps.json` français
 
 ### J4 — Site, packs, distribution
+- [x] Pack d'un département (carte + adresses), vérifié et installable par setup
 - [ ] Site vitrine français (landing, téléchargements, crédits)
 - [ ] Packs Small/Medium/All France + cartes par région
 - [ ] Manifest, sums, hébergement des téléchargements
@@ -186,5 +191,11 @@ les limites et les « quand appeler à l'aide » restent cités.
   `national.sqlite`) ; **Martinique : 2 710 lieux-dits + 87 cours d'eau**, étiquettes
   vérifiées à l'écran. Trois pièges corrigés : table `poi` à recopier, parseur WKB
   multi-anneaux, géométries 3D (`ST_Force2D`).
-- Prochaine étape : hauteurs de bâtiments (schéma + rendu 3D) ou RPG, puis assemblage
-  d'un pack département.
+- J2b/J4 (pack) : `tools/build_pack_fr.py` assemble le map set (`map-set.json` +
+  `national.sqlite` + `terrain.sqlite` + statut) et l'index d'adresses, les vérifie
+  comme setup (`install.check_zip` + `check_map`), et écrit le fragment de manifest.
+  **Martinique : carte 19,7 Mo / 59,3 Mo installés, adresses 7,1 Mo / 21,2 Mo.**
+  Vérifié bout-en-bout : pack installé dans une bibliothèque hôte, l'appli sert la
+  carte et place une adresse BAN à l'écran.
+- Prochaine étape : hauteurs de bâtiments BD TOPO (schéma + rendu 3D) ou RPG, puis
+  les autres départements.
