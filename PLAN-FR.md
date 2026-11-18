@@ -68,10 +68,12 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] Codes : `FR-01`…`FR-95`, `FR-2A`/`FR-2B`, `FR-971`…`FR-976` — `engine/regions.py`
 - [x] Assouplir la règle `[A-Z]{2}` (manifest + install) sans casser les index US
 - [ ] Boîtes de découpe par région (BASE ADMIN EXPRESS / IGN) — table en place, découpe à écrire
-- [ ] Couches : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO, lieux BD TOPO/COG,
-      parcelles RPG, adresses BAN, POI OSM + listes nationales
+- [x] Recherche d'adresses à la française (BAN, accents, *bis/ter*, communes nouvelles)
+      — `engine/address_search.py` + `tools/build_addresses_fr.py` ; **rappel mesuré
+      100 % sur 400 adresses réelles de Martinique × 5 variantes**
+- [ ] Couches cartographiques : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO,
+      lieux BD TOPO/COG, parcelles RPG, POI OSM + listes nationales
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
-- [ ] Recherche d'adresses à la française (BAN, accents, *bis/ter*, communes nouvelles)
 - [ ] Build d'essai d'une région (Martinique `FR-972`, 34 communes) + vérification
 - [ ] Crédits et licences par source et par date
 

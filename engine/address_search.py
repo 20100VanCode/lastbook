@@ -2,6 +2,7 @@
 import math
 import re
 import sqlite3
+import unicodedata
 from pathlib import Path
 
 from engine.paths import ro_uri
@@ -81,11 +82,13 @@ def find_addresses(query, geo_directory, limit=8, near=None):
     """Return exact house-number matches from installed indexes, never a guessed house."""
     if not is_address_query(query):
         return []
+    geo_directory = Path(geo_directory)
+    paths = sorted((geo_directory / 'addresses').glob('*.sqlite'))
+    if any(path.name.startswith('FR-') for path in paths):
+        return find_addresses_fr(query, paths, limit, near)
     number, words, state, postcode = _parts(query)
     if not words:
         return []
-    geo_directory = Path(geo_directory)
-    paths = sorted((geo_directory / 'addresses').glob('*.sqlite'))
     if state:
         paths = [path for path in paths if path.stem.upper() == state]
     legacy = geo_directory / 'addresses.sqlite'
@@ -147,3 +150,143 @@ def find_addresses(query, geo_directory, limit=8, near=None):
     finally:
         for connection in connections:
             connection.close()
+
+
+# --------------------------------------------------------------------- France
+# The Base Adresse Nationale writes a French address as number, optional repetition
+# (bis/ter), street type and name, then the postcode and the commune:
+# "14 bis Rue Écuyère, 14000 Caen". The US rules above read a postcode last and a
+# state name at the end, so they drop "Bellême" to "me" and look for a state. A
+# French index declares meta.country='FR' (tools/build_addresses_fr.py) and is
+# searched here, where no trailing word is ever read as a state.
+FR_WORDS = {
+    'bd': 'boulevard', 'blv': 'boulevard', 'bvd': 'boulevard', 'boulevard': 'boulevard',
+    'av': 'avenue', 'ave': 'avenue', 'avenue': 'avenue',
+    'imp': 'impasse', 'impa': 'impasse', 'impasse': 'impasse',
+    'rte': 'route', 'route': 'route', 'pl': 'place', 'place': 'place',
+    'ch': 'chemin', 'chem': 'chemin', 'chemin': 'chemin',
+    'all': 'allee', 'alle': 'allee', 'allee': 'allee',
+    'fg': 'faubourg', 'faub': 'faubourg', 'faubourg': 'faubourg',
+    'qu': 'quai', 'qua': 'quai', 'quai': 'quai',
+    'sq': 'square', 'square': 'square', 'pas': 'passage', 'pass': 'passage',
+    'passage': 'passage', 'car': 'carrefour', 'carr': 'carrefour',
+    'carrefour': 'carrefour', 'prom': 'promenade', 'promenade': 'promenade',
+    'r': 'rue', 'rue': 'rue', 'st': 'saint', 'saint': 'saint',
+    'ste': 'sainte', 'sainte': 'sainte', 'ham': 'hameau', 'hameau': 'hameau',
+    'res': 'residence', 'residence': 'residence',
+    'rnd': 'rond point', 'rpt': 'rond point', 'rondpoint': 'rond point',
+}
+# A street made only of these is not a street ("Rue", "Avenue"), so it never matches.
+FR_STREET_TYPES = frozenset(('rue', 'avenue', 'boulevard', 'place', 'chemin', 'route',
+                             'impasse', 'allee', 'passage', 'quai', 'square'))
+FR_REPETITION = ('bis', 'ter', 'quater', 'quatr') + tuple('abcdefghijklmnopqrstuvwxyz')
+
+
+def _fold(text):
+    """Lower-case, accents folded, œ/æ expanded: the characters a-z0-9 survive it."""
+    t = unicodedata.normalize('NFKD', str(text).lower())
+    t = ''.join(ch for ch in t if not unicodedata.combining(ch))
+    return t.replace('œ', 'oe').replace('æ', 'ae')
+
+
+def normalize_fr(text):
+    """'Rue Écuyère' -> 'rue ecuyere'. Accents folded, œ/æ expanded, street words canonical."""
+    words = re.sub(r'[^a-z0-9 ]+', ' ', _fold(text)).split()
+    return ' '.join(FR_WORDS.get(word, word) for word in words)
+
+
+def _parts_fr(query):
+    """'14 bis Rue Écuyère, 14000 Caen' -> ('14', 'bis', ['rue','ecuyere','caen'], '14000').
+
+    The postcode comes before the commune, so it is taken wherever it appears; no
+    trailing word is ever read as a state, which is what removed "Bellême" and "Ri".
+    """
+    match = re.match(r'^(\d[\w-]*)\s+(.*)$', str(query).strip())
+    if not match:
+        return None
+    number = match.group(1).lower()
+    rest = match.group(2)
+    repetition = ''
+    rep = re.match(r'^(bis|ter|quater|quatr|[a-z])\s+(.*)$', rest, re.I)
+    if rep and rep.group(1).lower() != 'r':   # a leading "r" is "rue", not a repetition
+        repetition = rep.group(1).lower()
+        rest = rep.group(2)
+    tokens = re.sub(r'[^a-z0-9 ]+', ' ', _fold(rest)).split()
+    postcode = ''
+    for index in range(len(tokens) - 1, -1, -1):
+        if re.fullmatch(r'\d{5}', tokens[index]):
+            postcode = tokens.pop(index)
+            break
+    return number, repetition, normalize_fr(' '.join(tokens)).split(), postcode
+
+
+def find_addresses_fr(query, paths, limit=8, near=None):
+    """Exact house-number matches from a French index, never a guessed house."""
+    parts = _parts_fr(query)
+    if not parts:
+        return []
+    number, repetition, words, postcode = parts
+    if not words:
+        return []
+    numbers = [number] + [f'{number} {r}' for r in FR_REPETITION]
+    if repetition:
+        numbers.insert(0, f'{number} {repetition}')
+    numbers = list(dict.fromkeys(numbers))
+    holders = ','.join('?' * len(numbers))
+
+    def lookup(street, city):
+        rows = []
+        for path in paths:
+            try:
+                connection = sqlite3.connect(ro_uri(path), uri=True)
+            except sqlite3.Error:
+                continue
+            try:
+                rows.extend(connection.execute(
+                    f'SELECT num,street,city,state,zip,lat,lon,norm FROM addr'
+                    f' WHERE norm >= ? AND norm < ? AND num IN ({holders})'
+                    f' ORDER BY length(norm),norm LIMIT ?',
+                    [street, street + '\uffff', *numbers, limit * 6]).fetchall())
+            except sqlite3.Error:
+                continue
+            finally:
+                connection.close()
+        if city:
+            rows = [row for row in rows if normalize_fr(row[2]).startswith(city)]
+        if postcode:
+            rows = [row for row in rows if row[4] == postcode]
+        return rows
+
+    # Prefer a split that leaves a commune: "14 rue de la République, Fort-de-France"
+    # must not return every "rue de la République" in the département.
+    for count in range(len(words) - 1, 0, -1):
+        if all(word in FR_STREET_TYPES for word in words[:count]):
+            continue
+        rows = lookup(' '.join(words[:count]), normalize_fr(' '.join(words[count:])))
+        if rows:
+            return _fr_results(rows, limit, near)
+    rows = lookup(' '.join(words), '')
+    return _fr_results(rows, limit, near) if rows else []
+
+
+def _fr_results(rows, limit, near):
+    def rank(row):
+        distance = 0
+        if near:
+            distance = (row[5] - near[0]) ** 2 + ((row[6] - near[1]) * math.cos(math.radians(near[0]))) ** 2
+        return len(row[7]), distance, row[2], row[1]
+
+    results, seen = [], set()
+    for num, street_name, city_name, _state, zip_code, lat, lon, normalized in sorted(rows, key=rank):
+        key = (num, normalized, lat, lon)
+        if key in seen:
+            continue
+        seen.add(key)
+        results.append({
+            'name': f'{num} {street_name}', 'kind': 'Adresse',
+            'detail': ', '.join(part for part in (city_name, zip_code) if part),
+            'lat': lat, 'lon': lon, 'source': 'Base Adresse Nationale', 'onMap': True,
+        })
+        if len(results) == limit:
+            break
+    return results
