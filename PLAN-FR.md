@@ -64,9 +64,9 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] Tests du dépôt au vert + vérification visuelle en local
 
 ### J2 — Géographie France + DOM-TOM
-- [ ] Codes région : `FR-ARA` … `FR-PAC`, `FR-20R`, `FR-971`…`FR-976` (18 régions)
-- [ ] Assouplir la règle `[A-Z]{2}` (manifest + install) sans casser les index US
-- [ ] Boîtes de découpe par région (BASE ADMIN EXPRESS / IGN)
+- [x] Codes région : `FR-ARA` … `FR-PAC`, `FR-20R`, `FR-971`…`FR-976` (18 régions) — `engine/regions.py`
+- [x] Assouplir la règle `[A-Z]{2}` (manifest + install) sans casser les index US
+- [ ] Boîtes de découpe par région (BASE ADMIN EXPRESS / IGN) — table en place, découpe à écrire
 - [ ] Couches : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO, lieux BD TOPO/COG,
       parcelles RPG, adresses BAN, POI OSM + listes nationales
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
