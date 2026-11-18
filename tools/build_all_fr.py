@@ -36,13 +36,13 @@ BAN = 'https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-{}.csv
 GEOFABRIK = 'https://download.geofabrik.de/europe/france/{}-latest-free.{}.zip'
 # the département's region as Geofabrik names it (France's regions before 2016), and the DROM
 REGION_OSM = {
-    'alsace': 'alsace', 'aquitaine': 'aquitaine', 'auvergne': 'auvergne', 'basse_normandie': 'basse_normandie',
-    'bourgogne': 'bourgogne', 'bretagne': 'bretagne', 'centre': 'centre', 'champagne_ardenne': 'champagne_ardenne',
-    'corse': 'corse', 'franche_comte': 'franche_comte', 'haute_normandie': 'haute_normandie',
-    'ile_de_france': 'ile_de_france', 'languedoc_roussillon': 'languedoc_roussillon', 'limousin': 'limousin',
-    'lorraine': 'lorraine', 'midi_pyrenees': 'midi_pyrenees', 'nord_pas_de_calais': 'nord_pas_de_calais',
-    'pays_de_la_loire': 'pays_de_la_loire', 'picardie': 'picardie', 'poitou_charentes': 'poitou_charentes',
-    'provence_alpes_cote_d_azur': 'provence_alpes_cote_d_azur', 'rhone_alpes': 'rhone_alpes',
+    'alsace': 'alsace', 'aquitaine': 'aquitaine', 'auvergne': 'auvergne', 'basse_normandie': 'basse-normandie',
+    'bourgogne': 'bourgogne', 'bretagne': 'bretagne', 'centre': 'centre', 'champagne_ardenne': 'champagne-ardenne',
+    'corse': 'corse', 'franche_comte': 'franche-comte', 'haute_normandie': 'haute-normandie',
+    'ile_de_france': 'ile-de-france', 'languedoc_roussillon': 'languedoc-roussillon', 'limousin': 'limousin',
+    'lorraine': 'lorraine', 'midi_pyrenees': 'midi-pyrenees', 'nord_pas_de_calais': 'nord-pas-de-calais',
+    'pays_de_la_loire': 'pays-de-la-loire', 'picardie': 'picardie', 'poitou_charentes': 'poitou-charentes',
+    'provence_alpes_cote_d_azur': 'provence-alpes-cote-d-azur', 'rhone_alpes': 'rhone-alpes',
 }
 DROM_OSM = {'971': ('guadeloupe', 'shp'), '972': ('martinique', 'shp'), '973': ('guyane', 'shp'),
             '974': ('reunion', 'shp'), '976': ('mayotte', 'shp')}
