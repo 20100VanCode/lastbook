@@ -68,6 +68,7 @@ def main():
     skipped = 0
     started = time.time()
     batch = []
+    bounds = [180.0, 90.0, -180.0, -90.0]          # ouest, sud, est, nord — sert à borner la carte
     with opener(src, 'rt', encoding='utf-8', newline='') as stream:
         for row in csv.DictReader(stream, delimiter=';'):
             total += 1
@@ -90,6 +91,10 @@ def main():
                           (row.get('nom_commune') or '').strip(), a.departement,
                           (row.get('code_postal') or '').strip(), lat, lon))
             kept += 1
+            if lon < bounds[0]: bounds[0] = lon
+            if lon > bounds[2]: bounds[2] = lon
+            if lat < bounds[1]: bounds[1] = lat
+            if lat > bounds[3]: bounds[3] = lat
             if len(batch) >= 50_000:
                 db.executemany('INSERT INTO addr VALUES (?,?,?,?,?,?,?,?)', batch)
                 batch.clear()
@@ -104,6 +109,7 @@ def main():
         ('source', 'Base Adresse Nationale (BAN), fichier départemental quotidien'),
         ('source_built', time.strftime('%Y-%m-%dT%H:%M:%S')),
         ('licence', 'Licence Ouverte 2.0 (Etalab)'),
+        ('bounds', ','.join(f'{v:.5f}' for v in bounds) if kept else ''),
     ])
     db.commit()
     check = db.execute('PRAGMA quick_check').fetchone()[0]

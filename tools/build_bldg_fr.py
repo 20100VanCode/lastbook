@@ -23,6 +23,22 @@ from pathlib import Path
 
 from pyproj import CRS
 
+
+def delivery(src):
+    """(kind, target, epsg): IGN's 3.5 is a GeoPackage inside the 7z, 3.0 and older are shapefiles."""
+    gpkg = next(iter(sorted(src.rglob('*.gpkg'))), None)
+    if gpkg:
+        db = sqlite3.connect(f'file:{gpkg}?mode=ro', uri=True)
+        try:
+            row = db.execute('SELECT srs_id FROM gpkg_contents LIMIT 1').fetchone()
+        finally:
+            db.close()
+        return 'gpkg', gpkg, int(row[0]) if row else 4326
+    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    if prj is None:
+        raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
+    return 'shp', src, CRS.from_wkt(prj.read_text(encoding='utf-8')).to_epsg() or 4326
+
 WORLD = 2 ** 30
 STOREY = 3.2
 
@@ -71,20 +87,32 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--min', type=float, default=2.0, help='a building shorter than this is not a building')
     ap.add_argument('--max', type=float, default=560.0)
+    ap.add_argument('--box', help='W,S,E,N — limiter à un département quand la livraison est régionale')
     a = ap.parse_args()
+    only = tuple(float(v) for v in a.box.split(',')) if a.box else None
     src = Path(a.dir)
-    shp = sorted(src.rglob('BATI/BATIMENT.shp'))
-    if not shp:
-        raise SystemExit(f'pas de BATI/BATIMENT.shp dans {src}')
-    prj = sorted(src.rglob('*.prj'))[0]
-    epsg = CRS.from_wkt(prj.read_text(encoding='utf-8')).to_epsg() or 4326
+    kind, target, epsg = delivery(src)
+    print(f'CRS EPSG:{epsg}, livraison {"GeoPackage" if kind == "gpkg" else "shapefiles"}', flush=True)
 
     import duckdb
     con = duckdb.connect()
     con.execute('INSTALL spatial; LOAD spatial;')
     con.execute('SET geometry_always_xy = true')
-    select = ("ST_AsWKB(ST_Force2D(ST_Transform(geom, 'EPSG:%s', 'EPSG:4326'))), HAUTEUR" % epsg)
-    rows = con.execute(f'SELECT {select} FROM ST_Read(?) WHERE HAUTEUR IS NOT NULL', [str(shp[0])]).fetchall()
+    layer = 'batiment' if kind == 'gpkg' else str(next(iter(sorted(src.rglob('BATI/BATIMENT.shp')))))
+    geom = 'geometrie' if kind == 'gpkg' else 'geom'
+    if kind == 'gpkg':
+        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?, layer=?)', [str(target), layer]
+    else:
+        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?)', [layer]
+    have = {r[0].lower(): r[0] for r in con.execute(describe, args).fetchall()}
+    if 'hauteur' not in have:
+        raise SystemExit('la couche batiment n’a pas de colonne hauteur')
+    select = f"ST_AsWKB(ST_Force2D(ST_Transform({geom}, 'EPSG:{epsg}', 'EPSG:4326'))), {have['hauteur']}"
+    if kind == 'gpkg':
+        sql, args = f'SELECT {select} FROM ST_Read(?, layer=?) WHERE {have["hauteur"]} IS NOT NULL', [str(target), layer]
+    else:
+        sql, args = f'SELECT {select} FROM ST_Read(?) WHERE {have["hauteur"]} IS NOT NULL', [layer]
+    rows = con.execute(sql, args).fetchall()
 
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -113,6 +141,13 @@ def main():
         pts = [xy(ring[i], ring[i + 1]) for i in range(0, len(ring) - 2, 2)]   # the last point repeats the first
         cx = sum(p[0] for p in pts) // len(pts)
         cy = sum(p[1] for p in pts) // len(pts)
+        if only:
+            lon = cx / WORLD * 360 - 180
+            s = (0.5 - cy / WORLD) * 2 * math.pi
+            lat = math.degrees(math.atan(math.sinh(s)))
+            if not (only[0] <= lon <= only[2] and only[1] <= lat <= only[3]):
+                skipped += 1
+                continue
         buf = tiles.get((cx >> 16, cy >> 16))
         if buf is None:
             buf = tiles[(cx >> 16, cy >> 16)] = array('i')

@@ -107,13 +107,48 @@ def wkb_parts(b, o=0):
     raise ValueError('geometry type %d' % t)
 
 
-def rows(con, shp, cols, src):
-    """Yield (parts, values) for one shapefile, projected to WGS84."""
-    select = f"ST_AsWKB(ST_Force2D(ST_Transform(geom, 'EPSG:{src}', 'EPSG:4326')))," + ','.join(cols)
+def delivery(src):
+    """(kind, target, epsg): IGN's 3.5 is a GeoPackage inside the 7z, 3.0 and older are shapefiles."""
+    gpkg = next(iter(sorted(src.rglob('*.gpkg'))), None)
+    if gpkg:
+        db = sqlite3.connect(f'file:{gpkg}?mode=ro', uri=True)
+        try:
+            row = db.execute('SELECT srs_id FROM gpkg_contents LIMIT 1').fetchone()
+        finally:
+            db.close()
+        return 'gpkg', gpkg, int(row[0]) if row else 4326
+    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    if prj is None:
+        raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
+    crs = CRS.from_wkt(prj.read_text(encoding='utf-8'))
+    return 'shp', src, crs.to_epsg() or 4326
+
+
+def rows(con, kind, target, layer, wanted, epsg):
+    """Yield (parts, values) for one layer, projected to WGS84.
+
+    A GeoPackage names its layers and columns in lower case and its geometry `geometrie`;
+    the wanted columns are matched case-insensitively, so the same call reads both formats.
+    """
+    name = layer.lower() if kind == 'gpkg' else layer
+    geom = 'geometrie' if kind == 'gpkg' else 'geom'
+    if kind == 'gpkg':
+        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?, layer=?)', [str(target), name]
+    else:
+        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?)', [str(target)]
+    have = {r[0].lower(): r[0] for r in con.execute(describe, args).fetchall()}
+    cols = [have[w.lower()] for w in wanted if w.lower() in have]
+    if not cols:
+        return
+    select = f"ST_AsWKB(ST_Force2D(ST_Transform({geom}, 'EPSG:{epsg}', 'EPSG:4326')))," + ','.join(cols)
+    if kind == 'gpkg':
+        sql, args = f'SELECT {select} FROM ST_Read(?, layer=?)', [str(target), name]
+    else:
+        sql, args = f'SELECT {select} FROM ST_Read(?)', [str(target)]
     try:
-        got = con.execute(f'SELECT {select} FROM ST_Read(?)', [str(shp)]).fetchall()
+        got = con.execute(sql, args).fetchall()
     except Exception as exc:
-        print(f'  {shp.name}: illisible ({exc})')
+        print(f'  {layer}: illisible ({exc})')
         return
     for row in got:
         if row[0] is None:
@@ -130,18 +165,16 @@ def main():
     ap.add_argument('--departement', required=True)
     ap.add_argument('--map', required=True, help='national.sqlite from build_map_fr.py')
     ap.add_argument('--source', default='BD TOPO 3.0 (IGN)')
+    ap.add_argument('--box', help='W,S,E,N — limiter à un département quand la livraison est régionale')
     a = ap.parse_args()
+    only = tuple(float(v) for v in a.box.split(',')) if a.box else None
     src_dir = Path(a.dir)
     out = Path(a.map)
     if not out.exists():
         raise SystemExit(f'{out} introuvable : construisez d’abord la carte avec build_map_fr.py')
 
-    prj = next(iter(sorted(src_dir.rglob('*.prj'))), None)
-    if prj is None:
-        raise SystemExit('aucun .prj dans la livraison BD TOPO')
-    crs = CRS.from_wkt(prj.read_text(encoding='utf-8'))
-    epsg = crs.to_epsg() or 4326
-    print(f'CRS {crs.name} (EPSG:{epsg})', flush=True)
+    kind, target, epsg = delivery(src_dir)
+    print(f'CRS EPSG:{epsg}, livraison {"GeoPackage" if kind == "gpkg" else "shapefiles"}', flush=True)
 
     import duckdb
     con = duckdb.connect()
@@ -177,6 +210,8 @@ def main():
         if not parts:
             return 0
         bx = bbox(parts)
+        if only and (bx[1] < only[0] or bx[0] > only[2] or bx[3] < only[1] or bx[2] > only[3]):
+            return 0
         # a geometry that did not project cleanly is worse than no geometry
         if not (-180 <= bx[0] <= 180 and -180 <= bx[1] <= 180 and -90 <= bx[2] <= 90 and -90 <= bx[3] <= 90):
             return 0
@@ -185,16 +220,19 @@ def main():
         dst.execute('INSERT INTO feat_idx VALUES (?,?,?,?,?,?,?)', (fid[0], *bx, minz, 30))
         return 1
 
-    def shp(name):
-        found = sorted(src_dir.rglob(name))
+    def layer(name):
+        """The layer to read: a GeoPackage table name, or the first matching shapefile."""
+        if kind == 'gpkg':
+            return name
+        found = sorted(src_dir.rglob(name + '.shp'))
         return found[0] if found else None
 
     t0 = time.time()
     added = {}
     # water surfaces BD TOPO names and OSM does not
-    p = shp('SURFACE_HYDROGRAPHIQUE.shp')
+    p = layer('SURFACE_HYDROGRAPHIQUE')
     if p:
-        for parts, (nature, nom) in rows(con, p, ('NATURE', 'NOM_P_EAU'), epsg):
+        for parts, (nature, nom) in rows(con, kind, target, p, ('NATURE', 'NOM_P_EAU'), epsg):
             nom = (nom or '').strip()
             if not nom or nom in known:
                 continue
@@ -202,18 +240,18 @@ def main():
             added['surfaces d’eau'] = added.get('surfaces d’eau', 0) + add(
                 'water', 'lake' if nature in ('Plan d’eau', 'Retenue') else 'river', nom, area_z(*bbox(parts), 7), parts)
     # named river arms
-    p = shp('TRONCON_HYDROGRAPHIQUE.shp')
+    p = layer('TRONCON_HYDROGRAPHIQUE')
     if p:
-        for parts, (nom,) in rows(con, p, ('NOM_C_EAU',), epsg):
+        for parts, (nom,) in rows(con, kind, target, p, ('NOM_C_EAU',), epsg):
             nom = (nom or '').strip()
             if not nom or nom in known:
                 continue
             known.add(nom)
             added['cours d’eau'] = added.get('cours d’eau', 0) + add('waterway', 'river', nom, 12, [simplify(x, 0.00005) for x in parts])
     # quartiers and lieux-dits, drawn as labels only
-    p = shp('ZONE_D_HABITATION.shp')
+    p = layer('ZONE_D_HABITATION')
     if p:
-        for parts, (nature, nom) in rows(con, p, ('NATURE', 'TOPONYME'), epsg):
+        for parts, (nature, nom) in rows(con, kind, target, p, ('NATURE', 'TOPONYME'), epsg):
             nom = (nom or '').strip()
             cls, minz = PLACE_CLS.get(nature, ('suburb', 14))
             if not nom or nom in known:

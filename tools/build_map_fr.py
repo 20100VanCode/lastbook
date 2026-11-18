@@ -124,11 +124,22 @@ def area_z(minx, maxx, miny, maxy, base):
     return max(base, min(16, z))
 
 
-def layer_rows(con, shp, cols):
-    """Yield (parts, values) for one Geofabrik layer, reading WKB through duckdb spatial."""
-    select = 'ST_AsWKB(geom),' + ','.join(cols)
+def layer_rows(con, source, name, cols):
+    """Yield (parts, values) for one Geofabrik layer, reading WKB through duckdb spatial.
+
+    source is ('shp', directory) or ('gpkg', file): Geofabrik now publishes France's
+    regions as GeoPackage and the DROM as shapefiles, and both carry the same
+    gis_osm_<name>_free_1 layers.
+    """
+    cols_sql = ','.join(cols)
+    if source[0] == 'shp':
+        sql = f'SELECT ST_AsWKB(geom),{cols_sql} FROM ST_Read(?)'
+        args = [str(Path(source[1]) / f'gis_osm_{name}_free_1.shp')]
+    else:
+        sql = f'SELECT ST_AsWKB(geom),{cols_sql} FROM ST_Read(?, layer=?)'
+        args = [str(source[1]), f'gis_osm_{name}_free']
     try:
-        rows = con.execute(f"SELECT {select} FROM ST_Read(?)", [str(shp)]).fetchall()
+        rows = con.execute(sql, args).fetchall()
     except Exception:
         return
     for row in rows:
@@ -142,13 +153,16 @@ def layer_rows(con, shp, cols):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--shp', required=True, help='unzipped Geofabrik *-latest-free.shp directory')
+    ap.add_argument('--shp', help='unzipped Geofabrik *-latest-free.shp directory (DROM)')
+    ap.add_argument('--gpkg', help='Geofabrik *-latest-free.gpkg (France’s regions)')
     ap.add_argument('--departement', required=True)
     ap.add_argument('--out', required=True, help='national.sqlite to write')
     ap.add_argument('--source', default='© OpenStreetMap contributors, via Geofabrik (ODbL 1.0)')
     ap.add_argument('--box', help='W,S,E,N; the département region box if omitted')
     a = ap.parse_args()
-    shp = Path(a.shp)
+    if not a.shp and not a.gpkg:
+        raise SystemExit('il faut --shp (DROM) ou --gpkg (régions France)')
+    source = ('shp', a.shp) if a.shp else ('gpkg', a.gpkg)
     out = Path(a.out)
     if a.box:
         box = tuple(float(v) for v in a.box.split(','))
@@ -184,35 +198,32 @@ def main():
         dst.execute('INSERT INTO feat VALUES (?,?,?,?,?,?)', (fid[0], layer, cls, name, minz, pack(parts)))
         dst.execute('INSERT INTO feat_idx VALUES (?,?,?,?,?,?,?)', (fid[0], *bx, minz, 30))
 
-    def path(name):
-        return shp / f'gis_osm_{name}_free_1.shp'
-
     t0 = time.time()
-    for parts, (cls, name) in layer_rows(con, path('water_a'), ('fclass', 'name')):
+    for parts, (cls, name) in layer_rows(con, source,'water_a', ('fclass', 'name')):
         layer = 'wet' if cls.startswith('wetland') else 'water'
         add(layer, cls, name, area_z(*bbox(parts), 7), [simplify(p, 0.00001) for p in parts])
-    for parts, (cls, name) in layer_rows(con, path('natural_a'), ('fclass', 'name')):
+    for parts, (cls, name) in layer_rows(con, source,'natural_a', ('fclass', 'name')):
         if cls == 'beach':
             add('beach', cls, name, area_z(*bbox(parts), 10), parts)
-    for parts, (cls, name) in layer_rows(con, path('landuse_a'), ('fclass', 'name')):
+    for parts, (cls, name) in layer_rows(con, source,'landuse_a', ('fclass', 'name')):
         k = LANDUSE_KEEP.get(cls)
         if k:
             add('land', k, name, area_z(*bbox(parts), 9), [simplify(p, 0.00001) for p in parts])
     dst.commit()
     print('water/land', fid[0], round(time.time() - t0), flush=True)
-    for parts, (cls, name) in layer_rows(con, path('waterways'), ('fclass', 'name')):
+    for parts, (cls, name) in layer_rows(con, source,'waterways', ('fclass', 'name')):
         add('waterway', cls, name, 10 if cls == 'river' else 13, parts)
-    for parts, (cls, name) in layer_rows(con, path('railways'), ('fclass', 'name')):
+    for parts, (cls, name) in layer_rows(con, source,'railways', ('fclass', 'name')):
         add('rail', cls, name, 10 if cls == 'rail' else 13, parts)
-    for parts, (cls, name, ref) in layer_rows(con, path('roads'), ('fclass', 'name', 'ref')):
+    for parts, (cls, name, ref) in layer_rows(con, source,'roads', ('fclass', 'name', 'ref')):
         add('road', cls, name or ref, ROAD_Z.get(cls, 15), parts)
     dst.commit()
     print('roads', fid[0], round(time.time() - t0), flush=True)
-    for parts, (cls,) in layer_rows(con, path('buildings_a'), ('fclass',)):
+    for parts, (cls,) in layer_rows(con, source,'buildings_a', ('fclass',)):
         add('bldg', cls or '', None, 15, [simplify(parts[0], 0.000002)])
     dst.commit()
     print('buildings', fid[0], round(time.time() - t0), flush=True)
-    for parts, (cls, pop, name) in layer_rows(con, path('places'), ('fclass', 'population', 'name')):
+    for parts, (cls, pop, name) in layer_rows(con, source,'places', ('fclass', 'population', 'name')):
         if name:
             z = PLACE_Z.get(cls, 14)
             if cls in ('city', 'town') and pop and int(pop) > 300000:
@@ -220,7 +231,7 @@ def main():
             add('place', cls, name, z, parts)
     pid = 0
     for name, only in (('pois', None), ('pois_a', None), ('natural', {'spring'}), ('natural_a', None)):
-        for parts, (cls, pname) in layer_rows(con, path(name), ('fclass', 'name')):
+        for parts, (cls, pname) in layer_rows(con, source,name, ('fclass', 'name')):
             if cls not in POI_KEEP or (only is not None and cls not in only):
                 continue
             minx, maxx, miny, maxy = bbox(parts)

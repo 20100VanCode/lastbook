@@ -24,7 +24,28 @@ from pathlib import Path
 import numpy as np
 from pyproj import CRS, Transformer
 
-HERE = Path(__file__).resolve().parent.parent
+def crs_of(src):
+    """The delivery's CRS: its .prj when there is one, else the name IGN gives it."""
+    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    if prj:
+        return CRS.from_wkt(prj.read_text(encoding='utf-8')).to_epsg() or 4326
+    names = ' '.join(p.name.upper() for p in src.rglob('*'))
+    for token, epsg in CRS_BY_NAME.items():
+        if token in names:
+            return epsg
+    raise SystemExit('aucun .prj, et aucun CRS reconnaissable dans le nom de la livraison')
+
+
+HERE = Path(__file__).resolve().parents[1]
+# IGN names the CRS in the file name when the delivery carries no .prj. The local datums
+# (MART87, REUN89…) differ from WGS84 by about a metre: at 25 m resolution the UTM zone
+# of the same number is close enough for a terrain grid.
+CRS_BY_NAME = {
+    'LAMB93': 2154,
+    'WGS84UTM20': 32620, 'WGS84UTM21': 32621, 'WGS84UTM22': 32622,
+    'WGS84UTM38S': 32738, 'WGS84UTM39S': 32739, 'WGS84UTM40S': 32740,
+    'RGR92UTM40S': 32740, 'RGM04UTM38S': 32738, 'RGFG95UTM22': 32622, 'RGSPM06U21': 32621,
+}
 MAXZ, SUPERZ, MINZ = 12, 8, 4
 SPAN = 2 ** (MAXZ - SUPERZ)
 PX = 256 * SPAN
@@ -84,10 +105,7 @@ def main():
     grids = [read_asc(p) for p in sorted(src.rglob('*.asc'))]
     if not grids:
         raise SystemExit(f'no .asc grid in {src}')
-    prj = next((p.read_text(encoding='utf-8') for p in sorted(src.rglob('*.prj'))), None)
-    crs = CRS.from_wkt(prj) if prj else None
-    if crs is None:
-        raise SystemExit('no .prj found: cannot place the grid')
+    crs = CRS.from_epsg(crs_of(src))
     to_wgs = Transformer.from_crs(crs, 4326, always_xy=True)
     to_utm = Transformer.from_crs(4326, crs, always_xy=True)
 
@@ -100,7 +118,7 @@ def main():
     for head, data in grids:
         col = int(round((head['xllcorner'] - x0) / cell))
         row = int(round((head['yllcorner'] - y0) / cell))
-        dem[row:row + data.shape[0], col:col + data.shape[1]] = data
+        dem[row:row + data.shape[0], col:col + data.shape[1]] = data[::-1]   # an ASC grid starts at its north edge
     print(f'{len(grids)} grids, {width}x{height} cells of {cell:g} m, {crs.to_epsg() or crs.name}', flush=True)
 
     # The box, from the four corners of the source extent.
@@ -139,7 +157,8 @@ def main():
     tiles = 0
     low = {}
     for x8 in range(x0t, x1t + 1):
-        for y8 in range(ys[1], ys[0] + 1):
+        # y grows southward, so the northern tile has the smaller index
+        for y8 in range(min(ys), max(ys) + 1):
             lon, lat = tile_lonlat(SUPERZ, x8, y8, PX)
             h = sample(lon, lat)
             if np.isnan(h).all():
