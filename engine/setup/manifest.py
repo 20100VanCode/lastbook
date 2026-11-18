@@ -8,7 +8,7 @@ import threading
 from pathlib import Path
 
 from . import download
-from ..regions import ID as REGION_ID
+from ..regions import is_known_id
 
 REMOTE = 'https://downloads.lastbook.org/manifest-v1.json'
 SHA = re.compile(r'^[0-9a-f]{64}$')
@@ -70,7 +70,7 @@ def validate(m, allowed=None):
         for x in m.get(key) or []:
             if not isinstance(x, dict) or not isinstance(x.get('id'), str) or not NAME.match(x['id']):
                 return None
-            if key == 'address_indexes' and not REGION_ID.fullmatch(x['id']):
+            if key == 'address_indexes' and not is_known_id(x['id']):
                 return None
             files = []
             for f in x.get('files') or []:
