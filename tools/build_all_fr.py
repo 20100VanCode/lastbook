@@ -109,7 +109,7 @@ def fetch(url, path, tries=6):
     """Download to path, resuming a partial file and retrying what the server drops."""
     size = path.stat().st_size if path.exists() else 0
     remote = head_size(url)
-    if size and (not remote or size == remote):
+    if size and (not remote or size >= remote):
         return path
     if size:
         print(f'  {path.name}: déjà là mais incomplet ({size:,} / {remote:,}), reprise', flush=True)
@@ -134,7 +134,7 @@ def fetch(url, path, tries=6):
             time.sleep(min(60, 5 * (attempt + 1)))
             continue
         got = part.stat().st_size
-        if not remote or got == remote:
+        if not remote or got >= remote:
             part.replace(path)
             return path
         print(f'  {path.name}: {got:,} / {remote:,} octets, nouvel essai', flush=True)
@@ -222,13 +222,15 @@ def main():
                     region, kind = REGION_OSM[DEPARTEMENT_REGION_OLD[code]], 'gpkg'
                 raw = unzip(fetch(GEOFABRIK.format(region, kind), cache / 'osm' / f'{region}.{kind}.zip'),
                             cache / 'osm' / region)
-                layer = next(raw.rglob(f'*.{kind}'), None)
-                if not layer:
+                # a shapefile delivery is a directory of layers; a GeoPackage is one file
+                source = raw if kind == 'shp' else next(raw.rglob('*.gpkg'), None)
+                if not source:
                     raise RuntimeError(f'pas de .{kind} dans la livraison {region}')
-                args = ['build_map_fr.py', f'--{kind}', layer, '--departement', code, '--out', target]
+                args = ['build_map_fr.py', f'--{kind}', source, '--departement', code, '--out', target]
                 box = ban_bounds(geo / 'addresses' / f'FR-{code}.sqlite')
                 if box:
-                    args += ['--box', box]
+                    # a box starts with a minus: argparse needs the = form to read it as a value
+                    args += [f'--box={box}']
                 run(*args)
             box = ban_bounds(geo / 'addresses' / f'FR-{code}.sqlite')
             if (geo / 'national.sqlite').exists():
@@ -240,7 +242,7 @@ def main():
             # 4. noms BD TOPO, puis 5. hauteurs de bâtiments
             entry = topo.get(code)
             box = ban_bounds(geo / 'addresses' / f'FR-{code}.sqlite')
-            box_args = ['--box', box] if box else []
+            box_args = [f'--box={box}'] if box else []
             if not entry:
                 # a handful of départements are published only inside their region's file
                 entry = regions.get(REGION_CODE[code])

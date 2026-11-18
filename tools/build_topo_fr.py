@@ -135,16 +135,16 @@ def rows(con, kind, target, layer, wanted, epsg):
     if kind == 'gpkg':
         describe, args = 'DESCRIBE SELECT * FROM ST_Read(?, layer=?)', [str(target), name]
     else:
-        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?)', [str(target)]
+        describe, args = 'DESCRIBE SELECT * FROM ST_Read(?)', [str(layer)]
     have = {r[0].lower(): r[0] for r in con.execute(describe, args).fetchall()}
-    cols = [have[w.lower()] for w in wanted if w.lower() in have]
-    if not cols:
-        return
+    if any(w.lower() not in have for w in wanted):
+        return          # this layer does not carry what we came for (the caller unpacks exactly these)
+    cols = [have[w.lower()] for w in wanted]
     select = f"ST_AsWKB(ST_Force2D(ST_Transform({geom}, 'EPSG:{epsg}', 'EPSG:4326')))," + ','.join(cols)
     if kind == 'gpkg':
         sql, args = f'SELECT {select} FROM ST_Read(?, layer=?)', [str(target), name]
     else:
-        sql, args = f'SELECT {select} FROM ST_Read(?)', [str(target)]
+        sql, args = f'SELECT {select} FROM ST_Read(?)', [str(layer)]
     try:
         got = con.execute(sql, args).fetchall()
     except Exception as exc:
