@@ -73,11 +73,14 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] Recherche d'adresses à la française (BAN, accents, *bis/ter*, communes nouvelles)
       — `engine/address_search.py` + `tools/build_addresses_fr.py` ; **rappel mesuré
       100 % sur 400 adresses réelles de Martinique × 5 variantes**
-- [ ] Couches cartographiques : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO,
-      lieux BD TOPO/COG, parcelles RPG, POI OSM + listes nationales
+- [x] Couche OSM (routes, eau, terres, bâtiments, lieux, POI) — `tools/build_map_fr.py`
+      depuis les shapefiles Geofabrik ; **Martinique : 317 074 traits, 1 015 POI,
+      rendu vérifié dans l'appli** (crédit OSM, date du build, bouton « France »)
+- [ ] Couches IGN : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO,
+      lieux BD TOPO/COG, parcelles RPG
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
-- [ ] Build d'essai d'une région (Martinique `FR-972`, 34 communes) + vérification
-- [ ] Crédits et licences par source et par date
+- [ ] Build complet d'un département (Martinique `FR-972`) + pack
+- [x] Crédit et date de la carte selon les données chargées (fini la liste US en dur)
 
 ### J3 — Contenus français
 - [ ] Traduire et replacer les 14 sujets (clé, eau, nourriture, énergie, abri, santé,
@@ -135,8 +138,9 @@ les limites et les « quand appeler à l'aide » restent cités.
 
 - Table/licence : une table par licence, ou fusion OSM + Licence Ouverte sous ODbL.
 - Unités : colonnes métriques (`height_m`, `area_ha`) ou conversion à l'affichage.
-- Lecteur IGN : BD ALTI / BD TOPO / RPG au-delà de l'essai (départements 14, 50, 61).
+- Lecteur IGN : BD ALTI / BD TOPO / RPG.
 - Projections d'outre-mer : UTM + datums locaux à écrire dans les outils.
+- Le pack d'un département (terrain, eau, bâtiments, parcelles, adresses) reste à assembler.
 - Financement / hébergement des packs (hors dépôt).
 
 ---
@@ -150,4 +154,8 @@ les limites et les « quand appeler à l'aide » restent cités.
   manifest et le switch.
 - J2b (adresses) : BAN Martinique, 138 230 adresses indexées ; normalisateur et
   recherche français ; **rappel 100 %** sur 400 adresses × 5 variantes.
-- Prochaine étape : couches cartographiques (terrain, eau, bâtiments, lieux, parcelles).
+- J2b (carte) : `tools/build_map_fr.py` (shapefiles Geofabrik → `national.sqlite`) ;
+  **Martinique : 317 074 traits, 1 015 POI**, rendu vérifié dans l'appli. Crédit et
+  date de la carte désormais issus des données chargées.
+- Prochaine étape : couches IGN (terrain, eau, bâtiments, lieux, parcelles), puis
+  assemblage d'un pack département.

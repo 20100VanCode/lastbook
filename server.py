@@ -718,6 +718,29 @@ def national_status():
         return {'state':'not-built'}
 
 
+def national_meta():
+    try:
+        db = sqlite3.connect(ro_uri(HERE / 'derived/geo/national.sqlite'), uri=True)
+        try:
+            return dict(db.execute('SELECT key,value FROM meta'))
+        finally:
+            db.close()
+    except (sqlite3.Error, OSError):
+        return {}
+
+
+def national_built():
+    return national_meta().get('built', '')
+
+
+def map_attribution():
+    """The credits line: the sources the loaded map actually holds, not a fixed US list."""
+    meta = national_meta()
+    if meta.get('country') == 'FR':
+        return meta.get('source') or '© OpenStreetMap contributors · ODbL 1.0'
+    return '© OpenStreetMap contributors · Microsoft buildings · USGS · USDA · NOAA · USACE · CDFW · CalGEM · Natural Earth'
+
+
 SOCAL_CELL = 0.05
 _socal = {'cells': None}
 
@@ -1619,7 +1642,9 @@ def map_info():
     if pack:
         extra.update(map_contents())
         geo = pack_datasets(extra)
-    return {**extra, 'meta': meta, 'datasets': geo, 'national': {k: v for k, v in national_status().items() if k not in ('source', 'database')}, 'version': data_version(), 'aerial_detail': detail, 'aerial_rev': rev, 'terrain_circle': tdetail}
+    return {**extra, 'meta': meta, 'datasets': geo, 'national': {k: v for k, v in national_status().items() if k not in ('source', 'database')},
+            'version': data_version(), 'aerial_detail': detail, 'aerial_rev': rev, 'terrain_circle': tdetail,
+            'attr': map_attribution(), 'built': national_built(), 'country': national_meta().get('country', '')}
 
 
 def pack_datasets(have):

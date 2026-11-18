@@ -101,7 +101,7 @@ const MapView = (() => {
     if (!on.length) on = DEFAULT_LAYERS;
     main.classList.add('map-page');
     document.title = 'Carte · RELIQUE';
-    main.innerHTML = `<div class="maphead"><h1>Carte et aide à proximité</h1><p class="small muted">Hors-ligne\u00a0: fonctionne sans Internet. Montre ce qui a été cartographié au 25 octobre 2026 — pas les dégâts, fermetures ou dangers.</p>${IN_WINDOW ? '<a class="btn plain" href="/ui/setup.html#manage">Téléchargements de la carte</a>' : ''}</div>
+    main.innerHTML = `<div class="maphead"><h1>Carte et aide à proximité</h1><p class="small muted">Hors-ligne\u00a0: fonctionne sans Internet. Montre ce qui a été cartographié<span id="mdate"> au 25 octobre 2026</span> — pas les dégâts, fermetures ou dangers.</p>${IN_WINDOW ? '<a class="btn plain" href="/ui/setup.html#manage">Téléchargements de la carte</a>' : ''}</div>
     <div class="mapgrid"><div class="mapwrap" id="mapwrap">
       <canvas id="mapc" tabindex="0" role="application" aria-label="Carte. Les flèches déplacent, plus et moins zooment, Échap ferme les détails. La liste à côté de la carte donne les mêmes lieux sous forme de texte."></canvas>
       <div class="map-top">
@@ -111,12 +111,12 @@ const MapView = (() => {
       <div class="map-pop" id="pres" hidden></div>
       <div class="map-pop layers" id="layers" hidden></div>
       <div class="mapctl"><span class="zgrp" role="group" aria-label="Zoom"><button id="zin" aria-label="Zoom avant" title="Zoom avant">+</button><button id="zout" aria-label="Zoom arrière" title="Zoom arrière">−</button></span>
-        <button id="zhome" aria-label="Aller à ma zone" title="Ma zone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></button><button id="map-us" aria-label="Tous les États-Unis" title="Tous les États-Unis">É.-U.</button>
+        <button id="zhome" aria-label="Aller à ma zone" title="Ma zone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></button><button id="map-us" aria-label="Ma zone" title="Ma zone">Zone</button>
         <button id="map-full" aria-label="Plein écran" title="Plein écran">${FULL[0]}</button><button id="map-3d" aria-label="Vue du relief en 3D" title="Vue 3D">3D</button><button id="map-photo" aria-label="Photos aériennes" aria-pressed="false" title="Photos aériennes">🛰</button></div>
       <div class="map-card" id="card" hidden></div>
       <div class="map-tip" id="tip" hidden></div>
       <div class="map-status" id="mstatus" aria-live="polite"></div>
-      <div class="mapelev" id="melev" hidden></div><div class="mapscale" id="mscale"></div><div class="mapattr">© OpenStreetMap contributors · Microsoft buildings · USGS · USDA · NOAA · USACE · CDFW · CalGEM · Natural Earth</div>
+      <div class="mapelev" id="melev" hidden></div><div class="mapscale" id="mscale"></div><div class="mapattr" id="mattr">© OpenStreetMap contributors</div>
     </div>
     <div class="maptools">
       <section class="panel"><h2>Les plus proches du centre de la carte</h2><p class="small muted" style="margin:0 0 4px">Pour les couches activées. Distance à vol d’oiseau, pas par la route.</p><div class="nearres" id="near" aria-live="polite"></div></section>
@@ -176,6 +176,10 @@ const MapView = (() => {
     fetch('/api/map/info').then(r => r.json()).then(info => {
       if (!st) return;
       st.national = info.national; st.ver = info.version; st.aerialDetail = info.aerial_detail; st.aerialRev = info.aerial_rev; st.terrainCircle = info.terrain_circle;
+      st.country = info.country || '';
+      if (info.attr && $('mattr')) $('mattr').textContent = info.attr;
+      if (info.built && $('mdate')) { const d = new Date(info.built); if (!isNaN(d)) $('mdate').textContent = ' au ' + d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+      if (st.country === 'FR') { const b = $('map-us'); if (b) { b.textContent = 'France'; b.title = 'Toute la France'; b.setAttribute('aria-label', 'Toute la France') } }
       describe(info); if (openWhole) fit(wholeMap(), 0.92, true); coverage(); draw();
       $('mdata').innerHTML = info.datasets.map(d => `<li class="row" style="display:block"><b>${escH(d.label)}</b><span class="muted">${escH(d.status)}</span>${d.bytes ? ` · ${(d.bytes / 1073741824).toFixed(1)} GB` : ''}</li>`).join('') +
         (st.have && !st.have.size ? '' : `<li class="row small muted" style="display:block">${st.have ? '' : 'Pas encore dessiné\u00a0: types de forêts. '}Les couches de ressources sont des relevés — poissons, puits, mines et cultures indiquent où ils ont été enregistrés ou cartographiés, sans preuve de ce qui s’y trouve aujourd’hui.</li>`);
