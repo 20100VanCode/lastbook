@@ -111,6 +111,7 @@ issue before any code.
 [REGIONS-DE.md](REGIONS-DE.md) does the same for Germany's 16 states.
 [REGIONS-PY.md](REGIONS-PY.md) does the same for Paraguay as one country-wide region.
 [REGIONS-IE.md](REGIONS-IE.md) does the same for the island of Ireland, including Northern Ireland, as one region.
+[REGIONS-GB-LONDON.md](REGIONS-GB-LONDON.md) does the same for Greater London as one region.
 
 ## Checking a map change
 
