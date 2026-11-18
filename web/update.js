@@ -12,14 +12,14 @@
 
   function view(s) {
     const btn = (t) => `<button class="btn plain" data-upd="check">${t}</button>`;
-    const ver = s.current ? `Version ${E(s.current)}.` : 'This copy has no version number (it was not built as an app).';
+    const ver = s.current ? `Version ${E(s.current)}.` : 'Cette copie n\'a pas de numéro de version (elle n\'a pas été construite comme application).';
     switch (s.state) {
-      case 'checking': return `${ver} Checking for updates…`;
-      case 'up_to_date': return `${ver} Lastbook is up to date. ${btn('Check again')}`;
-      case 'available': return `${ver} Version ${E(s.version)} is available. Download it from ${E(s.website)}. Your library, local AI and chats stay. ${btn('Check again')}`;
-      case 'not_published': return `${ver} No update information yet. ${btn('Try again')}`;
-      case 'too_old_os': case 'error': return `${ver} ${E(s.message)} ${btn('Try again')}`;
-      default: return `${ver} ${btn('Check for updates')}`;
+      case 'checking': return `${ver} Vérification des mises à jour…`;
+      case 'up_to_date': return `${ver} RELIQUE est à jour. ${btn('Revérifier')}`;
+      case 'available': return `${ver} La version ${E(s.version)} est disponible. Téléchargez-la depuis ${E(s.website)}. Votre bibliothèque, votre IA locale et vos discussions sont conservées. ${btn('Revérifier')}`;
+      case 'not_published': return `${ver} Pas encore d\'information sur les mises à jour. ${btn('Réessayer')}`;
+      case 'too_old_os': case 'error': return `${ver} ${E(s.message)} ${btn('Réessayer')}`;
+      default: return `${ver} ${btn('Vérifier les mises à jour')}`;
     }
   }
 
@@ -31,7 +31,7 @@
 
   async function refresh(el) {
     if (!el.isConnected) return;
-    try { paint(el, await call('state')) } catch { el.textContent = 'Lastbook could not ask about updates.' }
+    try { paint(el, await call('state')) } catch { el.textContent = 'RELIQUE n\'a pas pu vérifier les mises à jour.' }
   }
 
   async function check(el) {
@@ -39,11 +39,11 @@
       const s = await call('check');
       if (s.error && !s.state) { el.textContent = s.error; return }
       paint(el, s);
-    } catch { el.textContent = 'Lastbook could not ask about updates.' }
+    } catch { el.textContent = 'RELIQUE n\'a pas pu vérifier les mises à jour.' }
   }
 
   window.LBUpdate = {
-    card: () => '<div class="card"><b>Lastbook app</b><small id="updBox">…</small></div>',
+    card: () => '<div class="card"><b>Application RELIQUE</b><small id="updBox">…</small></div>',
     mount(root) {
       const el = root.querySelector('#updBox'); if (!el) return;
       el.addEventListener('click', e => { if (e.target.closest('[data-upd]')) check(el) });

@@ -44,8 +44,8 @@ const KIND_ICO = { pdf: 'page', html: 'page', video: 'video', transcript: 'video
 const TC = { hurt: '#c62828', water: '#1565c0', power: '#c77700', food: '#d4570f', shelter: '#7b3fa0', sanitation: '#7a5232', disaster: '#b23c17', comms: '#00796b',
   grow: '#2e7d32', preserve: '#a0661a', health: '#c2185b', repair: '#455a64', energy: '#e09400', land: '#5d7a2e' };
 // Short names for tiles; the full title shows on the guide page.
-const SHORT = { hurt: 'Injury & illness', water: 'Drinking water', power: 'Power is out', food: 'Food & cooking', shelter: 'Too hot or cold', sanitation: 'Toilets & hygiene',
-  disaster: 'Quake, fire, flood', comms: 'Contact & find way', grow: 'Grow food', preserve: 'Preserve food', health: 'Health care', repair: 'Repair & build', energy: 'Power systems', land: 'Land & resources' };
+const SHORT = { hurt: 'Blessures et maladies', water: 'Eau potable', power: 'Plus de courant', food: 'Nourriture et cuisine', shelter: 'Trop chaud ou trop froid', sanitation: 'Toilettes et hygiène',
+  disaster: 'Séisme, incendie, inondation', comms: 'Contacts et repérage', grow: 'Cultiver la terre', preserve: 'Conserver les aliments', health: 'Soins de santé', repair: 'Réparer et construire', energy: 'Systèmes électriques', land: 'Terre et ressources' };
 const tcStyle = id => `style="--tc:${TC[id] || '#1a6b55'}"`;
 
 /* ------------------------------------------------------------ storage -- */
@@ -54,7 +54,7 @@ const store = {
   set(k, v) { try { localStorage.setItem('sg.' + k, JSON.stringify(v)) } catch { } },
 };
 // A row as the lists show it: its title and the subtitle under it. Two rows that read the same are one row, whatever their keys.
-const rowSub = x => x.sub && x.sub !== x.title ? x.sub : x.key[0] === 'w' ? 'Encyclopedia' : '';
+const rowSub = x => x.sub && x.sub !== x.title ? x.sub : x.key[0] === 'w' ? 'Encyclopédie' : '';
 const rowId = x => x.title + '|' + rowSub(x);
 function remember(item) {  // {key,title,href,sub}
   const r = store.get('recent', []).filter(x => x.key !== item.key && rowId(x) !== rowId(item));
@@ -65,13 +65,13 @@ const isSaved = key => store.get('saved', []).some(x => x.key === key);
 function savedCount() { const el = $('#savedN'); if (el) el.textContent = store.get('saved', []).length || '' }
 function toggleSave(item, btn) {
   let s = store.get('saved', []);
-  if (s.some(x => x.key === item.key)) { s = s.filter(x => x.key !== item.key); toast('Removed from Saved') }
-  else { s.unshift({ ...item, at: Date.now() }); toast('Saved on this device') }
+  if (s.some(x => x.key === item.key)) { s = s.filter(x => x.key !== item.key); toast('Retiré des Enregistrés') }
+  else { s.unshift({ ...item, at: Date.now() }); toast('Enregistré sur cet appareil') }
   store.set('saved', s);
   savedCount();
-  if (btn) { btn.setAttribute('aria-pressed', isSaved(item.key)); const sp = $('span', btn); if (sp) sp.textContent = isSaved(item.key) ? 'Saved' : 'Save' }
+  if (btn) { btn.setAttribute('aria-pressed', isSaved(item.key)); const sp = $('span', btn); if (sp) sp.textContent = isSaved(item.key) ? 'Enregistré' : 'Enregistrer' }
 }
-const saveButton = item => `<button class="btn plain" title="Save" data-save='${esc(JSON.stringify(item))}' aria-pressed="${isSaved(item.key)}">${ico('save')}<span>${isSaved(item.key) ? 'Saved' : 'Save'}</span></button>`;
+const saveButton = item => `<button class="btn plain" title="Enregistrer" data-save='${esc(JSON.stringify(item))}' aria-pressed="${isSaved(item.key)}">${ico('save')}<span>${isSaved(item.key) ? 'Enregistré' : 'Enregistrer'}</span></button>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-save]'); if (b) toggleSave(JSON.parse(b.dataset.save), b) });
 let toastT;
 function toast(msg) {
@@ -98,8 +98,8 @@ function setVprog(id, data) { const p = vprog(); p[id] = { ...(p[id] || {}), ...
 /* --------------------------------------------------------------- data -- */
 async function api(u, opts) {
   const r = await fetch(u, opts);
-  let d; try { d = await r.json() } catch { throw new Error('The library sent an unreadable reply.') }
-  if (!r.ok || (d && d.error && !Array.isArray(d))) throw new Error(d && d.error || ('Server error ' + r.status));
+  let d; try { d = await r.json() } catch { throw new Error('La bibliothèque a renvoyé une réponse illisible.') }
+  if (!r.ok || (d && d.error && !Array.isArray(d))) throw new Error(d && d.error || ('Erreur du serveur ' + r.status));
   return d;
 }
 let LIB = null;
@@ -124,7 +124,7 @@ const here = () => location.hash || '#/videos';
 const fromQ = () => 'from=' + encodeURIComponent(here());
 const pageImg = (id, p, w) => `/api/page/${encodeURIComponent(id)}/${p || 1}.png?w=${w}`;
 const hostOf = u => { try { return new URL(u).host } catch { return u } };   // a web address shown as its site only
-const askLink = (about, label = 'Ask about this') => `<a class="btn plain" title="${esc(label)}" href="#/ask?about=${encodeURIComponent(about)}&${fromQ()}">${ico('ask')}<span>${label}</span></a>`;
+const askLink = (about, label = 'Poser une question à ce sujet') => `<a class="btn plain" title="${esc(label)}" href="#/ask?about=${encodeURIComponent(about)}&${fromQ()}">${ico('ask')}<span>${label}</span></a>`;
 
 function hrefFor(item, src) {
   src = src || item.src || item;
@@ -134,12 +134,12 @@ function hrefFor(item, src) {
   return `#/read/${encodeURIComponent(src.id)}?${item.page ? 'p=' + item.page + '&' : ''}${fromQ()}`;
 }
 function srcText(s, page) {
-  if (!s) return 'Source not found in this library copy';
-  const bits = [`<strong>${esc(s.publisher || s.collection || 'Unknown publisher')}</strong>`];
+  if (!s) return 'Source introuvable dans cette copie de la bibliothèque';
+  const bits = [`<strong>${esc(s.publisher || s.collection || 'Éditeur inconnu')}</strong>`];
   if (s.year) bits.push(esc(s.year));
-  if (page) bits.push('page ' + page + (s.pages ? ' of ' + s.pages : ''));
+  if (page) bits.push('page ' + page + (s.pages ? ' sur ' + s.pages : ''));
   else if (s.kind === 'pdf' && s.pages) bits.push(s.pages + ' pages');
-  if (s.duration) bits.push(fmtDur(s.duration) + (s.transcript ? ' · transcript' : ''));
+  if (s.duration) bits.push(fmtDur(s.duration) + (s.transcript ? ' · transcription' : ''));
   return bits.join(' · ');
 }
 // A reading card shows a picture of what you'll open: the actual page, the video frame, or an encyclopedia mark.
@@ -151,7 +151,7 @@ function rcard(item) {
   else if (s && s.kind === 'pdf') pv = `<span class="pv"><img loading="lazy" alt="" src="${pageImg(s.id, item.page, 360)}" onerror="this.remove()"><span class="pg">${item.page ? 'p. ' + item.page : 'PDF'}</span></span>`;
   else pv = `<span class="pv w">${ico('page')}</span>`;
   const label = item.label || item.title || (s && s.title);
-  const src = item.zim ? `<strong>Encyclopedia</strong> · ${esc(item.title || '')} · community-written` : `${s ? 'From “' + esc(s.title) + '” · ' : ''}${srcText(s, item.page)}<br>${esc(s ? s.trust : '')}`;
+  const src = item.zim ? `<strong>Encyclopédie</strong> · ${esc(item.title || '')} · rédigé par la communauté` : `${s ? 'Extrait de «\u00a0' + esc(s.title) + '\u00a0» · ' : ''}${srcText(s, item.page)}<br>${esc(s ? s.trust : '')}`;
   return `<a class="rcard" href="${hrefFor(item)}">${pv}<span><b>${esc(label)}</b>${item.note ? `<p>${esc(item.note)}</p>` : ''}<span class="src">${src}</span></span></a>`;
 }
 function rowItem(item) {
@@ -159,7 +159,7 @@ function rowItem(item) {
   let k = ico(item.zim ? 'wiki' : s ? KIND_ICO[s.kind] : 'page');
   if (s && s.kind === 'video' && s.thumb) k = `<img loading="lazy" alt="" src="${fileUrl(s.thumb)}">`;
   else if (s && s.kind === 'pdf' && (item.page || item.preview)) k = `<img loading="lazy" alt="" src="${pageImg(s.id, item.page, 200)}" onerror="this.remove()">`;
-  const sub = item.zim ? 'Encyclopedia article · community-written' : srcText(s, item.page);
+  const sub = item.zim ? 'Article d’encyclopédie · rédigé par la communauté' : srcText(s, item.page);
   return `<li><a class="row" href="${hrefFor(item)}"><span class="k">${k}</span><span><b>${esc(item.label || item.title || (s && s.title))}</b><small>${sub}</small></span></a></li>`;
 }
 function vcard(v, opts = {}) {
@@ -167,11 +167,11 @@ function vcard(v, opts = {}) {
   const pct = p && p.t && (v.duration || p.d) ? Math.min(100, 100 * p.t / (v.duration || p.d)) : 0;
   return `<a class="vcard" href="#/watch/${encodeURIComponent(v.id)}?${fromQ()}" ${opts.style || ''}>
     <span class="vthumb">${v.thumb ? `<img loading="lazy" alt="" src="${fileUrl(v.thumb)}" onerror="this.remove()">` : `<span class="ph">${ico('video')}</span>`}
-      ${v.transcript ? '<span class="cc" title="Has a transcript">CC</span>' : ''}${v.duration ? `<span class="dur">${clock(v.duration)}</span>` : ''}${pct > 2 ? `<span class="prog" style="width:${pct}%"></span>` : ''}<span class="play">${ico('play')}</span></span>
+      ${v.transcript ? '<span class="cc" title="Avec une transcription">CC</span>' : ''}${v.duration ? `<span class="dur">${clock(v.duration)}</span>` : ''}${pct > 2 ? `<span class="prog" style="width:${pct}%"></span>` : ''}<span class="play">${ico('play')}</span></span>
     <b>${esc(v.title)}</b><span class="vm">${esc(opts.sub || v.publisher || '')}</span></a>`;
 }
 function rail(html, cls = '') {
-  return `<div class="rail-wrap"><button class="rail-btn l" aria-label="Scroll left" hidden>${ico('back')}</button><div class="rail ${cls}">${html}</div><button class="rail-btn r" aria-label="Scroll right">${ico('right')}</button></div>`;
+  return `<div class="rail-wrap"><button class="rail-btn l" aria-label="Faire défiler vers la gauche" hidden>${ico('back')}</button><div class="rail ${cls}">${html}</div><button class="rail-btn r" aria-label="Faire défiler vers la droite">${ico('right')}</button></div>`;
 }
 function wireRails(root = main) {
   $$('.rail-wrap', root).forEach(w => {
@@ -184,22 +184,22 @@ function wireRails(root = main) {
 }
 const secHead = (title, sub, link) => `<div class="sec-head"><div><h2>${title}</h2>${sub ? `<span class="sub">${sub}</span>` : ''}</div>${link || ''}</div>`;
 function crumbs(list) {
-  return `<nav class="crumbs" aria-label="You are here">${list.map((c, i) => i < list.length - 1 ? `<a href="${c[1]}">${esc(c[0])}</a><span aria-hidden="true">›</span>` : `<span aria-current="page">${esc(c[0])}</span>`).join('')}</nav>`;
+  return `<nav class="crumbs" aria-label="Vous êtes ici">${list.map((c, i) => i < list.length - 1 ? `<a href="${c[1]}">${esc(c[0])}</a><span aria-hidden="true">›</span>` : `<span aria-current="page">${esc(c[0])}</span>`).join('')}</nav>`;
 }
-function backButton(from, fallback = 'Back') {
+function backButton(from, fallback = 'Retour') {
   let label = fallback, href = from || '#/';
   const m = /^#\/t\/([\w-]+)/.exec(href);
   if (m && topicById(m[1])) label = SHORT[m[1]] || topicById(m[1]).title;
-  else if (href.startsWith('#/search')) label = 'Search results';
-  else if (href.startsWith('#/ask')) label = 'Back to chat';
-  else if (href.startsWith('#/saved')) label = 'Saved';
-  else if (href.startsWith('#/map')) label = 'Map';
-  else if (href.startsWith('#/videos')) label = 'Videos';
+  else if (href.startsWith('#/search')) label = 'Résultats de recherche';
+  else if (href.startsWith('#/ask')) label = 'Retour au chat';
+  else if (href.startsWith('#/saved')) label = 'Enregistrés';
+  else if (href.startsWith('#/map')) label = 'Carte';
+  else if (href.startsWith('#/videos')) label = 'Vidéos';
   else if (href.startsWith('#/guides')) label = 'Guides';
-  else if (href.startsWith('#/watch')) label = 'Video';
-  else if (href.startsWith('#/read')) label = 'Back to page';
-  else if (href.startsWith('#/library') || href.startsWith('#/shelf') || href.startsWith('#/collection') || href.startsWith('#/encyclopedias') || href.startsWith('#/prepare')) label = 'Library';
-  else if (href === '#/' || href === '#') label = 'Videos';
+  else if (href.startsWith('#/watch')) label = 'Vidéo';
+  else if (href.startsWith('#/read')) label = 'Retour à la page';
+  else if (href.startsWith('#/library') || href.startsWith('#/shelf') || href.startsWith('#/collection') || href.startsWith('#/encyclopedias') || href.startsWith('#/prepare')) label = 'Bibliothèque';
+  else if (href === '#/' || href === '#') label = 'Vidéos';
   return `<a class="back" href="${esc(href)}" data-back>${ico('back')}<span>${esc(label)}</span></a>`;
 }
 // Links into readers carry where you came from; refresh it at click time (sections may have opened since render).
@@ -215,12 +215,12 @@ document.addEventListener('click', e => {
   if (a && !location.hash.startsWith('#/wiki/') && navAt > 0 && navStack[navAt - 1] === a.getAttribute('href')) { e.preventDefault(); history.back() }
 });
 function errorBox(e, what) {
-  return `<div class="err" role="alert"><b>${esc(what || 'Something went wrong.')}</b><br>${esc(e.message || e)}
-  <br><span class="small">If this keeps happening, close Lastbook and open it again.</span></div>`;
+  return `<div class="err" role="alert"><b>${esc(what || 'Une erreur est survenue.')}</b><br>${esc(e.message || e)}
+  <br><span class="small">Si cela persiste, fermez RELIQUE et rouvrez-le.</span></div>`;
 }
 // The window title, and on reading pages the toolbar's title and the line under it.
 // bar: what the toolbar shows when it is not the page's own title (an article names itself; the toolbar names the encyclopedia).
-const setTitle = (t, sub, bar) => { document.title = t ? t + ' · Lastbook' : 'Lastbook'; const b = $('#tbTitle'); b.textContent = b.title = bar ?? t ?? ''; if (sub !== undefined) $('#tbSub').textContent = $('#tbSub').title = sub };
+const setTitle = (t, sub, bar) => { document.title = t ? t + ' · RELIQUE' : 'RELIQUE'; const b = $('#tbTitle'); b.textContent = b.title = bar ?? t ?? ''; if (sub !== undefined) $('#tbSub').textContent = $('#tbSub').title = sub };
 
 /* ------------------------------------------------------------- router -- */
 // Where this tab is in its history. Each entry carries its own index in history.state, so Back and Forward are known exactly:
@@ -295,7 +295,7 @@ async function route() {
     else if (v === 'collection') await collectionPage(q.get('name') || '', q.get('from'));
     else if (v === 'about') await about();
     else notFound();
-  } catch (e) { setTitle(''); document.body.className = 'v-error'; main.innerHTML = emptyState('warn', 'This page could not be opened', e.message || e) }   // v-error: not a reading page, so a phone keeps its tab bar
+  } catch (e) { setTitle(''); document.body.className = 'v-error'; main.innerHTML = emptyState('warn', 'Cette page n’a pas pu être ouverte', e.message || e) }   // v-error: not a reading page, so a phone keeps its tab bar
   wireRails(); dock(); barState();
   $('#topQ').value = '';
   const big = $('main h1'); if (big) h1seen.observe(big);
@@ -352,7 +352,7 @@ const h1seen = new IntersectionObserver(es => html.classList.toggle('h1-gone', !
 function railTitles() { const icons = html.classList.contains('compact') && !html.classList.contains('side-open'); $$('.side a.row-s').forEach(a => icons ? a.title = $('span', a).textContent : a.removeAttribute('title')) }
 addEventListener('resize', railTitles);
 // The toolbar's field says only 'Search' when it is too narrow for the whole hint, as Windows' and the Mac's own narrow fields do
-new ResizeObserver(() => { const q = $('#topQ'); if (q.clientWidth) q.placeholder = q.clientWidth < 175 ? 'Search' : 'Search the library' }).observe($('#topQ'));
+new ResizeObserver(() => { const q = $('#topQ'); if (q.clientWidth) q.placeholder = q.clientWidth < 175 ? 'Rechercher' : 'Rechercher dans la bibliothèque' }).observe($('#topQ'));
 // At 900 and wider a page's .dock controls (view switch, Save, Ask) sit in the toolbar; narrower they stay in the page.
 const docks = () => wide.matches || (!MAC && innerWidth >= 640);
 function dock() {
@@ -414,10 +414,10 @@ document.addEventListener('keydown', e => {
     else if (document.activeElement === $('#topQ')) { $('#topQ').value = ''; $('#topQ').blur() }
   }
 });
-function notFound() { setTitle('Not found'); main.innerHTML = emptyState('search', 'That page isn’t here', 'The link may be from an older version of the guide.') }
-const emptyState = (icon, title, text) => `<div class="empty"><span class="e-ico">${ico(icon)}</span><b>${esc(title)}</b><p>${esc(text)}</p><p class="e-act"><a class="btn plain" href="#/">Go to Videos</a></p></div>`;
-function searchBox(id, value, placeholder, button = 'Search') {
-  return `<form class="bigsearch" role="search" id="${id}F">${ico('search')}<label class="sr" for="${id}">Search</label><input id="${id}" type="search" autocomplete="off" value="${esc(value || '')}" placeholder="${esc(placeholder)}" enterkeyhint="search"><button>${button}</button></form>`;
+function notFound() { setTitle('Introuvable'); main.innerHTML = emptyState('search', 'Cette page n’est pas ici', 'Le lien vient peut-être d’une version plus ancienne du guide.') }
+const emptyState = (icon, title, text) => `<div class="empty"><span class="e-ico">${ico(icon)}</span><b>${esc(title)}</b><p>${esc(text)}</p><p class="e-act"><a class="btn plain" href="#/">Aller aux vidéos</a></p></div>`;
+function searchBox(id, value, placeholder, button = 'Rechercher') {
+  return `<form class="bigsearch" role="search" id="${id}F">${ico('search')}<label class="sr" for="${id}">Rechercher</label><input id="${id}" type="search" autocomplete="off" value="${esc(value || '')}" placeholder="${esc(placeholder)}" enterkeyhint="search"><button>${button}</button></form>`;
 }
 
 /* --------------------------------------------------------------- home -- */
@@ -428,33 +428,33 @@ async function home() {
   const pins = (await libInfo()).pins !== false;
   main.innerHTML = `
   <section class="hero">
-    <h1>What do you need?</h1>
-    <p class="lead">Pick what’s happening, search in your own words, or ask the library a question.</p>
-    ${searchBox('bigQ', '', innerWidth < 500 ? 'e.g. boil water' : 'e.g. boil water, deep cut, no power')}
-    <div class="chips examples" aria-label="Example searches">${['boil water', 'cut won’t stop bleeding', 'fridge after power cut', 'burn', 'toilet not working', 'smell gas'].map(x => `<a class="chip" href="#/search?q=${encodeURIComponent(x)}">${esc(x)}</a>`).join('')}</div>
+    <h1>De quoi avez-vous besoin\u00a0?</h1>
+    <p class="lead">Choisissez ce qui se passe, recherchez avec vos propres mots ou posez une question à la bibliothèque.</p>
+    ${searchBox('bigQ', '', innerWidth < 500 ? 'ex. faire bouillir de l’eau' : 'ex. faire bouillir de l’eau, coupure profonde, plus de courant')}
+    <div class="chips examples" aria-label="Recherches d’exemple">${['boil water', 'cut won’t stop bleeding', 'fridge after power cut', 'burn', 'toilet not working', 'smell gas'].map(x => `<a class="chip" href="#/search?q=${encodeURIComponent(x)}">${esc(x)}</a>`).join('')}</div>
   </section>
-  ${secHead('Need help now')}
+  ${secHead('Besoin d’aide maintenant')}
   <div class="needs">${nowTopics().map(tile).join('')}</div>
-  <div class="banners"><a class="banner chatb" href="#/ask"><span class="ico">${ico('ask')}</span><span><b>Ask the library</b><small>Get an answer built from the manuals, with the exact pages and video moments it came from</small></span><span class="go">${ico('right')}</span></a>
-  <a class="banner map" href="#/map"><span class="ico">${ico('pin')}</span><span>${pins ? '<b>Find help nearby</b><small>Hospitals, pharmacies, water taps and fire stations on an offline map</small>' : '<b>Find a place</b><small>Main roads, towns and water on an offline map</small>'}</span><span class="go">${ico('right')}</span></a></div>
-  ${cont.length ? secHead('Pick up where you left off') + rail(cont.join('')) : ''}
+  <div class="banners"><a class="banner chatb" href="#/ask"><span class="ico">${ico('ask')}</span><span><b>Demander à la bibliothèque</b><small>Obtenez une réponse construite à partir des manuels, avec les pages exactes et les moments de vidéo dont elle est tirée</small></span><span class="go">${ico('right')}</span></a>
+  <a class="banner map" href="#/map"><span class="ico">${ico('pin')}</span><span>${pins ? '<b>Trouver de l’aide à proximité</b><small>Hôpitaux, pharmacies, points d’eau et casernes de pompiers sur une carte hors-ligne</small>' : '<b>Trouver un lieu</b><small>Routes principales, villes et points d’eau sur une carte hors-ligne</small>'}</span><span class="go">${ico('right')}</span></a></div>
+  ${cont.length ? secHead('Reprendre où vous en étiez') + rail(cont.join('')) : ''}
   <div id="homeVideos"></div>
-  ${secHead('Learn a skill', 'Step-by-step routes for the weeks and months ahead', '<a href="#/library">All skills</a>')}
-  ${rail(learnTopics().map(t => `<a class="skill" href="#/t/${t.id}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><b>${esc(SHORT[t.id] || t.title)}</b><small>${esc(t.short || '')}</small><span class="steps">${(t.route || []).length} steps</span></a>`).join(''), 'skills')}
-  <a class="banner prep" href="#/prepare"><span class="ico">${ico('prep')}</span><span><b>Get ready before it happens</b><small>Store water and food, plan for outages, pack kits</small></span><span class="go">${ico('right')}</span></a>`;
+  ${secHead('Apprendre une compétence', 'Des parcours étape par étape pour les semaines et les mois à venir', '<a href="#/library">Toutes les compétences</a>')}
+  ${rail(learnTopics().map(t => `<a class="skill" href="#/t/${t.id}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><b>${esc(SHORT[t.id] || t.title)}</b><small>${esc(t.short || '')}</small><span class="steps">${(t.route || []).length} étapes</span></a>`).join(''), 'skills')}
+  <a class="banner prep" href="#/prepare"><span class="ico">${ico('prep')}</span><span><b>Préparez-vous avant que cela n’arrive</b><small>Stockez eau et nourriture, prévoyez les coupures, préparez des kits</small></span><span class="go">${ico('right')}</span></a>`;
   $('#bigQF').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/search?q=' + encodeURIComponent($('#bigQ').value.trim()) });
   const ex = $('.examples', main), exEnd = () => { ex.classList.toggle('at-end', ex.scrollLeft + ex.clientWidth >= ex.scrollWidth - 4); ex.classList.toggle('at-start', ex.scrollLeft < 4) };
   ex.addEventListener('scroll', exEnd, { passive: true }); exEnd(); window.onresize = exEnd;
   try {
     const rows = await api('/api/videos');
     const g = rows.find(r => r.id === 'guides');
-    if (g && $('#homeVideos')) { $('#homeVideos').innerHTML = secHead('Watch how it’s done', 'Videos picked for the guides', '<a href="#/videos">All videos</a>') + rail(g.items.slice(0, 14).map(v => vcard(v, { style: tcStyle(v.guide) })).join('')); wireRails($('#homeVideos')) }
+    if (g && $('#homeVideos')) { $('#homeVideos').innerHTML = secHead('Regardez faire', 'Vidéos choisies pour les guides', '<a href="#/videos">Toutes les vidéos</a>') + rail(g.items.slice(0, 14).map(v => vcard(v, { style: tcStyle(v.guide) })).join('')); wireRails($('#homeVideos')) }
   } catch { }
 }
 async function continueItems() {
   const out = [], rec = await recents();
   (await resumable(12)).slice(0, 6)
-    .forEach(([id, v]) => out.push(vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Resume at ' + clock(v.t) })));
+    .forEach(([id, v]) => out.push(vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Reprendre à ' + clock(v.t) })));
   rec.filter(r => !r.key.startsWith('v:')).slice(0, 8).forEach(r => out.push(`<a class="mini" href="${esc(r.href)}"><small>${esc(r.sub || '')}</small><b>${esc(r.title)}</b></a>`));
   return out;
 }
@@ -469,38 +469,38 @@ async function topicPage(id, open) {
   const t = topicById(id);
   if (!t) return notFound();
   setTitle(t.title);
-  remember({ key: 't:' + id, title: t.title, href: '#/t/' + id, sub: t.mode === 'learn' ? 'Learning route' : 'Guide' });
+  remember({ key: 't:' + id, title: t.title, href: '#/t/' + id, sub: t.mode === 'learn' ? 'Parcours d’apprentissage' : 'Guide' });
   const learn = t.mode === 'learn';
   const progress = store.get('progress', {});
   const sits = (t.choices || []).map(c => c.goto
     ? `<div class="sit"><a href="#/t/${esc(c.goto)}"><span class="dot"></span><span class="tx"><b>${esc(c.label)}</b>${c.hint ? `<span>${esc(c.hint)}</span>` : ''}</span><span class="chev">${ico('right')}</span></a></div>`
     : `<div class="sit${open === c.id ? ' open' : ''}" id="c-${esc(c.id)}">
       <button aria-expanded="${open === c.id}" aria-controls="cb-${esc(c.id)}" data-choice="${esc(c.id)}"><span class="dot"></span><span class="tx"><b>${esc(c.label)}</b>${c.hint ? `<span>${esc(c.hint)}</span>` : ''}</span><span class="chev">${ico('down')}</span></button>
-      <div class="body" id="cb-${esc(c.id)}"><div class="rcards">${(c.read || []).map(rcard).join('') || '<p class="muted">Nothing picked for this yet — try searching.</p>'}</div></div></div>`).join('');
-  const limLi = l => `<li>${esc(l.text)}${l.src ? ` <span class="cite">— <a href="${hrefFor(l)}">${esc(l.src.publisher || l.src.title)}${l.page ? ', p. ' + l.page : ''}</a></span>` : l.zim ? ` <span class="cite">— <a href="${hrefFor(l)}">encyclopedia</a></span>` : ''}</li>`;
+      <div class="body" id="cb-${esc(c.id)}"><div class="rcards">${(c.read || []).map(rcard).join('') || '<p class="muted">Rien n’a encore été choisi pour ceci — essayez la recherche.</p>'}</div></div></div>`).join('');
+  const limLi = l => `<li>${esc(l.text)}${l.src ? ` <span class="cite">— <a href="${hrefFor(l)}">${esc(l.src.publisher || l.src.title)}${l.page ? ', p. ' + l.page : ''}</a></span>` : l.zim ? ` <span class="cite">— <a href="${hrefFor(l)}">encyclopédie</a></span>` : ''}</li>`;
   const LIM = 4, lims = t.limits || [];
-  const limits = lims.length ? `<section class="limits" aria-labelledby="lim"><h2 id="lim">${ico('warn')}Stop and get help when…</h2><ul>${lims.slice(0, LIM).map(limLi).join('')}</ul>${lims.length > LIM ? `<details><summary>Show all ${lims.length} warnings</summary><ul>${lims.slice(LIM).map(limLi).join('')}</ul></details>` : ''}</section>` : '';
-  const disagree = (t.gaps?.disagree || []).length ? `<div class="disagree"><b>Sources disagree</b><ul>${t.gaps.disagree.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
-  const route = (t.route || []).length ? `<h2>Your learning route</h2><p class="muted small">Ticks are your own notes on this device. Reading or watching is not the same as practising safely.</p>
+  const limits = lims.length ? `<section class="limits" aria-labelledby="lim"><h2 id="lim">${ico('warn')}Arrêtez et demandez de l’aide quand…</h2><ul>${lims.slice(0, LIM).map(limLi).join('')}</ul>${lims.length > LIM ? `<details><summary>Afficher les ${lims.length} avertissements</summary><ul>${lims.slice(LIM).map(limLi).join('')}</ul></details>` : ''}</section>` : '';
+  const disagree = (t.gaps?.disagree || []).length ? `<div class="disagree"><b>Les sources se contredisent</b><ul>${t.gaps.disagree.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+  const route = (t.route || []).length ? `<h2>Votre parcours d’apprentissage</h2><p class="muted small">Vos coches sont vos propres notes sur cet appareil. Lire ou regarder ne remplace pas une pratique en toute sécurité.</p>
     <ol class="route">${t.route.map((s, i) => { const k = id + ':' + i, p = progress[k] || {}; return `<li class="step${p.practised ? ' done' : ''}"><h3>${esc(s.title.replace(/^Step \d+:\s*/i, ''))}</h3>${s.goal ? `<p class="goal">${esc(s.goal)}</p>` : ''}
       <div class="rcards">${(s.read || []).map(rcard).join('')}</div>
-      <div class="mark"><label><input type="checkbox" data-prog="${k}" data-f="read" ${p.read ? 'checked' : ''}> I’ve read this</label><label><input type="checkbox" data-prog="${k}" data-f="practised" ${p.practised ? 'checked' : ''}> I’ve practised it with someone who knows</label></div></li>` }).join('')}</ol>` : '';
+      <div class="mark"><label><input type="checkbox" data-prog="${k}" data-f="read" ${p.read ? 'checked' : ''}> Je l’ai lu</label><label><input type="checkbox" data-prog="${k}" data-f="practised" ${p.practised ? 'checked' : ''}> Je l’ai pratiqué avec quelqu’un qui s’y connaît</label></div></li>` }).join('')}</ol>` : '';
   const sec = (icon, title, items) => items && items.length ? `<details class="more"><summary>${ico(icon)}<span>${title} <span class="n">· ${items.length}</span></span></summary><div class="body"><ul class="list">${items.map(i => rowItem({ ...i, preview: true })).join('')}</ul></div></details>` : '';
   const vids = topicVideos(t);
   const related = (t.related || []).map(topicById).filter(Boolean);
-  main.innerHTML = `<div class="ghero" ${tcStyle(id)}><div class="ghero-in">${crumbs([['Guides', '#/guides'], [learn ? 'Learn a skill' : 'Need help now', learn ? '#/library' : '#/guides'], [SHORT[id] || t.title]])}
+  main.innerHTML = `<div class="ghero" ${tcStyle(id)}><div class="ghero-in">${crumbs([['Guides', '#/guides'], [learn ? 'Apprendre une compétence' : 'Besoin d’aide maintenant', learn ? '#/library' : '#/guides'], [SHORT[id] || t.title]])}
       <div class="row1"><span class="ico">${ico(t.id)}</span><h1>${esc(t.title)}</h1></div><p class="lead">${esc(t.intro || '')}</p>
-      <div class="vactions" style="margin-bottom:0">${askLink('topic:' + id, 'Ask a question about this')}</div></div></div>
+      <div class="vactions" style="margin-bottom:0">${askLink('topic:' + id, 'Poser une question à ce sujet')}</div></div></div>
     <div class="gcols" ${tcStyle(id)}><div>
-      ${(t.choices || []).length ? `<p class="ask" id="askh">${learn ? 'Where do you want to start?' : 'What’s happening?'}</p><div class="situations" aria-labelledby="askh">${sits}</div>` : ''}
+      ${(t.choices || []).length ? `<p class="ask" id="askh">${learn ? 'Par où voulez-vous commencer\u00a0?' : 'Que se passe-t-il\u00a0?'}</p><div class="situations" aria-labelledby="askh">${sits}</div>` : ''}
       <div class="gnarrow">${limits}${disagree}</div>
       ${route}
-      ${vids.length ? secHead('Videos for this', `${vids.length} picked video${vids.length > 1 ? 's' : ''}`) + rail(vids.map(v => vcard(v)).join('')) : ''}
-      ${sec('prep', 'Get ready before it happens', t.prepare)}
-      ${sec('book', 'Go deeper: full manuals & articles', t.learn)}
-      ${(t.gaps?.missing || []).length ? `<details class="more"><summary>${ico('warn')}<span>Not in this library</span></summary><div class="body"><p class="muted small" style="margin-top:0">Looked for but not found when this guide was put together (October 2026):</p><ul>${t.gaps.missing.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div></details>` : ''}
-      ${related.length ? `<h2>Related guides</h2><div class="related">${related.map(r => `<a class="chip" href="#/t/${r.id}" ${tcStyle(r.id)}><span style="color:var(--tc)">${ico(r.id)}</span>${esc(SHORT[r.id] || r.title)}</a>`).join('')}</div>` : ''}
-    </div><aside class="gside" aria-label="Safety"></aside></div>`;
+      ${vids.length ? secHead('Vidéos pour ceci', `${vids.length} vidéo choisie${vids.length > 1 ? 's' : ''}`) + rail(vids.map(v => vcard(v)).join('')) : ''}
+      ${sec('prep', 'Préparez-vous avant que cela n’arrive', t.prepare)}
+      ${sec('book', 'Aller plus loin\u00a0: manuels et articles complets', t.learn)}
+      ${(t.gaps?.missing || []).length ? `<details class="more"><summary>${ico('warn')}<span>Absent de cette bibliothèque</span></summary><div class="body"><p class="muted small" style="margin-top:0">Recherché mais introuvable lors de la création de ce guide (octobre 2026)\u00a0:</p><ul>${t.gaps.missing.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div></details>` : ''}
+      ${related.length ? `<h2>Guides associés</h2><div class="related">${related.map(r => `<a class="chip" href="#/t/${r.id}" ${tcStyle(r.id)}><span style="color:var(--tc)">${ico(r.id)}</span>${esc(SHORT[r.id] || r.title)}</a>`).join('')}</div>` : ''}
+    </div><aside class="gside" aria-label="Sécurité"></aside></div>`;
   // On wide screens the safety box sits beside the choices so it stays visible.
   const side = $('.gside', main), nar = $('.gnarrow', main);
   const placeSide = () => { if (!side || !nar) return; if (innerWidth >= 1050) { if (!side.firstChild) side.append(...nar.childNodes) } else if (side.firstChild) nar.append(...side.childNodes) };
@@ -521,20 +521,20 @@ async function topicPage(id, open) {
 
 /* ------------------------------------------------------------- videos -- */
 async function videosHome() {
-  setTitle('Videos');
-  main.innerHTML = `<h1>Videos</h1><p class="lead">Watch it done — practical how-tos first, then channels and courses.</p>
-    <div class="vtools">${searchBox('vq', '', 'Search video titles')}</div>
-    <div class="chips" style="margin-top:8px">${[['short', 'Under 10 min'], ['medium', '10–30 min'], ['long', 'Over 30 min']].map(([k, l]) => `<a class="chip" href="#/videos/all?len=${k}">${ico('clock')}${l}</a>`).join('')}</div>
-    <div id="vrows"><p class="loading">Loading videos…</p></div>`;
+  setTitle('Vidéos');
+  main.innerHTML = `<h1>Vidéos</h1><p class="lead">Regardez faire — d’abord des tutoriels pratiques, puis les chaînes et les cours.</p>
+    <div class="vtools">${searchBox('vq', '', 'Rechercher un titre de vidéo')}</div>
+    <div class="chips" style="margin-top:8px">${[['short', 'Moins de 10 min'], ['medium', '10–30 min'], ['long', 'Plus de 30 min']].map(([k, l]) => `<a class="chip" href="#/videos/all?len=${k}">${ico('clock')}${l}</a>`).join('')}</div>
+    <div id="vrows"><p class="loading">Chargement des vidéos…</p></div>`;
   $('#vqF').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/videos/all?q=' + encodeURIComponent($('#vq').value.trim()) });
   const rows = await api('/api/videos');
   const cont = (await resumable(20)).slice(0, 12);
   const GCOL = { health: 'hurt', water: 'water', food: 'food', power: 'power', outdoors: 'shelter', repair: 'repair', making: 'land' };
   $('#vrows').innerHTML =
-    (cont.length ? secHead('Continue watching') + rail(cont.map(([id, v]) => vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Resume at ' + clock(v.t) })).join('')) : '') +
-    rows.map(r => secHead(esc(r.title), r.note ? esc(r.note) : '', `<a href="#/videos/${r.id}">See all ${r.count}</a>`) +
+    (cont.length ? secHead('Continuer à regarder') + rail(cont.map(([id, v]) => vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Reprendre à ' + clock(v.t) })).join('')) : '') +
+    rows.map(r => secHead(esc(r.title), r.note ? esc(r.note) : '', `<a href="#/videos/${r.id}">Voir les ${r.count}</a>`) +
       rail(r.items.map(v => vcard(v, { style: tcStyle(v.guide || GCOL[r.id]) })).join(''))).join('') +
-    `<p class="small muted" style="margin-top:24px">Only videos already downloaded are shown. Many have no captions, so the transcript search and the assistant can’t see what’s said in them.</p>`;
+    `<p class="small muted" style="margin-top:24px">Seules les vidéos déjà téléchargées sont affichées. Beaucoup n’ont pas de sous-titres\u00a0: la recherche dans les transcriptions et l’assistant ne peuvent pas voir ce qui y est dit.</p>`;
   wireRails();
 }
 async function videoRow(row, q) {
@@ -544,17 +544,17 @@ async function videoRow(row, q) {
   let off = 0;
   const first = await api(`/api/videos/${row}?q=${encodeURIComponent(qq)}&len=${len}&sort=${sort}&offset=0`);
   setTitle(first.title);
-  main.innerHTML = `<div>${backButton('#/videos', 'Videos')}</div><h1 style="margin-top:12px">${esc(qq ? 'Videos: “' + qq + '”' : first.title)}</h1>${first.note ? `<p class="lead">${esc(first.note)}</p>` : ''}
-    <div class="vtools">${searchBox('vq', qq, 'Search these videos', 'Go')}
-      <label class="sr" for="vsort">Sort</label><select id="vsort">${[['', 'Most useful first'], ['short', 'Shortest first'], ['new', 'Newest first'], ['az', 'A to Z']].map(([k, l]) => `<option value="${k}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
-    <div class="chips" style="margin:8px 0 16px">${[['', 'Any length'], ['short', 'Under 10 min'], ['medium', '10–30 min'], ['long', 'Over 30 min']].map(([k, l]) => `<a class="chip ${k === len ? 'on' : ''}" href="${qs({ len: k })}">${l}</a>`).join('')}</div>
-    <p class="muted small">${first.total.toLocaleString()} video${first.total === 1 ? '' : 's'}</p>
+  main.innerHTML = `<div>${backButton('#/videos', 'Vidéos')}</div><h1 style="margin-top:12px">${esc(qq ? 'Vidéos\u00a0: «\u00a0' + qq + '\u00a0»' : first.title)}</h1>${first.note ? `<p class="lead">${esc(first.note)}</p>` : ''}
+    <div class="vtools">${searchBox('vq', qq, 'Rechercher dans ces vidéos', 'OK')}
+      <label class="sr" for="vsort">Trier</label><select id="vsort">${[['', 'Les plus utiles d’abord'], ['short', 'Les plus courtes d’abord'], ['new', 'Les plus récentes d’abord'], ['az', 'A à Z']].map(([k, l]) => `<option value="${k}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    <div class="chips" style="margin:8px 0 16px">${[['', 'Toutes les durées'], ['short', 'Moins de 10 min'], ['medium', '10–30 min'], ['long', 'Plus de 30 min']].map(([k, l]) => `<a class="chip ${k === len ? 'on' : ''}" href="${qs({ len: k })}">${l}</a>`).join('')}</div>
+    <p class="muted small">${first.total.toLocaleString()} vidéo${first.total === 1 ? '' : 's'}</p>
     <div class="vgrid" id="vg"></div><p id="vmore"></p>`;
   $('#vqF').addEventListener('submit', e => { e.preventDefault(); location.hash = qs({ q: $('#vq').value.trim() }) });
   $('#vsort').addEventListener('change', e => { location.hash = qs({ sort: e.target.value }) });
   const add = d => {
-    $('#vg').insertAdjacentHTML('beforeend', d.items.map(v => vcard(v)).join('') || (off ? '' : '<div class="empty" style="grid-column:1/-1">No videos match. Try another word or length.</div>'));
-    $('#vmore').innerHTML = d.more ? '<button class="btn plain" id="vmb">Show more videos</button>' : '';
+    $('#vg').insertAdjacentHTML('beforeend', d.items.map(v => vcard(v)).join('') || (off ? '' : '<div class="empty" style="grid-column:1/-1">Aucune vidéo ne correspond. Essayez un autre mot ou une autre durée.</div>'));
+    $('#vmore').innerHTML = d.more ? '<button class="btn plain" id="vmb">Afficher plus de vidéos</button>' : '';
     if (d.more) $('#vmb').onclick = async () => { off += 48; add(await api(`/api/videos/${row}?q=${encodeURIComponent(qq)}&len=${len}&sort=${sort}&offset=${off}`)) };
   };
   add(first);
@@ -603,26 +603,26 @@ async function watch(id, t, from) {
   const d = await api('/api/doc/' + encodeURIComponent(id));
   setTitle(d.title);
   const selfHref = `#/watch/${encodeURIComponent(id)}`;
-  remember({ key: 'v:' + id, title: d.title, href: selfHref, sub: 'Video · ' + fmtDur(d.duration) });
+  remember({ key: 'v:' + id, title: d.title, href: selfHref, sub: 'Vidéo · ' + fmtDur(d.duration) });
   const p = vprog()[id];
   const resumeAt = !t && p && p.t > 15 && (!d.duration || p.t < d.duration - 20) ? p.t : 0;
-  main.innerHTML = `<div class="rtop">${backButton(from, 'Videos')}</div>
+  main.innerHTML = `<div class="rtop">${backButton(from, 'Vidéos')}</div>
   <div class="watch">
     <div>
       <div class="player"><video id="vid" controls preload="metadata" playsinline src="${fileUrl(d.path)}${t ? '#t=' + t : ''}"></video></div>
-      <div class="video-speed"><label for="videoSpeed">Playback speed</label><select id="videoSpeed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>Normal</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div>
-      ${d.remote ? `<p class="small muted" style="margin:6px 0 0">Stored on the remote drive “${esc(d.remote)}”. It plays only while that computer is reachable.</p>` : ''}
+      <div class="video-speed"><label for="videoSpeed">Vitesse de lecture</label><select id="videoSpeed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>Normale</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div>
+      ${d.remote ? `<p class="small muted" style="margin:6px 0 0">Stockée sur le disque distant «\u00a0${esc(d.remote)}\u00a0». Elle ne se lit que lorsque cet ordinateur est accessible.</p>` : ''}
       <h1 class="vtitle">${esc(d.title)}</h1>
       <div class="vmeta"><b>${esc(d.publisher || '')}</b><span>${fmtDur(d.duration)}</span>${d.upload_date ? `<span>${esc(d.upload_date.replace(/(\d{4})(\d\d)(\d\d)/, '$1-$2-$3'))}</span>` : ''}<span>${esc(d.trust)}</span></div>
-      ${resumeAt ? `<div class="resume" id="resume">You stopped at ${clock(resumeAt)}. <button class="btn" id="resYes">Resume</button><button class="btn plain" id="resNo">Start over</button></div>` : ''}
-      <div class="vactions dock">${saveButton({ key: 'v:' + id, title: d.title, href: selfHref, sub: 'Video · ' + fmtDur(d.duration) })}<a class="btn plain" title="Ask about this video" href="#/ask?about=${encodeURIComponent('video:' + id)}&${fromQ()}" id="askv">${ico('ask')}<span>Ask about this video</span></a></div>
-      <div class="notice small">A video shows how one person did something. Watching isn’t practice, and it may not match current safety guidance — check a manual for anything risky.</div>
+      ${resumeAt ? `<div class="resume" id="resume">Vous vous êtes arrêté à ${clock(resumeAt)}. <button class="btn" id="resYes">Reprendre</button><button class="btn plain" id="resNo">Recommencer</button></div>` : ''}
+      <div class="vactions dock">${saveButton({ key: 'v:' + id, title: d.title, href: selfHref, sub: 'Vidéo · ' + fmtDur(d.duration) })}<a class="btn plain" title="Poser une question sur cette vidéo" href="#/ask?about=${encodeURIComponent('video:' + id)}&${fromQ()}" id="askv">${ico('ask')}<span>Poser une question sur cette vidéo</span></a></div>
+      <div class="notice small">Une vidéo montre comment une personne a fait quelque chose. Regarder n’est pas pratiquer, et cela peut ne pas correspondre aux consignes de sécurité actuelles — vérifiez dans un manuel tout ce qui est risqué.</div>
     </div>
-    <section class="txpanel" id="tx" aria-label="Transcript"><header><h2>Transcript</h2><label class="sr" for="cueQ">Find in transcript</label><input id="cueQ" type="search" placeholder="Find words in the transcript"></header>
-      <div class="cues" id="cues"><p class="muted" style="padding:12px 14px">Loading transcript…</p></div><div class="txnote" id="txnote"></div></section>
+    <section class="txpanel" id="tx" aria-label="Transcription"><header><h2>Transcription</h2><label class="sr" for="cueQ">Rechercher dans la transcription</label><input id="cueQ" type="search" placeholder="Rechercher des mots dans la transcription"></header>
+      <div class="cues" id="cues"><p class="muted" style="padding:12px 14px">Chargement de la transcription…</p></div><div class="txnote" id="txnote"></div></section>
   </div>
   <div id="morev"></div>
-  <details class="about-src"><summary>About this video</summary><div class="in"><dl><dt>Channel</dt><dd>${esc(d.publisher || '—')}</dd><dt>Kind</dt><dd>${esc(d.trust)}</dd><dt>Length</dt><dd>${fmtDur(d.duration) || 'unknown'}</dd>${d.notes ? `<dt>Note</dt><dd>${esc(d.notes)}</dd>` : ''}${d.source_url ? `<dt>Online original</dt><dd>${esc(hostOf(d.source_url))} <span class="muted">(online; not needed here)</span></dd>` : ''}</dl></div></details>`;
+  <details class="about-src"><summary>À propos de cette vidéo</summary><div class="in"><dl><dt>Chaîne</dt><dd>${esc(d.publisher || '—')}</dd><dt>Type</dt><dd>${esc(d.trust)}</dd><dt>Durée</dt><dd>${fmtDur(d.duration) || 'inconnue'}</dd>${d.notes ? `<dt>Note</dt><dd>${esc(d.notes)}</dd>` : ''}${d.source_url ? `<dt>Original en ligne</dt><dd>${esc(hostOf(d.source_url))} <span class="muted">(en ligne\u00a0; inutile ici)</span></dd>` : ''}</dl></div></details>`;
   const vid = $('#vid');
   const speed = $('#videoSpeed');
   speed.addEventListener('change', () => { vid.playbackRate = Number(speed.value) });
@@ -635,12 +635,12 @@ async function watch(id, t, from) {
   if (d.thumb) vid.poster = fileUrl(d.thumb);
   vid.addEventListener('error', async () => {
     const say = why => vid.closest('.player')?.insertAdjacentHTML('afterend', `<div class="err">${why}</div>`);
-    if (d.remote) return say(`This video is on the remote drive “${esc(d.remote)}”, which isn’t reachable right now. The transcript below still works.`);
+    if (d.remote) return say(`Cette vidéo est sur le disque distant «\u00a0${esc(d.remote)}\u00a0», qui n’est pas accessible pour l’instant. La transcription ci-dessous fonctionne toujours.`);
     // Say why when the reason is the format: some library videos are AV1, which a computer without an AV1 decoder (a Mac before the M3) can't play.
     const f = (await videoFormats(fileUrl(d.path)).catch(() => [])).map(x => UNPLAYABLE[x]).find(x => x && !vid.canPlayType(x[1]));
     if (!vid.isConnected) return;   // the person has gone to another page
-    say(f ? `This video is saved in the ${f[0]} format, which this computer can’t play in Lastbook. Try another video player that supports ${f[0]}, such as VLC: the file is in your Lastbook data folder, at <b style="overflow-wrap:anywhere">library-data/${esc(d.path)}</b>.`
-      : `This video file couldn’t be played here. <a href="${fileUrl(d.path)}" target="_blank" rel="noopener">Open the file directly</a>.`);
+    say(f ? `Cette vidéo est enregistrée au format ${f[0]}, que cet ordinateur ne peut pas lire dans RELIQUE. Essayez un autre lecteur vidéo prenant en charge ${f[0]}, comme VLC\u00a0: le fichier se trouve dans votre dossier de données RELIQUE, à <b style="overflow-wrap:anywhere">library-data/${esc(d.path)}</b>.`
+      : `Ce fichier vidéo n’a pas pu être lu ici. <a href="${fileUrl(d.path)}" target="_blank" rel="noopener">Ouvrir le fichier directement</a>.`);
   }, { once: true });
   if (resumeAt) {
     $('#resYes').onclick = () => { vid.currentTime = resumeAt; vid.play().catch(() => { }); $('#resume').remove() };
@@ -656,14 +656,14 @@ async function watch(id, t, from) {
   let cues = [];
   try {
     const tx = await api('/api/transcript/' + encodeURIComponent(id)); cues = tx.cues || [];
-    $('#txnote').textContent = cues.length ? `${tx.source === 'authored' ? 'Captions written by the publisher' : /auto/.test(tx.source || '') ? 'Automatic captions' : 'Captions'} — may contain errors.` : '';
+    $('#txnote').textContent = cues.length ? `${tx.source === 'authored' ? 'Sous-titres rédigés par l’éditeur' : /auto/.test(tx.source || '') ? 'Sous-titres automatiques' : 'Sous-titres'} — ils peuvent contenir des erreurs.` : '';
   } catch { }
   const box = $('#cues');
   const draw = q => {
     const rx = q ? new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig') : null;
     const list = cues.filter(c => !rx || c.text.match(rx));
     box.innerHTML = list.length ? list.map(c => `<button class="cue" data-t="${c.t ?? ''}"><time>${c.t != null ? clock(c.t) : ''}</time><span>${rx ? esc(c.text).replace(rx, m => `<mark>${m}</mark>`) : esc(c.text)}</span></button>`).join('')
-      : `<p class="muted" style="padding:12px 14px">${cues.length ? 'No matching words.' : 'No transcript was saved for this video, so search and the assistant can’t see what’s said in it.'}</p>`;
+      : `<p class="muted" style="padding:12px 14px">${cues.length ? 'Aucun mot ne correspond.' : 'Aucune transcription n’a été enregistrée pour cette vidéo\u00a0: la recherche et l’assistant ne peuvent pas voir ce qui y est dit.'}</p>`;
   };
   draw('');
   $('#cueQ').addEventListener('input', e => draw(e.target.value.trim()));
@@ -676,7 +676,7 @@ async function watch(id, t, from) {
   });
   try {
     const rel = await api('/api/videos/related/' + encodeURIComponent(id));
-    if (rel.length && $('#morev')) { $('#morev').innerHTML = secHead('More like this') + rail(rel.map(v => vcard(v)).join('')); wireRails($('#morev')) }
+    if (rel.length && $('#morev')) { $('#morev').innerHTML = secHead('Dans le même genre') + rail(rel.map(v => vcard(v)).join('')); wireRails($('#morev')) }
   } catch { }
 }
 
@@ -694,57 +694,57 @@ async function reader(id, page, from, view) {
   const selfHref = `#/read/${encodeURIComponent(id)}?p=${page}`;
   remember({ key: 'd:' + id, title: d.title, href: selfHref, sub: (isPdf ? 'Page ' + page + ' · ' : '') + (d.publisher || '') });
   const go = (p, v = view) => `#/read/${encodeURIComponent(id)}?p=${p}&view=${v}${from ? '&from=' + encodeURIComponent(from) : ''}`;
-  const views = isPdf ? [['page', 'Page'], ['text', 'Text'], ['pdf', 'Whole PDF']] : isWeb ? [['web', 'Page'], ['text', 'Text only']] : [];
+  const views = isPdf ? [['page', 'Page'], ['text', 'Texte'], ['pdf', 'PDF entier']] : isWeb ? [['web', 'Page'], ['text', 'Texte seul']] : [];
   main.innerHTML = `
     <div class="rtop">${backButton(from)}</div>
     <h1 class="rtitle">${esc(d.title)}</h1>
     <div class="rsrc"><b>${esc(d.publisher || '')}</b>${d.year ? ' · ' + esc(d.year) : ''} · ${esc(d.trust)}</div>
-    <div class="rmodes">${views.length ? `<div class="seg dock" role="group" aria-label="How to show it">${views.map(([v, l]) => `<button data-view="${v}" aria-pressed="${v === view}">${l}</button>`).join('')}</div>` : ''}<span class="vactions dock">${askLink('doc:' + id + ':' + (isPdf ? page : 1), 'Ask')}${saveButton({ key, title: d.title + (isPdf ? ' — page ' + page : ''), href: selfHref, sub: d.publisher || d.kindLabel })}<button class="tb-btn insp-btn" data-insp aria-label="Show or hide the source details" title="Details">${ico('insp')}</button></span></div>
+    <div class="rmodes">${views.length ? `<div class="seg dock" role="group" aria-label="Comment l’afficher">${views.map(([v, l]) => `<button data-view="${v}" aria-pressed="${v === view}">${l}</button>`).join('')}</div>` : ''}<span class="vactions dock">${askLink('doc:' + id + ':' + (isPdf ? page : 1), 'Demander')}${saveButton({ key, title: d.title + (isPdf ? ' — page ' + page : ''), href: selfHref, sub: d.publisher || d.kindLabel })}<button class="tb-btn insp-btn" data-insp aria-label="Afficher ou masquer les détails de la source" title="Détails">${ico('insp')}</button></span></div>
     <div id="docbody"></div>
-    ${d.imageOnly ? '<div class="notice">This is a scanned document without searchable text, so search and the assistant can’t read it. Use the Page view.</div>' : ''}
-    ${isPdf && view !== 'pdf' ? `<div class="rbar"><a class="btn plain nav" href="${go(page - 1)}" ${page <= 1 ? 'aria-disabled="true" style="opacity:.35;pointer-events:none"' : ''} aria-label="Previous page">${ico('back')}<span>Previous</span></a>
-      <span class="pnum"><label class="sr" for="pg">Page number</label>Page <input id="pg" inputmode="numeric" value="${page}"> of ${total}</span>
-      <a class="btn nav" href="${go(page + 1)}" ${page >= total ? 'aria-disabled="true" style="opacity:.35;pointer-events:none"' : ''} aria-label="Next page"><span>Next</span>${ico('right')}</a></div>` : ''}
-    <details class="about-src"><summary>About this source</summary><div class="in"><p class="insp-h">${esc(d.title)}</p>
-      <dl><dt>Publisher</dt><dd>${esc(d.publisher || '—')}</dd><dt>Kind</dt><dd>${esc(d.trust)} · ${esc(d.kindLabel)}</dd>
-      ${d.edition ? `<dt>Edition</dt><dd>${esc(d.edition)}</dd>` : ''}${d.year ? `<dt>Year</dt><dd>${esc(d.year)}</dd>` : ''}
-      <dt>Saved</dt><dd>${esc((d.retrieved_at || '').slice(0, 10) || 'unknown date')} · ${esc(d.collection)}</dd>
+    ${d.imageOnly ? '<div class="notice">Ceci est un document numérisé sans texte interrogeable\u00a0: la recherche et l’assistant ne peuvent pas le lire. Utilisez la vue Page.</div>' : ''}
+    ${isPdf && view !== 'pdf' ? `<div class="rbar"><a class="btn plain nav" href="${go(page - 1)}" ${page <= 1 ? 'aria-disabled="true" style="opacity:.35;pointer-events:none"' : ''} aria-label="Page précédente">${ico('back')}<span>Précédente</span></a>
+      <span class="pnum"><label class="sr" for="pg">Numéro de page</label>Page <input id="pg" inputmode="numeric" value="${page}"> sur ${total}</span>
+      <a class="btn nav" href="${go(page + 1)}" ${page >= total ? 'aria-disabled="true" style="opacity:.35;pointer-events:none"' : ''} aria-label="Page suivante"><span>Suivante</span>${ico('right')}</a></div>` : ''}
+    <details class="about-src"><summary>À propos de cette source</summary><div class="in"><p class="insp-h">${esc(d.title)}</p>
+      <dl><dt>Éditeur</dt><dd>${esc(d.publisher || '—')}</dd><dt>Type</dt><dd>${esc(d.trust)} · ${esc(d.kindLabel)}</dd>
+      ${d.edition ? `<dt>Édition</dt><dd>${esc(d.edition)}</dd>` : ''}${d.year ? `<dt>Année</dt><dd>${esc(d.year)}</dd>` : ''}
+      <dt>Enregistré le</dt><dd>${esc((d.retrieved_at || '').slice(0, 10) || 'date inconnue')} · ${esc(d.collection)}</dd>
       ${d.notes ? `<dt>Note</dt><dd>${esc(d.notes)}</dd>` : ''}
-      ${d.source_url ? `<dt>Online original</dt><dd>${esc(hostOf(d.source_url))} <span class="muted">(online; not needed to read this copy)</span></dd>` : ''}</dl>
-      <p class="small muted">A reference copy, not advice checked for your situation. Check the date; older material can conflict with current guidance.</p>
-      ${isPdf || isWeb || !IN_WINDOW ? `<p><a class="btn ghost" href="${fileUrl(d.path)}${isPdf ? '#page=' + page : ''}" target="_blank" rel="noopener">${ico('ext')}Open the original file</a></p>` : ''}</div></details>`;
+      ${d.source_url ? `<dt>Original en ligne</dt><dd>${esc(hostOf(d.source_url))} <span class="muted">(en ligne\u00a0; inutile pour lire cette copie)</span></dd>` : ''}</dl>
+      <p class="small muted">Une copie de référence, pas un avis adapté à votre situation. Vérifiez la date\u00a0; un ancien contenu peut contredire les consignes actuelles.</p>
+      ${isPdf || isWeb || !IN_WINDOW ? `<p><a class="btn ghost" href="${fileUrl(d.path)}${isPdf ? '#page=' + page : ''}" target="_blank" rel="noopener">${ico('ext')}Ouvrir le fichier d’origine</a></p>` : ''}</div></details>`;
   $$('[data-view]', main).forEach(b => b.addEventListener('click', () => swap(go(page, b.dataset.view))));
   if (innerWidth >= 1060 && !html.classList.contains('insp-off')) $('.about-src', main).open = true;
   const pg = $('#pg'); if (pg) pg.addEventListener('change', () => { const n = parseInt(pg.value, 10); if (n >= 1 && n <= total) location.hash = go(n) });
   const body = $('#docbody');
   if (view === 'page') {
     const w = Math.min(1600, Math.round(Math.min(innerWidth, 1000) * Math.min(2, devicePixelRatio || 1)));
-    body.innerHTML = `<div class="pagewrap"><img class="pageimg" alt="Page ${page} of ${esc(d.title)}" src="${pageImg(id, page, w)}"></div>`;
+    body.innerHTML = `<div class="pagewrap"><img class="pageimg" alt="Page ${page} sur ${esc(d.title)}" src="${pageImg(id, page, w)}"></div>`;
     const img = $('img', body);
-    img.addEventListener('error', () => { body.innerHTML = `<div class="notice">This page image couldn’t be made. <a href="${go(page, 'text')}">Show the text instead</a>.</div>` });
+    img.addEventListener('error', () => { body.innerHTML = `<div class="notice">L’image de cette page n’a pas pu être créée. <a href="${go(page, 'text')}">Afficher le texte à la place</a>.</div>` });
     if (page < total) { const n = new Image(); n.src = pageImg(id, page + 1, w) }
     let sx = null, sy = 0;
     const wrap = $('.pagewrap', body);
     wrap.addEventListener('touchstart', e => { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY } }, { passive: true });
     wrap.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) { if (dx < 0 && page < total) location.hash = go(page + 1); if (dx > 0 && page > 1) location.hash = go(page - 1) } }, { passive: true });
   } else if (view === 'pdf') {
-    body.innerHTML = `<iframe class="frame" title="${esc(d.title)}" src="${fileUrl(d.path)}#page=${page}"></iframe><p class="small muted">If the PDF doesn’t show here (some phones can’t), use Page view or open the original file.</p>`;
+    body.innerHTML = `<iframe class="frame" title="${esc(d.title)}" src="${fileUrl(d.path)}#page=${page}"></iframe><p class="small muted">Si le PDF ne s’affiche pas ici (certains téléphones ne le peuvent pas), utilisez la vue Page ou ouvrez le fichier d’origine.</p>`;
   } else if (view === 'web') {
     const own = /(^|\/)documents\/lastbook\//.test(d.path);   // Lastbook's own pages (Sources and permissions) take the window's look from the server (engine/saved_pages.py, OWN_LOOK); an older server's stays a white sheet
     body.innerHTML = `<iframe class="frame${own ? ' own' : ''}" title="${esc(d.title)}" src="${fileUrl(d.path)}"></iframe>`;
   } else {
-    body.innerHTML = '<p class="loading">Loading text…</p>';
+    body.innerHTML = '<p class="loading">Chargement du texte…</p>';
     try {
       const t = await api(`/api/page/${encodeURIComponent(id)}/${isPdf ? page : 1}`);
       const txt = (t.text || '').replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
-      body.innerHTML = `${isPdf || isWeb ? '<div class="notice small">Text pulled out of the original automatically — tables, diagrams and warning boxes can be lost or out of order. Check the Page view for anything important.</div>' : ''}<div class="pagetext">${esc(txt) || '<span class="muted">No text on this page (it may be a picture or blank).</span>'}</div>`;
-    } catch (e) { body.innerHTML = errorBox(e, 'Couldn’t load the text.') }
+      body.innerHTML = `${isPdf || isWeb ? '<div class="notice small">Texte extrait automatiquement de l’original — les tableaux, schémas et encadrés d’avertissement peuvent être perdus ou désordonnés. Vérifiez la vue Page pour tout ce qui est important.</div>' : ''}<div class="pagetext">${esc(txt) || '<span class="muted">Aucun texte sur cette page (elle est peut-être une image ou vide).</span>'}</div>`;
+    } catch (e) { body.innerHTML = errorBox(e, 'Impossible de charger le texte.') }
   }
   main.onkeydown = e => { if (!isPdf || /INPUT/.test(e.target.tagName) || e.altKey || e.metaKey || e.ctrlKey) return; if (e.key === 'ArrowRight' && page < total) location.hash = go(page + 1); if (e.key === 'ArrowLeft' && page > 1) location.hash = go(page - 1) };
 }
 
 /* --------------------------------------------------------------- wiki -- */
-const ZIMNAMES = { mdwiki: 'Medical encyclopedia (MDWiki)', wikipedia: 'Wikipedia (text only)', wikibooks: 'Wikibooks — how-to textbooks', appropedia: 'Appropedia — appropriate technology' };
+const ZIMNAMES = { mdwiki: 'Encyclopédie médicale (MDWiki)', wikipedia: 'Wikipédia (texte seul)', wikibooks: 'Wikibooks — manuels pratiques', appropedia: 'Appropedia — technologies appropriées' };
 const zimLabel = name => { for (const k in ZIMNAMES) if (name.startsWith(k)) return ZIMNAMES[k]; return name };
 async function wiki(path, from, y) {
   const [zim, ...rest] = path.split('/');
@@ -755,7 +755,7 @@ async function wiki(path, from, y) {
   const selfHref = '#/wiki/' + path;
   const mainPage = zimMain(zim);
   main.innerHTML = `<div class="rtop">${backButton(from || '#/encyclopedias')}<span id="wsave" class="dock">${saveButton({ key: 'w:' + path, title, href: selfHref, sub: zimLabel(zim) })}</span></div>
-    <h1 class="rtitle" id="wtitle">${esc(title)}</h1><div class="rsrc"><span class="zn">${esc(zimLabel(zim))} · </span>Community-written; check safety-critical steps against a manual${IN_WINDOW ? '' : ` · <a id="wopen" href="${src}" target="_blank" rel="noopener">open on its own</a>`}</div>
+    <h1 class="rtitle" id="wtitle">${esc(title)}</h1><div class="rsrc"><span class="zn">${esc(zimLabel(zim))} · </span>Rédigé par la communauté\u00a0; vérifiez les étapes critiques pour la sécurité dans un manuel${IN_WINDOW ? '' : ` · <a id="wopen" href="${src}" target="_blank" rel="noopener">ouvrir séparément</a>`}</div>
     <iframe class="frame" id="wframe" title="${esc(title)}" src="${src}"></iframe>`;
   const f = $('#wframe');
   // The toolbar names the encyclopedia, and the article once the article's own title has scrolled up out of the frame, as a large title does
@@ -801,7 +801,7 @@ async function wiki(path, from, y) {
       if (f.contentDocument !== fd) return;
       if (front && own) own.style.setProperty('display', 'none', 'important');   // the skin sets its own display, which the hidden attribute does not beat
       main.classList.toggle('own-title', front);   // then the app's heading names it
-      const nt = front ? zimLabel(zim) : raw || p.split('/').pop().replace(/_/g, ' '), sub = front ? 'Encyclopedia' : zimLabel(zim);
+      const nt = front ? zimLabel(zim) : raw || p.split('/').pop().replace(/_/g, ' '), sub = front ? 'Encyclopédie' : zimLabel(zim);
       $('#wtitle').textContent = nt; if ($('#wopen')) $('#wopen').href = loc; setTitle(nt, '', zimLabel(zim));
       f.lbName = !front && own ? { nt, at: own.getBoundingClientRect().bottom + fw.scrollY } : null; barName();
       $('#wsave').innerHTML = saveButton({ key: 'w:' + p, title: nt, href: '#/wiki/' + p, sub });
@@ -896,39 +896,39 @@ function tidyArticle(fd) {
 }
 const roman = n => { let s = ''; for (const [v, r] of [[1000, 'm'], [900, 'cm'], [500, 'd'], [400, 'cd'], [100, 'c'], [90, 'xc'], [50, 'l'], [40, 'xl'], [10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i']]) for (; n >= v; n -= v) s += r; return s };
 // The article's stylesheet (engine/saved_pages.py) reads these: the window's text colours and its accent, which only this page knows
-// (the system accent in the apps, Lastbook green in a browser).
+// (the system accent in the apps, RELIQUE brick in a browser).
 function lookOf(fd) {
   const cs = getComputedStyle(html), r = fd.documentElement.style;
   const probe = document.createElement('i'); probe.style.color = 'var(--accent)'; probe.hidden = true; document.body.append(probe);
   r.setProperty('--lb-link', getComputedStyle(probe).color); probe.remove();
   for (const [k, v] of [['--lb-ink', '--ink'], ['--lb-ink2', '--ink2'], ['--lb-line', '--line2'], ['--lb-font', '--font'], ['--lb-display', '--display']]) { const x = cs.getPropertyValue(v).trim(); if (x) r.setProperty(k, x) }
 }
-const ZIMS = [['mdwiki_en_all_maxi_2025-11.zim', 'Medical encyclopedia', 'MDWiki: plain-language articles on conditions, medicines and first aid.', 'health'],
-['wikibooks_en_all_maxi_2026-04.zim', 'Wikibooks', 'Open textbooks and how-to manuals, from cooking to electronics.', 'book'],
-['appropedia_en_all_maxi_2026-02.zim', 'Appropedia', 'Appropriate technology: water, sanitation, energy and building projects.', 'repair'],
-['wikipedia_en_all_nopic_2026-06.zim', 'Wikipedia', 'The full English encyclopedia, text only (no pictures).', 'wiki']];
+const ZIMS = [['mdwiki_en_all_maxi_2025-11.zim', 'Encyclopédie médicale', 'MDWiki\u00a0: des articles en langage clair sur les maladies, les médicaments et les premiers secours.', 'health'],
+['wikibooks_en_all_maxi_2026-04.zim', 'Wikibooks', 'Manuels libres et guides pratiques, de la cuisine à l’électronique.', 'book'],
+['appropedia_en_all_maxi_2026-02.zim', 'Appropedia', 'Technologies appropriées\u00a0: eau, assainissement, énergie et projets de construction.', 'repair'],
+['wikipedia_en_all_nopic_2026-06.zim', 'Wikipédia', 'L’encyclopédie anglaise complète, texte seul (sans images).', 'wiki']];
 const zimsHere = async () => { const here = (await libInfo()).zims; return here ? ZIMS.filter(z => here.includes(z[0])) : ZIMS };
 async function encyclopedias(q) {
-  setTitle('Encyclopedias');
+  setTitle('Encyclopédies');
   const zims = await zimsHere();
-  if (!zims.length) { main.innerHTML = `<h1>Encyclopedias</h1><p class="lead">This download has no encyclopedias.</p>`; return }
-  main.innerHTML = `<h1>Encyclopedias</h1><p class="lead">${['', 'One complete encyclopedia', 'Two complete encyclopedias', 'Three complete encyclopedias', 'Four complete encyclopedias'][zims.length]}. Community-written: good for background — use the guides’ manuals for safety-critical steps.</p>
-  <div style="margin:16px 0">${searchBox('zq', q, 'e.g. tetanus, solar panel, sourdough')}</div><div id="zres"></div>
-  ${secHead('Open one')}<div class="cards2">${zims.map(z => `<a class="card" href="#/wiki/${z[0]}/?from=${encodeURIComponent('#/encyclopedias')}"><span class="ico">${ico(z[3])}</span><b>${esc(z[1])}</b><small>${esc(z[2])}</small></a>`).join('')}</div>`;
+  if (!zims.length) { main.innerHTML = `<h1>Encyclopédies</h1><p class="lead">Ce téléchargement ne contient aucune encyclopédie.</p>`; return }
+  main.innerHTML = `<h1>Encyclopédies</h1><p class="lead">${['', 'Une encyclopédie complète', 'Deux encyclopédies complètes', 'Trois encyclopédies complètes', 'Quatre encyclopédies complètes'][zims.length]}. Rédigé par la communauté\u00a0: utile pour le contexte — utilisez les manuels des guides pour les étapes critiques pour la sécurité.</p>
+  <div style="margin:16px 0">${searchBox('zq', q, 'ex. tétanos, panneau solaire, levain')}</div><div id="zres"></div>
+  ${secHead('En ouvrir une')}<div class="cards2">${zims.map(z => `<a class="card" href="#/wiki/${z[0]}/?from=${encodeURIComponent('#/encyclopedias')}"><span class="ico">${ico(z[3])}</span><b>${esc(z[1])}</b><small>${esc(z[2])}</small></a>`).join('')}</div>`;
   $('#zqF').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/encyclopedias?q=' + encodeURIComponent($('#zq').value.trim()) });
   if (q) zimResults(q, $('#zres'), 40);
 }
 // heading: part of a wider search, shown under that heading only when something matched. Answers whether anything did.
 async function zimResults(q, el, max = 8, heading = '') {
-  el.innerHTML = heading ? '' : '<p class="loading">Searching the encyclopedias…</p>';
+  el.innerHTML = heading ? '' : '<p class="loading">Recherche dans les encyclopédies…</p>';
   try {
     const hits = await api('/api/collection-search?q=' + encodeURIComponent(q));
-    if (!hits.length) { el.innerHTML = heading ? '' : `<div class="empty"><span class="e-ico">${ico('wiki')}</span><b>No articles found</b><p>Try another word for the same thing.</p></div>`; return false }
+    if (!hits.length) { el.innerHTML = heading ? '' : `<div class="empty"><span class="e-ico">${ico('wiki')}</span><b>Aucun article trouvé</b><p>Essayez un autre mot pour la même chose.</p></div>`; return false }
     const ord = ['mdwiki', 'wikibooks', 'appropedia', 'wikipedia'];
     hits.sort((a, b) => ord.findIndex(k => a.collection.startsWith(k)) - ord.findIndex(k => b.collection.startsWith(k)));
     el.innerHTML = `${heading ? `<h2>${heading}</h2>` : ''}<ul class="list">${hits.slice(0, max).map(h => `<li><a class="row" href="#/wiki/${esc(h.path.replace(/^zim\//, ''))}?${fromQ()}"><span class="k">${ico('wiki')}</span><span><b>${esc(h.title)}</b><small>${esc(zimLabel(h.collection))}</small></span></a></li>`).join('')}</ul>`;
     return true;
-  } catch (e) { el.innerHTML = heading ? '' : `<p class="muted">Encyclopedia search isn’t available right now (${esc(e.message)}).</p>`; return false }
+  } catch (e) { el.innerHTML = heading ? '' : `<p class="muted">La recherche dans les encyclopédies n’est pas disponible pour l’instant (${esc(e.message)}).</p>`; return false }
 }
 
 /* ------------------------------------------------------------- search -- */
@@ -939,11 +939,11 @@ function topicMatches(q) {
 }
 let searchSeq = 0;
 async function searchPage(q, kind) {
-  setTitle(q ? 'Search: ' + q : 'Search');
-  const kinds = [['all', 'Everything'], ['read', 'Manuals & pages'], ['video', 'Videos'], ['wiki', 'Encyclopedias']];
-  main.innerHTML = `<h1>${q ? 'Results' : 'Search'}</h1>
-  ${searchBox('searchQ', q, 'Describe it in everyday words')}
-  <div class="chips" role="group" aria-label="Show" style="margin-top:12px" id="kinds">${kinds.map(([k, l]) => `<a class="chip ${k === kind ? 'on' : ''}" aria-pressed="${k === kind}" data-kind="${k}" href="#/search?q=${encodeURIComponent(q)}&kind=${k}">${l}</a>`).join('')}</div>
+  setTitle(q ? 'Recherche\u00a0: ' + q : 'Rechercher');
+  const kinds = [['all', 'Tout'], ['read', 'Manuels et pages'], ['video', 'Vidéos'], ['wiki', 'Encyclopédies']];
+  main.innerHTML = `<h1>${q ? 'Résultats' : 'Rechercher'}</h1>
+  ${searchBox('searchQ', q, 'Décrivez avec des mots de tous les jours')}
+  <div class="chips" role="group" aria-label="Afficher" style="margin-top:12px" id="kinds">${kinds.map(([k, l]) => `<a class="chip ${k === kind ? 'on' : ''}" aria-pressed="${k === kind}" data-kind="${k}" href="#/search?q=${encodeURIComponent(q)}&kind=${k}">${l}</a>`).join('')}</div>
   <div id="sask"></div><div id="sout"></div>`;
   const input = $('#searchQ');
   $('#searchQF').addEventListener('submit', e => { e.preventDefault(); input.blur(); go(input.value.trim(), true) });
@@ -966,38 +966,38 @@ async function searchPage(q, kind) {
 }
 function askOffer(q) {
   const el = $('#sask'); if (!el) return;
-  el.innerHTML = q && q.split(/\s+/).length >= 2 ? `<a class="ghit" href="#/ask?q=${encodeURIComponent(q)}" style="--tc:var(--accent)"><span class="ico">${ico('ask')}</span><span><b>Ask the library: “${esc(q)}”</b><small>Get a written answer with the exact pages it came from</small></span></a>` : '';
+  el.innerHTML = q && q.split(/\s+/).length >= 2 ? `<a class="ghit" href="#/ask?q=${encodeURIComponent(q)}" style="--tc:var(--accent)"><span class="ico">${ico('ask')}</span><span><b>Demander à la bibliothèque\u00a0: «\u00a0${esc(q)}\u00a0»</b><small>Obtenez une réponse écrite avec les pages exactes dont elle est tirée</small></span></a>` : '';
 }
 async function results(q, kind) {
   const seq = ++searchSeq, out = $('#sout');
   if (!q) {
-    out.innerHTML = `<p class="muted" style="margin-top:18px">Use the words you’d use with a friend. For example:</p><div class="chips wrapchips">${['clean drinking water', 'broken leg', 'carbon monoxide', 'keep food cold', 'ham radio license', 'plant potatoes', 'sharpen a knife', 'diarrhea in a child'].map(x => `<a class="chip" href="#/search?q=${encodeURIComponent(x)}">${esc(x)}</a>`).join('')}</div>`;
+    out.innerHTML = `<p class="muted" style="margin-top:18px">Employez les mots que vous utiliseriez avec un ami. Par exemple\u00a0:</p><div class="chips wrapchips">${['clean drinking water', 'broken leg', 'carbon monoxide', 'keep food cold', 'ham radio license', 'plant potatoes', 'sharpen a knife', 'diarrhea in a child'].map(x => `<a class="chip" href="#/search?q=${encodeURIComponent(x)}">${esc(x)}</a>`).join('')}</div>`;
     return;
   }
   const g = kind === 'all' ? topicMatches(q) : [];
-  out.innerHTML = `${g.length ? `<h2>Start with a guide</h2>${g.map(({ t, c }) => `<a class="ghit" href="#/t/${t.id}${c ? '/' + c.id : ''}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><span><b>${esc(SHORT[t.id] || t.title)}${c ? ' — ' + esc(c.label) : ''}</b><small>Picked pages with exact page numbers and safety limits</small></span></a>`).join('')}` : ''}
+  out.innerHTML = `${g.length ? `<h2>Commencez par un guide</h2>${g.map(({ t, c }) => `<a class="ghit" href="#/t/${t.id}${c ? '/' + c.id : ''}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><span><b>${esc(SHORT[t.id] || t.title)}${c ? ' — ' + esc(c.label) : ''}</b><small>Pages choisies avec les numéros de page exacts et les limites de sécurité</small></span></a>`).join('')}` : ''}
     <div id="spass"></div><div id="svid"></div><div id="sres"></div><div id="szim"></div>`;
   if (kind === 'wiki') return zimResults(q, $('#szim'), 40);
   // Each part answers whether it found anything; "nothing matched" shows once, only when none did.
   const parts = kind === 'all' || kind === 'read' ? [passages(q, seq)] : [];
   const reqs = [api('/api/find?q=' + encodeURIComponent(q) + '&kind=' + (kind === 'video' ? 'video' : 'read'))];
   if (kind === 'all') reqs.push(api('/api/find?q=' + encodeURIComponent(q) + '&kind=video').catch(() => null));
-  $('#sres').innerHTML = '<p class="loading">Searching…</p>';
+  $('#sres').innerHTML = '<p class="loading">Recherche…</p>';
   const found = (async () => {
     try {
       const [d, vd] = await Promise.all(reqs);
       if (seq !== searchSeq) return true;
       const vids = (kind === 'video' ? d : vd)?.results || [];
       if (kind === 'video') { $('#sres').innerHTML = vids.length ? `<div class="vgrid" style="margin-top:14px">${vids.map(r => vcard(r)).join('')}</div>` : ''; return vids.length > 0 }
-      if (vids.length) { $('#svid').innerHTML = secHead('Videos', '', `<a href="#/search?q=${encodeURIComponent(q)}&kind=video">See all</a>`) + rail(vids.slice(0, 10).map(r => vcard(r)).join('')); wireRails($('#svid')) }
-      $('#sres').innerHTML = d.results.length ? `<h2>In the manuals and saved pages</h2>
-        ${d.expanded.length ? `<p class="small muted">Also looked for: ${d.expanded.slice(0, 10).map(esc).join(', ')}${d.mode === 'some words' ? ' · showing pages with some of your words' : ''}</p>` : ''}
+      if (vids.length) { $('#svid').innerHTML = secHead('Vidéos', '', `<a href="#/search?q=${encodeURIComponent(q)}&kind=video">Tout voir</a>`) + rail(vids.slice(0, 10).map(r => vcard(r)).join('')); wireRails($('#svid')) }
+      $('#sres').innerHTML = d.results.length ? `<h2>Dans les manuels et les pages enregistrées</h2>
+        ${d.expanded.length ? `<p class="small muted">Recherché aussi\u00a0: ${d.expanded.slice(0, 10).map(esc).join(', ')}${d.mode === 'some words' ? ' · affichage des pages contenant certains de vos mots' : ''}</p>` : ''}
         <div class="results">${d.results.map(resultCard).join('')}</div>` : '';
       return d.results.length + vids.length > 0;
-    } catch (e) { if (seq === searchSeq) $('#sres').innerHTML = errorBox(e, 'Search isn’t responding.') + '<p class="small muted">The library may be busy rebuilding its index. Try again in a minute.</p>'; return true }
+    } catch (e) { if (seq === searchSeq) $('#sres').innerHTML = errorBox(e, 'La recherche ne répond pas.') + '<p class="small muted">La bibliothèque est peut-être en train de reconstruire son index. Réessayez dans une minute.</p>'; return true }
   })();
   parts.push(found);
-  if (kind === 'all') parts.push(found.then(() => seq === searchSeq && zimResults(q, $('#szim'), 6, 'In the encyclopedias')));
+  if (kind === 'all') parts.push(found.then(() => seq === searchSeq && zimResults(q, $('#szim'), 6, 'Dans les encyclopédies')));
   const any = (await Promise.all(parts)).some(Boolean);
   if (seq === searchSeq && !g.length && !any) $('#sres').innerHTML = emptySearch(q);
 }
@@ -1006,74 +1006,74 @@ async function passages(q, seq) {
   try {
     const d = await api('/api/retrieve?q=' + encodeURIComponent(q) + '&k=6&kind=manual');
     if (seq !== searchSeq || !d.results.length || !$('#spass')) return false;
-    $('#spass').innerHTML = secHead('Most relevant pages', d.semantic && !d.semantic.chunks ? 'Matched by your words' : 'Matched by meaning as well as by words') + `<div class="rcards">${d.results.map(r => rcard({ src: { id: r.doc_id, kind: r.kind, title: r.title, publisher: r.publisher, year: r.year, pages: r.pages, trust: r.trust }, page: r.page, label: r.title, note: (r.excerpt || '').slice(0, 220) + '…' })).join('')}</div>`;
+    $('#spass').innerHTML = secHead('Pages les plus pertinentes', d.semantic && !d.semantic.chunks ? 'Correspondance par vos mots' : 'Correspondance par le sens autant que par les mots') + `<div class="rcards">${d.results.map(r => rcard({ src: { id: r.doc_id, kind: r.kind, title: r.title, publisher: r.publisher, year: r.year, pages: r.pages, trust: r.trust }, page: r.page, label: r.title, note: (r.excerpt || '').slice(0, 220) + '…' })).join('')}</div>`;
     return true;
   } catch { return false }
 }
-const emptySearch = q => `<div class="empty"><span class="e-ico">${ico('search')}</span><b>No results for “${esc(q)}”</b><p>Try fewer words, or another word for the same thing.</p></div>`;
+const emptySearch = q => `<div class="empty"><span class="e-ico">${ico('search')}</span><b>Aucun résultat pour «\u00a0${esc(q)}\u00a0»</b><p>Essayez moins de mots, ou un autre mot pour la même chose.</p></div>`;
 function resultCard(r) {
   const base = { src: r };
   return `<article class="result"><h3><a href="${hrefFor({ ...base, page: r.hits[0] && r.hits[0].page })}">${esc(r.title)}</a></h3>
     <div class="rsrc">${srcText(r)} · ${esc(r.trust)}</div>
-    ${r.hits.slice(0, 2).map(h => `<a class="hit" href="${hrefFor({ ...base, page: h.page })}">${h.page ? `<b>Page ${h.page}:</b> ` : ''}${h.snippet}</a>`).join('')}</article>`;
+    ${r.hits.slice(0, 2).map(h => `<a class="hit" href="${hrefFor({ ...base, page: h.page })}">${h.page ? `<b>Page ${h.page}\u00a0:</b> ` : ''}${h.snippet}</a>`).join('')}</article>`;
 }
 
 /* ------------------------------------------------------------ library -- */
 async function library() {
-  setTitle('Library');
+  setTitle('Bibliothèque');
   const saved = store.get('saved', []).length, chats = (window.Chat ? Chat.count() : 0);
   const zims = await zimsHere();
-  main.innerHTML = `<h1>Library</h1><p class="lead">Your saved things, learning routes, encyclopedias and every manual in the collection.</p>
+  main.innerHTML = `<h1>Bibliothèque</h1><p class="lead">Vos éléments enregistrés, vos parcours d’apprentissage, les encyclopédies et chaque manuel de la collection.</p>
   <div class="cards2 three" style="margin-top:16px">
-    <a class="card" href="#/saved"><span class="ico">${ico('save')}</span><b>Saved</b><small>${saved ? saved + ' saved item' + (saved > 1 ? 's' : '') : 'Pages, videos and answers you keep'} on this device</small></a>
-    <a class="card" href="#/ask"><span class="ico">${ico('ask')}</span><b>Chats</b><small>${chats ? chats + ' saved conversation' + (chats > 1 ? 's' : '') : 'Ask the library a question'}</small></a>
-    <a class="card" href="#/prepare"><span class="ico">${ico('prep')}</span><b>Prepare your household</b><small>Getting-ready readings from every guide</small></a>
+    <a class="card" href="#/saved"><span class="ico">${ico('save')}</span><b>Enregistrés</b><small>${saved ? saved + ' élément enregistré' + (saved > 1 ? 's' : '') : 'Les pages, vidéos et réponses que vous conservez'} sur cet appareil</small></a>
+    <a class="card" href="#/ask"><span class="ico">${ico('ask')}</span><b>Discussions</b><small>${chats ? chats + ' conversation enregistrée' + (chats > 1 ? 's' : '') : 'Posez une question à la bibliothèque'}</small></a>
+    <a class="card" href="#/prepare"><span class="ico">${ico('prep')}</span><b>Préparez votre foyer</b><small>Des lectures de préparation issues de chaque guide</small></a>
   </div>
-  ${secHead('Learn a skill', 'Step-by-step routes that start simple')}
-  <div class="needs">${learnTopics().map(t => `<a class="need" href="#/t/${t.id}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><b>${esc(SHORT[t.id] || t.title)}</b><small>${esc(t.short || '')} · ${(t.route || []).length} steps</small></a>`).join('')}</div>
-  ${zims.length ? secHead('Encyclopedias', 'Complete offline copies', '<a href="#/encyclopedias">Search them</a>') + `<div class="cards2">${zims.map(z => `<a class="card" href="#/wiki/${z[0]}/?from=${encodeURIComponent('#/library')}"><span class="ico">${ico(z[3])}</span><b>${esc(z[1])}</b><small>${esc(z[2])}</small></a>`).join('')}</div>` : ''}
-  ${secHead('Browse by subject', 'Every manual, saved web page and video')}<div id="shelves"><p class="loading">Loading…</p></div>
-  <p style="margin-top:20px"><a href="#/about">About this library and its sources</a>${IN_WINDOW ? ' · <a href="/ui/setup.html#manage">Library and local AI</a>' : ''}</p>`;
+  ${secHead('Apprendre une compétence', 'Des parcours étape par étape qui commencent simplement')}
+  <div class="needs">${learnTopics().map(t => `<a class="need" href="#/t/${t.id}" ${tcStyle(t.id)}><span class="ico">${ico(t.id)}</span><b>${esc(SHORT[t.id] || t.title)}</b><small>${esc(t.short || '')} · ${(t.route || []).length} étapes</small></a>`).join('')}</div>
+  ${zims.length ? secHead('Encyclopédies', 'Des copies hors-ligne complètes', '<a href="#/encyclopedias">Les rechercher</a>') + `<div class="cards2">${zims.map(z => `<a class="card" href="#/wiki/${z[0]}/?from=${encodeURIComponent('#/library')}"><span class="ico">${ico(z[3])}</span><b>${esc(z[1])}</b><small>${esc(z[2])}</small></a>`).join('')}</div>` : ''}
+  ${secHead('Parcourir par sujet', 'Chaque manuel, page web enregistrée et vidéo')}<div id="shelves"><p class="loading">Chargement…</p></div>
+  <p style="margin-top:20px"><a href="#/about">À propos de cette bibliothèque et de ses sources</a>${IN_WINDOW ? ' · <a href="/ui/setup.html#manage">Bibliothèque et IA locale</a>' : ''}</p>`;
   try {
     const sh = await api('/api/shelves');
-    $('#shelves').innerHTML = sh.filter(s => s.read + s.video).map(s => `<a class="shelfrow" href="#/shelf/${s.id}"><span><b>${esc(s.title)}</b><small>${s.read ? s.read.toLocaleString() + ' to read' : ''}${s.read && s.video ? ' · ' : ''}${s.video ? s.video.toLocaleString() + ' videos' : ''}</small></span>${ico('right')}</a>`).join('');
+    $('#shelves').innerHTML = sh.filter(s => s.read + s.video).map(s => `<a class="shelfrow" href="#/shelf/${s.id}"><span><b>${esc(s.title)}</b><small>${s.read ? s.read.toLocaleString() + ' à lire' : ''}${s.read && s.video ? ' · ' : ''}${s.video ? s.video.toLocaleString() + ' vidéos' : ''}</small></span>${ico('right')}</a>`).join('');
   } catch (e) { $('#shelves').innerHTML = errorBox(e) }
 }
 async function prepareHub() {
-  setTitle('Prepare your household');
+  setTitle('Préparez votre foyer');
   const list = nowTopics().filter(t => (t.prepare || []).length);
-  main.innerHTML = `<h1>Prepare your household</h1>
-  <p class="lead">Readings for getting ready before water, power or services stop — gathered from each guide. One area at a time.</p>
-  <div class="notice">A shopping list or cart isn’t the same as supplies you own, and reading isn’t the same as a practised plan.</div>
-  ${list.map(t => `<details class="more" ${tcStyle(t.id)}><summary><span class="prep-ico">${ico(t.id)}</span><span>${esc(SHORT[t.id] || t.title)} <span class="n">· ${t.prepare.length}</span></span></summary><div class="body"><ul class="list">${t.prepare.map(i => rowItem({ ...i, preview: true })).join('')}</ul><p><a href="#/t/${t.id}">Open the full guide</a></p></div></details>`).join('')}`;
+  main.innerHTML = `<h1>Préparez votre foyer</h1>
+  <p class="lead">Des lectures pour se préparer avant que l’eau, le courant ou les services ne s’arrêtent — rassemblées dans chaque guide. Un domaine à la fois.</p>
+  <div class="notice">Une liste ou un panier de courses ne valent pas les réserves que vous possédez, et lire ne vaut pas un plan pratiqué.</div>
+  ${list.map(t => `<details class="more" ${tcStyle(t.id)}><summary><span class="prep-ico">${ico(t.id)}</span><span>${esc(SHORT[t.id] || t.title)} <span class="n">· ${t.prepare.length}</span></span></summary><div class="body"><ul class="list">${t.prepare.map(i => rowItem({ ...i, preview: true })).join('')}</ul><p><a href="#/t/${t.id}">Ouvrir le guide complet</a></p></div></details>`).join('')}`;
 }
 async function shelfPage(id, kind, q) {
   const sh = (await api('/api/shelves')).find(s => s.id === id);
   if (!sh) return notFound();
   setTitle(sh.title);
-  main.innerHTML = `${backButton('#/library', 'Library')}${crumbs([['Library', '#/library'], [sh.title]])}<h1>${esc(sh.title)}</h1>
-  <div style="margin:14px 0 10px">${searchBox('shq', q, 'Filter by title or publisher', 'Filter')}</div>
-  <div class="chips">${[['all', 'Everything'], ['read', 'To read'], ['video', 'Videos']].map(([k, l]) => `<a class="chip ${k === kind ? 'on' : ''}" href="#/shelf/${id}?kind=${k}&q=${encodeURIComponent(q)}">${l}</a>`).join('')}</div><div id="shres"><p class="loading">Loading…</p></div>`;
+  main.innerHTML = `${backButton('#/library', 'Bibliothèque')}${crumbs([['Bibliothèque', '#/library'], [sh.title]])}<h1>${esc(sh.title)}</h1>
+  <div style="margin:14px 0 10px">${searchBox('shq', q, 'Filtrer par titre ou éditeur', 'Filtrer')}</div>
+  <div class="chips">${[['all', 'Tout'], ['read', 'À lire'], ['video', 'Vidéos']].map(([k, l]) => `<a class="chip ${k === kind ? 'on' : ''}" href="#/shelf/${id}?kind=${k}&q=${encodeURIComponent(q)}">${l}</a>`).join('')}</div><div id="shres"><p class="loading">Chargement…</p></div>`;
   $('#shqF').addEventListener('submit', e => { e.preventDefault(); location.hash = `#/shelf/${id}?kind=${kind}&q=` + encodeURIComponent($('#shq').value.trim()) });
   let off = 0;
   const load = async () => {
     const d = await api(`/api/shelf/${id}?kind=${kind}&q=${encodeURIComponent(q)}&offset=${off}`);
-    const html = d.collections.map(c => `<section class="collection"><h3>${esc(c.collection)}</h3><div class="small muted">${esc(c.trust)} · ${c.count} item${c.count > 1 ? 's' : ''}</div><ul class="list">${c.items.map(r => rowItem({ src: r })).join('')}</ul>${c.count > c.items.length ? `<a class="btn ghost" href="#/collection?name=${encodeURIComponent(c.collection)}&${fromQ()}">See all ${c.count}</a>` : ''}</section>`).join('');
-    if (!off) $('#shres').innerHTML = d.collections.length ? '' : '<div class="empty">Nothing here matches. Try another word.</div>';
+    const html = d.collections.map(c => `<section class="collection"><h3>${esc(c.collection)}</h3><div class="small muted">${esc(c.trust)} · ${c.count} élément${c.count > 1 ? 's' : ''}</div><ul class="list">${c.items.map(r => rowItem({ src: r })).join('')}</ul>${c.count > c.items.length ? `<a class="btn ghost" href="#/collection?name=${encodeURIComponent(c.collection)}&${fromQ()}">Voir les ${c.count}</a>` : ''}</section>`).join('');
+    if (!off) $('#shres').innerHTML = d.collections.length ? '' : '<div class="empty">Rien ne correspond ici. Essayez un autre mot.</div>';
     $('#shres').insertAdjacentHTML('beforeend', html);
     $('#moreb')?.remove();
-    if (d.more) { $('#shres').insertAdjacentHTML('beforeend', '<p><button class="btn plain" id="moreb">Show more</button></p>'); $('#moreb').onclick = () => { off += 40; load() } }
+    if (d.more) { $('#shres').insertAdjacentHTML('beforeend', '<p><button class="btn plain" id="moreb">Afficher plus</button></p>'); $('#moreb').onclick = () => { off += 40; load() } }
   };
   await load();
 }
 async function collectionPage(name, from) {
   setTitle(name);
-  main.innerHTML = `<div>${backButton(from, 'Library')}</div><h1 style="margin-top:12px">${esc(name)}</h1><ul class="list collection" id="cl"></ul><div id="cm"></div>`;
+  main.innerHTML = `<div>${backButton(from, 'Bibliothèque')}</div><h1 style="margin-top:12px">${esc(name)}</h1><ul class="list collection" id="cl"></ul><div id="cm"></div>`;
   let off = 0;
   const load = async () => {
     const d = await api('/api/collection?name=' + encodeURIComponent(name) + '&offset=' + off);
     $('#cl').insertAdjacentHTML('beforeend', d.items.map(r => rowItem({ src: r })).join(''));
-    $('#cm').innerHTML = d.more ? '<button class="btn plain" id="cmb">Show more</button>' : '';
+    $('#cm').innerHTML = d.more ? '<button class="btn plain" id="cmb">Afficher plus</button>' : '';
     if (d.more) $('#cmb').onclick = () => { off += 60; load() };
   };
   await load();
@@ -1081,14 +1081,14 @@ async function collectionPage(name, from) {
 
 /* -------------------------------------------------------------- saved -- */
 async function savedPage() {
-  setTitle('Saved');
+  setTitle('Enregistrés');
   const s = store.get('saved', []), r = await recents();
   const li = x => `<li><a class="row" href="${esc(x.href)}"><span class="k">${ico(x.key[0] === 'v' ? 'video' : x.key[0] === 'w' ? 'wiki' : x.key[0] === 't' ? 'book' : x.key[0] === 'a' ? 'ask' : 'page')}</span><span><b>${esc(x.title)}</b><small>${esc(rowSub(x))}</small></span></a></li>`;
   const cont = await resumable();
-  main.innerHTML = `<h1>Saved</h1><p class="lead">Kept on this device only.</p>
-  ${s.length ? `<div class="collection" style="margin-top:18px"><ul class="list">${s.map(li).join('')}</ul></div>` : `<div class="empty"><span class="e-ico">${ico('save')}</span><b>Nothing saved yet</b><p>Choose Save on any page, video, article or answer to keep it here.</p></div>`}
-  ${cont.length ? secHead('Continue watching') + rail(cont.map(([id, v]) => vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Resume at ' + clock(v.t) })).join('')) : ''}
-  ${secHead('Recently opened')}${r.length ? `<div class="collection"><ul class="list">${r.map(li).join('')}</ul></div><p><button class="btn plain" id="clr">Clear recent list</button></p>` : '<div class="empty"><p>Pages you open will appear here.</p></div>'}`;
+  main.innerHTML = `<h1>Enregistrés</h1><p class="lead">Conservé sur cet appareil uniquement.</p>
+  ${s.length ? `<div class="collection" style="margin-top:18px"><ul class="list">${s.map(li).join('')}</ul></div>` : `<div class="empty"><span class="e-ico">${ico('save')}</span><b>Rien n’est encore enregistré</b><p>Choisissez Enregistrer sur une page, une vidéo, un article ou une réponse pour le conserver ici.</p></div>`}
+  ${cont.length ? secHead('Continuer à regarder') + rail(cont.map(([id, v]) => vcard({ id, title: v.title, thumb: v.thumb, duration: v.d }, { sub: 'Reprendre à ' + clock(v.t) })).join('')) : ''}
+  ${secHead('Ouverts récemment')}${r.length ? `<div class="collection"><ul class="list">${r.map(li).join('')}</ul></div><p><button class="btn plain" id="clr">Effacer la liste</button></p>` : '<div class="empty"><p>Les pages ouvertes apparaîtront ici.</p></div>'}`;
   const c = $('#clr'); if (c) c.onclick = () => { store.set('recent', []); savedPage() };
 }
 
@@ -1098,31 +1098,31 @@ const many = (n, one, more) => `${n.toLocaleString()} ${n === 1 ? one : more}`;
 function blind(c) {
   if (!c) return '';
   const nv = c.videos - c.videos_with_text, parts = [];
-  if (nv) parts.push(`${nv.toLocaleString()} of ${many(c.videos, 'video', 'videos')} ${nv === 1 ? 'has' : 'have'} no captions or transcript`);
-  if (c.pdfs_image_only) parts.push(`${many(c.pdfs_image_only, 'PDF is a scan', 'PDFs are scans')} without text`);
-  if (c.docs_without_text) parts.push(`${many(c.docs_without_text, 'document', 'documents')} gave no readable text when indexed`);
+  if (nv) parts.push(`${nv.toLocaleString()} sur ${many(c.videos, 'vidéo', 'vidéos')}${nv === 1 ? ' n’a' : ' n’ont'} pas de sous-titres ni de transcription`);
+  if (c.pdfs_image_only) parts.push(`${many(c.pdfs_image_only, 'PDF est un scan', 'PDF sont des scans')} sans texte`);
+  if (c.docs_without_text) parts.push(`${many(c.docs_without_text, 'document', 'documents')}${c.docs_without_text === 1 ? ' n’a' : ' n’ont'} donné aucun texte lisible lors de l’indexation`);
   if (!parts.length) return '';
-  const t = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0];
+  const t = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' et ' + parts[parts.length - 1] : parts[0];
   return t[0].toUpperCase() + t.slice(1) + '. ';
 }
 // The optional local AI in the desktop app: what it is, where it runs, and its controls. '' in the server version.
 function localAbout(st) {
   const l = st.local; if (!l) return '';
-  const gb = n => (n / 1e9).toFixed(1) + ' GB';
-  const where = (l.placement || []).filter(p => p.bytes > 2e8).map(p => `${gb(p.bytes)} on ${esc(p.device)}`).join(', ');
-  const line = { ready: 'running now', stopped: 'ready; it starts when you ask and stops after 15 minutes unused', loading: 'starting' }[l.state];
+  const gb = n => (n / 1e9).toFixed(1) + ' Go';
+  const where = (l.placement || []).filter(p => p.bytes > 2e8).map(p => `${gb(p.bytes)} sur ${esc(p.device)}`).join(', ');
+  const line = { ready: 'en cours', stopped: 'prête\u00a0; elle démarre quand vous posez une question et s’arrête après 15 minutes sans utilisation', loading: 'démarrage' }[l.state];
   const btn = (a, t) => `<button class="btn plain" onclick="localAI('${a}')">${t}</button>`;
-  return line ? `Local AI: ${esc(l.name)}, ${line}.${where ? ` It uses ${where}.` : ''} It reads text only.
-      <span class="row">${l.state === 'ready' ? btn('stop', 'Stop it now') : ''}${btn('off', 'Turn off')}</span>`
-    : l.state === 'off' ? `The local AI is turned off. ${btn('on', 'Turn on')}`
-    : `Local AI: ${esc(l.message || { absent: 'not added. Add it in Library and local AI (about 17 GB).', checking: 'checking the file…', measuring: 'checking this computer’s memory…' }[l.state] || l.state)} ${l.state === 'absent' ? '<a class="btn plain" href="/ui/setup.html#manage">Add the local AI</a>' : ''}${btn('rescan', 'Look again')}`;
+  return line ? `IA locale\u00a0: ${esc(l.name)}, ${line}.${where ? ` Elle utilise ${where}.` : ''} Elle ne lit que le texte.
+      <span class="row">${l.state === 'ready' ? btn('stop', 'L’arrêter maintenant') : ''}${btn('off', 'Désactiver')}</span>`
+    : l.state === 'off' ? `L’IA locale est désactivée. ${btn('on', 'Activer')}`
+    : `IA locale\u00a0: ${esc(l.message || { absent: 'non ajoutée. Ajoutez-la dans Bibliothèque et IA locale (environ 17 Go).', checking: 'vérification du fichier…', measuring: 'vérification de la mémoire de cet ordinateur…' }[l.state] || l.state)} ${l.state === 'absent' ? '<a class="btn plain" href="/ui/setup.html#manage">Ajouter l’IA locale</a>' : ''}${btn('rescan', 'Revérifier')}`;
 }
 async function localAI(action) {
   try { await fetch('/api/assistant/local', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action }) }) } catch { }
   setTimeout(() => { if (location.hash.startsWith('#/about')) route() }, 400);
 }
 async function about() {
-  setTitle('About this library');
+  setTitle('À propos de cette bibliothèque');
   let dl = {}, st = {};
   LIB = null;   // About shows the counts as they are now
   const s = await libInfo();
@@ -1130,30 +1130,30 @@ async function about() {
   try { dl = await api('/api/download-status') } catch { }
   try { st = await fetch('/api/assistant/status').then(r => r.json()) } catch { }   // not api(): this answer names an error when no model is running, and still holds what is wanted
   const ch = dl.channels && dl.channels.counts, ix = st.index || {};
-  main.innerHTML = `<h1>About this library</h1>
-  <p class="lead">Public manuals, health guides, courses, videos and encyclopedias kept on this computer, so it works when the internet and phones don’t.</p>
+  main.innerHTML = `<h1>À propos de cette bibliothèque</h1>
+  <p class="lead">Manuels publics, guides de santé, cours, vidéos et encyclopédies conservés sur cet ordinateur\u00a0: il fonctionne quand internet et le téléphone tombent.</p>
   <div class="cards2" style="margin-top:16px">
-   <div class="card"><b>What’s in it</b><small>${(s.pdfs || 0).toLocaleString()} PDF manuals (${(s.pdf_pages || 0).toLocaleString()} pages), ${(s.web_pages || 0).toLocaleString()} saved web pages, ${(s.videos || 0).toLocaleString()} downloaded videos and ${s.collections || 0} complete encyclopedias.</small></div>
-   ${ch ? `<div class="card"><b>Still arriving</b><small>${ch.pending.toLocaleString()} more videos are queued and ${ch.downloading} downloading. Queued videos are not in the library yet — they appear only once downloaded.</small></div>` : ''}
-   <div class="card"><b>Assistant</b><small>${localAbout(st) || (st.online ? `Local model ${esc(st.model)} — available.` : 'No local model is running, so Chat can’t write answers right now. Guides, search, videos and the map all work without one.')} ${ix.chunks ? `Meaning-based index: ${ix.chunks.toLocaleString()} passages from ${ix.docs.toLocaleString()} documents${ix.pending ? `, ${ix.pending.toLocaleString()} still to index` : ''}.` : ''}</small></div>
-   <div class="card"><b>What the assistant can’t see</b><small>${blind(st.coverage)}It also can’t see pictures in videos or raw map data. It reads text${st.vision === false ? '' : ' (and page images when it asks to)'} and says when it finds nothing.${st.coverage && st.coverage.remote_videos ? ` ${st.coverage.remote_videos} videos are stored on a remote drive and play only when that computer is reachable.` : ''}</small></div>
+   <div class="card"><b>Contenu</b><small>${(s.pdfs || 0).toLocaleString()} manuels PDF (${(s.pdf_pages || 0).toLocaleString()} pages), ${(s.web_pages || 0).toLocaleString()} pages web enregistrées, ${(s.videos || 0).toLocaleString()} vidéos téléchargées et ${s.collections || 0} encyclopédies complètes.</small></div>
+   ${ch ? `<div class="card"><b>En cours d’arrivée</b><small>${ch.pending.toLocaleString()} vidéos sont en file et ${ch.downloading} en téléchargement. Les vidéos en file ne sont pas encore dans la bibliothèque\u00a0: elles n’apparaissent qu’une fois téléchargées.</small></div>` : ''}
+   <div class="card"><b>Assistant</b><small>${localAbout(st) || (st.online ? `Modèle local ${esc(st.model)} — disponible.` : 'Aucun modèle local ne tourne\u00a0: le chat ne peut pas rédiger de réponses pour l’instant. Les guides, la recherche, les vidéos et la carte fonctionnent sans lui.')} ${ix.chunks ? `Index sémantique\u00a0: ${ix.chunks.toLocaleString()} extraits de ${ix.docs.toLocaleString()} documents${ix.pending ? `, ${ix.pending.toLocaleString()} à indexer` : ''}.` : ''}</small></div>
+   <div class="card"><b>Ce que l’assistant ne voit pas</b><small>${blind(st.coverage)}Il ne voit pas non plus les images des vidéos ni les données brutes de la carte. Il lit le texte${st.vision === false ? '' : ' (et les images de page quand il le demande)'} et indique quand il ne trouve rien.${st.coverage && st.coverage.remote_videos ? ` ${st.coverage.remote_videos} vidéos sont stockées sur un disque distant et ne se lisent que lorsque cet ordinateur est accessible.` : ''}</small></div>
    ${IN_WINDOW && window.LBUpdate ? LBUpdate.card() : ''}
   </div>
-  <h2>How sources are labelled</h2><ul>
-   <li><b>International health &amp; humanitarian guidance</b> — WHO, Red Cross / Red Crescent, MSF, UNICEF, Sphere, St John Ambulance.</li>
-   <li><b>Hesperian community health guide</b> — “Where There Is No Doctor” and related books.</li>
-   <li><b>Government guidance</b> — FEMA, CDC, EPA, USDA, NOAA, National Park Service and similar.</li>
-   <li><b>University / extension service</b> — e.g. National Center for Home Food Preservation, UC extension.</li>
-   <li><b>Manufacturer manual</b> — only for the exact model named.</li>
-   <li><b>Community-written encyclopedia</b> and <b>hobbyist video</b> — background; check anything risky against a manual.</li></ul>
-  <h2>What this guide does not do</h2><ul>
-   <li>It points to original pages; the guides don’t write their own medical, chemical or electrical instructions. The assistant’s answers mark which sentences come from a cited page and which are its own wording.</li>
-   <li>Nothing here replaces trained help. Each guide shows the sources’ own limits.</li>
-   <li>Reading and watching are not the same as practising. Your ticks stay on this device.</li>
-   ${s.pack ? '' : '<li>Shopping lists and carts in older reports are plans, not proof of supplies you own.</li>'}</ul>
-  ${s.sources ? `<h2>Sources and credits</h2><p><a href="#/read/${encodeURIComponent(s.sources)}?${fromQ()}">Sources and permissions</a>: every publisher in this library, where it came from, and how to ask for something to be removed.</p>` : ''}
-  ${IN_WINDOW ? '' : '<h2>Using it on a phone</h2><p>Phones on the same Wi-Fi (no internet needed) can use the guide when this computer starts it with <code>server.py --lan</code>. Phones need the access link shown in the terminal the first time.</p>'}
-  ${oldServer ? '<h2>Other ways in</h2><p><a href="/reports/gap-closure-status.html" target="_blank">Gap closure report</a> · <a href="/reports/learning-pathways.html" target="_blank">Learning pathways report</a> · <a href="/reports/survival-tools-cart.html" target="_blank">Supplies planning</a></p>' : ''}`;
+  <h2>Comment les sources sont classées</h2><ul>
+   <li><b>Guide sanitaire et humanitaire international</b> — WHO, Red Cross / Red Crescent, MSF, UNICEF, Sphere, St John Ambulance.</li>
+   <li><b>Guide de santé communautaire Hesperian</b> — “Where There Is No Doctor” et ouvrages apparentés.</li>
+   <li><b>Guide gouvernemental</b> — FEMA, CDC, EPA, USDA, NOAA, National Park Service et organismes similaires.</li>
+   <li><b>Université / service de vulgarisation</b> — ex. National Center for Home Food Preservation, UC extension.</li>
+   <li><b>Manuel du fabricant</b> — uniquement pour le modèle exact nommé.</li>
+   <li><b>Encyclopédie rédigée par la communauté</b> et <b>vidéo amateur</b> — arrière-plan\u00a0; vérifiez tout ce qui est risqué dans un manuel.</li></ul>
+  <h2>Ce que ce guide ne fait pas</h2><ul>
+   <li>Il renvoie vers les pages d’origine\u00a0; les guides ne rédigent pas leurs propres instructions médicales, chimiques ou électriques. Les réponses de l’assistant indiquent quelles phrases proviennent d’une page citée et lesquelles sont sa propre formulation.</li>
+   <li>Rien ici ne remplace une aide qualifiée. Chaque guide présente les limites propres aux sources.</li>
+   <li>Lire et regarder ne remplacent pas la pratique. Vos coches restent sur cet appareil.</li>
+   ${s.pack ? '' : '<li>Les listes et paniers de courses des anciens rapports sont des plans, pas la preuve des réserves possédées.</li>'}</ul>
+  ${s.sources ? `<h2>Sources et crédits</h2><p><a href="#/read/${encodeURIComponent(s.sources)}?${fromQ()}">Sources et autorisations</a>\u00a0: chaque éditeur de cette bibliothèque, sa provenance, et comment demander un retrait.</p>` : ''}
+  ${IN_WINDOW ? '' : '<h2>L’utiliser sur un téléphone</h2><p>Les téléphones sur le même Wi-Fi (sans internet) peuvent utiliser le guide quand cet ordinateur le démarre avec <code>server.py --lan</code>. Les téléphones ont besoin du lien d’accès affiché dans le terminal la première fois.</p>'}
+  ${oldServer ? '<h2>Autres accès</h2><p><a href="/reports/gap-closure-status.html" target="_blank">Rapport de fermeture des manques</a> · <a href="/reports/learning-pathways.html" target="_blank">Rapport des parcours d’apprentissage</a> · <a href="/reports/survival-tools-cart.html" target="_blank">Planification des réserves</a></p>' : ''}`;
   if (IN_WINDOW && window.LBUpdate) LBUpdate.mount(main);   // Check for updates (web/update.js): only when the person asks
 }
 

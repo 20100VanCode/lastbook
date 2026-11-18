@@ -1,4 +1,5 @@
 'use strict';
+/* RELIQUE — adaptation française : ce module ne touche qu'aux classes de <html> (plateforme, fenêtre, barre latérale). */
 /* Runs in <head>, before the first paint: the classes on <html> that pick the look. No page content is touched here.
    plat-mac or plat-win: the desktop app by its address (as IN_WINDOW in app.js), a browser by its system. in-app: inside the desktop app.
    side-off: the sidebar was hidden. compact: Windows' folded pane of icons. inactive: the window is not in front. scrolled: the page is not at its top. */

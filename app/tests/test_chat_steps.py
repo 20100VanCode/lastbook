@@ -33,10 +33,10 @@ class Steps(unittest.TestCase):
             {'name': 'read_pages', 'args': {'doc_id': 'x', 'pages': '"><svg onload=alert(1)>'}, 'summary': {'title': 'T'}},
             {'name': 'read_pages', 'args': {'doc_id': 'x', 'pages': 7}, 'summary': {'title': 'T'}},
         ])
-        self.assertEqual(got[0], 'Read FEMA, pages 3, 4')
-        self.assertEqual(got[1], 'Read T, page &lt;img src=x onerror=alert(1)&gt;')
-        self.assertEqual(got[2], 'Read T, page &quot;&gt;&lt;svg onload=alert(1)&gt;')
-        self.assertEqual(got[3], 'Read T, page 7')
+        self.assertEqual(got[0], 'Lecture de FEMA, pages 3, 4')
+        self.assertEqual(got[1], 'Lecture de T, page &lt;img src=x onerror=alert(1)&gt;')
+        self.assertEqual(got[2], 'Lecture de T, page &quot;&gt;&lt;svg onload=alert(1)&gt;')
+        self.assertEqual(got[3], 'Lecture de T, page 7')
         for t in got:
             self.assertNotIn('<', t)
 
@@ -53,11 +53,11 @@ class Steps(unittest.TestCase):
         for t in got:
             self.assertFalse(t.startswith('THROW'), t)
             self.assertNotIn('<', t)
-        self.assertEqual(got[0], 'Read T, pages 5, 6')
-        self.assertEqual(got[1], 'Read T, page ')
-        self.assertEqual(got[2], 'Looked up “clinic” on the offline map')
-        self.assertEqual(got[3], 'Searched “water” — 1 passage')
-        self.assertEqual(got[4], 'Looked at the picture of T, page 3')
+        self.assertEqual(got[0], 'Lecture de T, pages 5, 6')
+        self.assertEqual(got[1], 'Lecture de T, page ')
+        self.assertEqual(got[2], 'Recherche de «\u00a0clinic\u00a0» sur la carte hors-ligne')
+        self.assertEqual(got[3], 'Recherche de «\u00a0water\u00a0» — 1 passage')
+        self.assertEqual(got[4], 'Image de T consultée, page 3')
 
     def test_odd_values_in_other_arguments(self):
         bad = {'toString': 'x'}
@@ -72,10 +72,10 @@ class Steps(unittest.TestCase):
         for t in got:
             self.assertFalse(t.startswith('THROW'), t)
             self.assertNotIn('<', t)
-        self.assertEqual(got[0], 'Searched “” — 2 passages')
-        self.assertEqual(got[2], 'Looked at the picture of T, page ')
-        self.assertEqual(got[3], 'Read , page 2')
-        self.assertEqual(got[5], 'Searched “&lt;b&gt;x&lt;/b&gt;” (videos) — 1 passage')
+        self.assertEqual(got[0], 'Recherche de «\u00a0\u00a0» — 2 passages')
+        self.assertEqual(got[2], 'Image de T consultée, page ')
+        self.assertEqual(got[3], 'Lecture de , page 2')
+        self.assertEqual(got[5], 'Recherche de «\u00a0&lt;b&gt;x&lt;/b&gt;\u00a0» (vidéos) — 1 passage')
 
 
 if __name__ == '__main__':
