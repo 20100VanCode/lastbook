@@ -13,7 +13,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2a** Identifiants | **fait** | 101 départements + 18 régions ; règle `FR-…` acceptée dans manifest et switch |
 | **J2b** Adresses | **fait** | BAN Martinique : 138 230 adresses ; recherche française, rappel **100 %** mesuré |
 | **J2b** Carte | **fait (OSM)** | Martinique : 317 074 traits, 1 015 POI ; rendu vérifié dans l'appli |
-| **J2b** Couches IGN | en cours | terrain BD ALTI (Martinique : 57 tuiles, rendu vérifié) |
+| **J2b** Couches IGN | en cours | terrain BD ALTI + noms BD TOPO (Martinique, rendu vérifié) |
 | **J3** Contenus | à faire | d'abord le catalogue FR, puis les 14 sujets et les écarts |
 | **J4** Site + packs | à faire | — |
 
@@ -96,7 +96,10 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       rendu vérifié dans l'appli** (crédit OSM, date du build, bouton « France »)
 - [x] Terrain BD ALTI 25 m — `tools/build_terrain_fr.py` (grilles UTM → WGS84,
       tuiles relief z4-12) ; **Martinique : 57 tuiles, rendu vérifié dans l'appli**
-- [ ] Couches BD TOPO : eau + ROE, bâtiments, lieux ; RPG (parcelles)
+- [x] Noms d'après BD TOPO — `tools/build_topo_fr.py` (lieux-dits, cours d'eau) ;
+      **Martinique : 2 710 lieux-dits, 87 cours d'eau**, étiquettes vérifiées à l'écran
+- [ ] Bâtiments BD TOPO avec hauteurs (nécessite une colonne `feat` + rendu 3D)
+- [ ] RPG (parcelles)
 - [ ] Unités métriques à l'affichage (la carte affiche encore les pieds)
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
 - [ ] Build complet d'un département (Martinique `FR-972`) + pack
@@ -179,5 +182,9 @@ les limites et les « quand appeler à l'aide » restent cités.
   date de la carte désormais issus des données chargées.
 - J2b (terrain) : `tools/build_terrain_fr.py` (BD ALTI 25 m, UTM → WGS84) ;
   **Martinique : 57 tuiles relief z4-12**, rendu vérifié (ombrage + courbes).
-- Prochaine étape : couches BD TOPO (eau, bâtiments, lieux) et RPG, puis assemblage
+- J2b (noms BD TOPO) : `tools/build_topo_fr.py` (BD TOPO 3.0, 53 couches → fusion dans
+  `national.sqlite`) ; **Martinique : 2 710 lieux-dits + 87 cours d'eau**, étiquettes
+  vérifiées à l'écran. Trois pièges corrigés : table `poi` à recopier, parseur WKB
+  multi-anneaux, géométries 3D (`ST_Force2D`).
+- Prochaine étape : hauteurs de bâtiments (schéma + rendu 3D) ou RPG, puis assemblage
   d'un pack département.
