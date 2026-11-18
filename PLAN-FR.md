@@ -104,9 +104,10 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       (table `bldg_osm`, même format que `build_osm_heights.py`) ;
       **Martinique : 151 380 bâtiments, 250 tuiles z14**, vue 3D vérifiée
       (2 641 bâtiments affichés avec hauteurs mesurées)
-- [ ] RPG (parcelles)
-- [ ] Unités métriques à l'affichage (la carte affiche encore les pieds) — fait dans la
-      vue 3D ; reste la carte 2D (échelle, courbes)
+- [x] RPG (parcelles) — `tools/build_crops_fr.py` : GPKG régional → `crops.sqlite`
+      (cellules cliquables + overlay z7-13) ; Corse : 4 692 parcelles, 317 tuiles
+- [x] Unités métriques à l'affichage — échelle en km/m, courbes en mètres,
+      altitude en mètres (vue 3D et carte 2D)
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
 - [x] Build complet d'un département (Martinique `FR-972`) + pack —
       `tools/build_pack_fr.py` : carte 24,4 Mo compressés / 64,3 Mo installés,
@@ -220,5 +221,8 @@ les limites et les « quand appeler à l'aide » restent cités.
 - Coût observé : pack métropolitain **100 à 180 Mo** (453-467 Mo installés),
   DROM 25 à 123 Mo ; cache stable à ~3 Go (extractions supprimées au fil de l'eau),
   ~15 Go de packs et ~40 Go de travail au total.
-- Prochaine étape : finir les 101 (57 restants), puis RPG (parcelles), unités
-  métriques restantes sur la carte 2D, puis J3.
+- **J2b RPG** : `tools/build_crops_fr.py` (RPG 4.0, un GPKG par région ; groupe 21 =
+  vignoble, 20/23 = vergers, FRA/FLA/FLP = petits fruits) → `crops.sqlite` et
+  overlay coloré z7-13. Corse : 4 692 parcelles.
+- **Unités** : échelle en km/m, courbes et altitude en mètres, partout (2D et 3D).
+- Prochaine étape : finir les 101 (55 restants), puis J3.
