@@ -11,15 +11,17 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 |---|---|---|
 | **J1** Marque + UI | **fait** | RELIQUE (fiche, logo SVG/PNG/favicon), palette par jetons, UI 100 % française, rendu vérifié |
 | **J2a** Identifiants | **fait** | 101 départements + 18 régions ; règle `FR-…` acceptée dans manifest et switch |
-| **J2b** Adresses | **fait** | BAN Martinique : 138 230 adresses ; recherche française, rappel **100 %** mesuré |
-| **J2b** Carte | **fait (OSM)** | Martinique : 317 074 traits, 1 015 POI ; rendu vérifié dans l'appli |
-| **J2b** Couches IGN | en cours | terrain BD ALTI + noms BD TOPO (Martinique, rendu vérifié) |
+| **J2b** Adresses | **fait** | BAN : normalisateur + recherche français, rappel **100 %** mesuré ; index par département |
+| **J2b** Carte | **fait** | `national.sqlite` depuis Geofabrik (shapefiles DROM, **GeoPackage** métropole) borné à l'emprise BAN du département |
+| **J2b** Couches IGN | **fait** | BD ALTI (terrain), BD TOPO (noms d'eau, lieux-dits) en shapefiles **et** GPKG 3.5 ; bâtiments BD TOPO → vue 3D |
 | **J3** Contenus | à faire | d'abord le catalogue FR, puis les 14 sujets et les écarts |
-| **J4** Site + packs | en cours | pack FR-972 (carte + adresses) vérifié et installable par setup |
+| **J4** Site + packs | **en cours** | **44 packs départements** au 18 nov. 19 h (carte + relief + bâtiments + adresses), relus par `install.check_zip` + `check_map` |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
-- **Prochain** : RPG (parcelles), unités métriques sur la carte 2D, puis les 101 départements.
+- **Chaîne** : `tools/build_all_fr.py` (6 étapes par département, reprise, cache avec reprise `Range`),
+  sources résolues par `tools/ign_feed.py`.
+- **Prochain** : finir les 101 (57 restants, ~6 h), puis RPG, unités métriques 2D, puis J3.
 
 ---
 
@@ -207,5 +209,16 @@ les limites et les « quand appeler à l'aide » restent cités.
   `buildings.sqlite` (pack 24,4 Mo / 64,3 Mo installés).
 - J1 (terrain3d.js) : la vue 3D était encore en anglais et en pieds — libellés
   français, altitudes en mètres, source des hauteurs dite « BD TOPO ».
-- Prochaine étape : RPG (parcelles), unités métriques restantes sur la carte 2D,
-  puis les autres départements.
+- Lot 101 (18 nov., après 14 h) : `tools/ign_feed.py` résout les adresses IGN
+  (**BD TOPO 99 départements + 18 régions, BD ALTI 104**) ; `tools/build_all_fr.py`
+  enchaîne les 6 étapes avec reprise. **44 packs faits en 4 h 45**, ~6,5 min par
+  département, aucun échec. Sources : BAN (data.gouv), Geofabrik (DROM en shapefiles,
+  métropole en **GeoPackage** par ancienne région), IGN BD ALTI + BD TOPO (3.0 en
+  shapefiles, **3.5 en GPKG** — 76 départements). Cinq départements (53, 54, 55,
+  56, 57) n'ont pas d'édition départementale : on découpe l'édition régionale à
+  l'emprise BAN.
+- Coût observé : pack métropolitain **100 à 180 Mo** (453-467 Mo installés),
+  DROM 25 à 123 Mo ; cache stable à ~3 Go (extractions supprimées au fil de l'eau),
+  ~15 Go de packs et ~40 Go de travail au total.
+- Prochaine étape : finir les 101 (57 restants), puis RPG (parcelles), unités
+  métriques restantes sur la carte 2D, puis J3.
