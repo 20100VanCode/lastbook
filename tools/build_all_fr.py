@@ -189,6 +189,7 @@ def main():
         raise SystemExit('départements inconnus : ' + ', '.join(unknown))
 
     done = []
+    osm_region = None
     for code in codes:
         name = dict((d[0], d[1]) for d in DEPARTEMENTS)[code]
         work = work_root / f'FR-{code}'
@@ -220,6 +221,7 @@ def main():
                     region, kind = DROM_OSM[code]
                 else:
                     region, kind = REGION_OSM[DEPARTEMENT_REGION_OLD[code]], 'gpkg'
+                osm_region = region
                 raw = unzip(fetch(GEOFABRIK.format(region, kind), cache / 'osm' / f'{region}.{kind}.zip'),
                             cache / 'osm' / region)
                 # a shapefile delivery is a directory of layers; a GeoPackage is one file
@@ -263,6 +265,12 @@ def main():
             print(f'  → pack {code} prêt', flush=True)
         except Exception as exc:
             print(f'  ÉCHEC {code} : {type(exc).__name__}: {exc}', flush=True)
+        finally:
+            # IGN and Geofabrik extracts are gigabytes each; the archives stay, the trees go
+            shutil.rmtree(cache / 'bdtopo' / code, ignore_errors=True)
+            shutil.rmtree(cache / 'bdalti' / code, ignore_errors=True)
+            if osm_region:
+                shutil.rmtree(cache / 'osm' / osm_region, ignore_errors=True)
     print(f'\n{done and len(done)}/{len(codes)} départements : {", ".join(done)}', flush=True)
 
 
