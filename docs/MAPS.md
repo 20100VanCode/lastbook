@@ -112,6 +112,7 @@ issue before any code.
 [REGIONS-PY.md](REGIONS-PY.md) does the same for Paraguay as one country-wide region.
 [REGIONS-IE.md](REGIONS-IE.md) does the same for the island of Ireland, including Northern Ireland, as one region.
 [REGIONS-GB-LONDON.md](REGIONS-GB-LONDON.md) does the same for Greater London as one region.
+[REGIONS-ES.md](REGIONS-ES.md) does the same for Spain's 17 autonomous communities and its two autonomous cities.
 
 ## Checking a map change
 
