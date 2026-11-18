@@ -41,11 +41,13 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 
 ## 3. Décisions prises
 
-- **Nom** : RELIQUE — « Le savoir qui survit. » (proposition, modifiable)
-- **Jalon 1** : marque + coquille française (identité, UI, navigation, écrans, ton)
-- **Fork** : on reste syncable — branche `relique-fr`, les renoms de marque sont faits
-  dans `web/` et `content/`, les identifiants internes (`lastbook:`, `downloads.lastbook.org`,
-  `X-Lastbook-Key`) restent en place au jalon 1 pour ne pas casser le bridge et les tests.
+- **Nom** : RELIQUE — « Le savoir qui survit. » (confirmé)
+- **J1** : marque + coquille française — **fait**
+- **Cartographie** : l'unité de découpe est le **département** (101) ; les 18 régions
+  servent de regroupement et d'entrée dans l'écran de configuration.
+- **Fork** : branche `relique-fr`, syncable avec `Immortal-Protocols/lastbook`. `main`
+  reste un miroir propre de l'upstream. Les identifiants internes (`lastbook:`,
+  `downloads.lastbook.org`, `X-Lastbook-Key`) ne sont pas renommés.
 - **Contraintes non négociables** (héritées du projet) : hors-ligne après installation,
   pas de police web dans l'app, pas de réseau hors setup, sources de cartes sous
   licence ouverte, aucun lieu ni mot de la maison dans les fichiers livrés.
@@ -63,11 +65,11 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] À propos, recherche, listes, états vides, chat, carte en français
 - [x] Tests du dépôt au vert + vérification visuelle en local
 
-### J2 — Géographie France + DOM-TOM
+### J2 — Géographie France + DOM-TOM _(en cours)_
 - [x] Unité de découpe : **département** (101) — `engine/departements.py` ; les 18 régions restent le regroupement
 - [x] Codes : `FR-01`…`FR-95`, `FR-2A`/`FR-2B`, `FR-971`…`FR-976` — `engine/regions.py`
 - [x] Assouplir la règle `[A-Z]{2}` (manifest + install) sans casser les index US
-- [ ] Boîtes de découpe par région (BASE ADMIN EXPRESS / IGN) — table en place, découpe à écrire
+- [ ] Boîtes de découpe par département (ADMIN EXPRESS / IGN) — table en place, découpe à écrire
 - [x] Recherche d'adresses à la française (BAN, accents, *bis/ter*, communes nouvelles)
       — `engine/address_search.py` + `tools/build_addresses_fr.py` ; **rappel mesuré
       100 % sur 400 adresses réelles de Martinique × 5 variantes**
@@ -100,8 +102,9 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 
 Le document `docs/REGIONS-FR.md` fait foi. Résumé :
 
-- **18 régions**, une par région (13 métropolitaines + Corse + 5 DROM), découpées par
-  **départements** (101) et non par boîte, pour éviter de ramener des lignes étrangères.
+- **18 régions** (13 métropolitaines + Corse + 5 DROM) ; la carte détaillée est découpée
+  par **département** (101), et non par boîte, pour éviter de ramener des lignes étrangères.
+  L'écran de configuration propose les régions pour atteindre leurs départements.
 - **Sources** : BD ALTI (terrain), BD TOPO (eau, bâtiments, lieux), RPG (parcelles),
   BAN (adresses), OSM (POI de base), ROE (barrages), Géo'DAE (défibrillateurs),
   répertoire éducation, stations-service, gendarmeries.
@@ -130,9 +133,21 @@ les limites et les « quand appeler à l'aide » restent cités.
 
 ## 7. Ce qui reste ouvert
 
-- Nom définitif (RELIQUE est une proposition).
-- Codes région : accepter `FR-XXX` dans le manifest, ou passer par les départements.
-- Coupe des couches : par départements (recommandé) ou par boîte.
 - Table/licence : une table par licence, ou fusion OSM + Licence Ouverte sous ODbL.
 - Unités : colonnes métriques (`height_m`, `area_ha`) ou conversion à l'affichage.
+- Lecteur IGN : BD ALTI / BD TOPO / RPG au-delà de l'essai (départements 14, 50, 61).
+- Projections d'outre-mer : UTM + datums locaux à écrire dans les outils.
 - Financement / hébergement des packs (hors dépôt).
+
+---
+
+## 8. Journal
+
+**18 nov. 2026**
+- J1 : marque RELIQUE (fiche, logo, jetons) + UI 100 % française. 330 tests, 2 échecs
+  PDF préexistants (pypdfium2 vendored hors path, identiques sur `main`).
+- J2a : 101 départements + 18 régions ; règle d'identifiant `FR-…` acceptée dans le
+  manifest et le switch.
+- J2b (adresses) : BAN Martinique, 138 230 adresses indexées ; normalisateur et
+  recherche français ; **rappel 100 %** sur 400 adresses × 5 variantes.
+- Prochaine étape : couches cartographiques (terrain, eau, bâtiments, lieux, parcelles).
