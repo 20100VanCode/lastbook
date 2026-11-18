@@ -19,7 +19,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
-- **Prochain** : hauteurs de bâtiments BD TOPO (schéma + rendu 3D), RPG, puis les 101 départements.
+- **Prochain** : RPG (parcelles), unités métriques sur la carte 2D, puis les 101 départements.
 
 ---
 
@@ -98,12 +98,16 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       tuiles relief z4-12) ; **Martinique : 57 tuiles, rendu vérifié dans l'appli**
 - [x] Noms d'après BD TOPO — `tools/build_topo_fr.py` (lieux-dits, cours d'eau) ;
       **Martinique : 2 710 lieux-dits, 87 cours d'eau**, étiquettes vérifiées à l'écran
-- [ ] Bâtiments BD TOPO avec hauteurs (nécessite une colonne `feat` + rendu 3D)
+- [x] Bâtiments BD TOPO avec hauteurs — `tools/build_bldg_fr.py` → `buildings.sqlite`
+      (table `bldg_osm`, même format que `build_osm_heights.py`) ;
+      **Martinique : 151 380 bâtiments, 250 tuiles z14**, vue 3D vérifiée
+      (2 641 bâtiments affichés avec hauteurs mesurées)
 - [ ] RPG (parcelles)
-- [ ] Unités métriques à l'affichage (la carte affiche encore les pieds)
+- [ ] Unités métriques à l'affichage (la carte affiche encore les pieds) — fait dans la
+      vue 3D ; reste la carte 2D (échelle, courbes)
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
 - [x] Build complet d'un département (Martinique `FR-972`) + pack —
-      `tools/build_pack_fr.py` : carte 19,7 Mo compressés / 59,3 Mo installés,
+      `tools/build_pack_fr.py` : carte 24,4 Mo compressés / 64,3 Mo installés,
       adresses 7,1 Mo / 21,2 Mo ; vérifié par `install.check_zip` + `check_map`,
       installé dans une bibliothèque hôte, puis servi par l'appli (carte + adresse
       BAN placée à l'écran)
@@ -197,5 +201,11 @@ les limites et les « quand appeler à l'aide » restent cités.
   **Martinique : carte 19,7 Mo / 59,3 Mo installés, adresses 7,1 Mo / 21,2 Mo.**
   Vérifié bout-en-bout : pack installé dans une bibliothèque hôte, l'appli sert la
   carte et place une adresse BAN à l'écran.
-- Prochaine étape : hauteurs de bâtiments BD TOPO (schéma + rendu 3D) ou RPG, puis
-  les autres départements.
+- J2b (bâtiments) : `tools/build_bldg_fr.py` (BD TOPO `BATIMENT.HAUTEUR` →
+  `buildings.sqlite`/`bldg_osm`) ; **Martinique : 151 380 bâtiments**, la vue 3D
+  extrude 2 641 bâtiments avec hauteurs mesurées. `build_pack_fr.py` embarque
+  `buildings.sqlite` (pack 24,4 Mo / 64,3 Mo installés).
+- J1 (terrain3d.js) : la vue 3D était encore en anglais et en pieds — libellés
+  français, altitudes en mètres, source des hauteurs dite « BD TOPO ».
+- Prochaine étape : RPG (parcelles), unités métriques restantes sur la carte 2D,
+  puis les autres départements.
