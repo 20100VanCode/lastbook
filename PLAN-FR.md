@@ -5,6 +5,24 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 
 ---
 
+## 0. Résumé d'étape — 18 nov. 2026
+
+| Jalon | Statut | Livré |
+|---|---|---|
+| **J1** Marque + UI | **fait** | RELIQUE (fiche, logo SVG/PNG/favicon), palette par jetons, UI 100 % française, rendu vérifié |
+| **J2a** Identifiants | **fait** | 101 départements + 18 régions ; règle `FR-…` acceptée dans manifest et switch |
+| **J2b** Adresses | **fait** | BAN Martinique : 138 230 adresses ; recherche française, rappel **100 %** mesuré |
+| **J2b** Carte | **fait (OSM)** | Martinique : 317 074 traits, 1 015 POI ; rendu vérifié dans l'appli |
+| **J2b** Couches IGN | en cours | terrain BD ALTI (Martinique : 57 tuiles, rendu vérifié) |
+| **J3** Contenus | à faire | d'abord le catalogue FR, puis les 14 sujets et les écarts |
+| **J4** Site + packs | à faire | — |
+
+- **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
+- **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
+- **Prochain** : couches IGN d'un département (Martinique), puis assemblage d'un pack.
+
+---
+
 ## 1. Intention
 
 Lastbook est une **bibliothèque de survie hors-ligne** : manuels, vidéos, encyclopédies,
@@ -76,8 +94,10 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] Couche OSM (routes, eau, terres, bâtiments, lieux, POI) — `tools/build_map_fr.py`
       depuis les shapefiles Geofabrik ; **Martinique : 317 074 traits, 1 015 POI,
       rendu vérifié dans l'appli** (crédit OSM, date du build, bouton « France »)
-- [ ] Couches IGN : terrain BD ALTI, eau BD TOPO + ROE, bâtiments BD TOPO,
-      lieux BD TOPO/COG, parcelles RPG
+- [x] Terrain BD ALTI 25 m — `tools/build_terrain_fr.py` (grilles UTM → WGS84,
+      tuiles relief z4-12) ; **Martinique : 57 tuiles, rendu vérifié dans l'appli**
+- [ ] Couches BD TOPO : eau + ROE, bâtiments, lieux ; RPG (parcelles)
+- [ ] Unités métriques à l'affichage (la carte affiche encore les pieds)
 - [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
 - [ ] Build complet d'un département (Martinique `FR-972`) + pack
 - [x] Crédit et date de la carte selon les données chargées (fini la liste US en dur)
@@ -157,5 +177,7 @@ les limites et les « quand appeler à l'aide » restent cités.
 - J2b (carte) : `tools/build_map_fr.py` (shapefiles Geofabrik → `national.sqlite`) ;
   **Martinique : 317 074 traits, 1 015 POI**, rendu vérifié dans l'appli. Crédit et
   date de la carte désormais issus des données chargées.
-- Prochaine étape : couches IGN (terrain, eau, bâtiments, lieux, parcelles), puis
-  assemblage d'un pack département.
+- J2b (terrain) : `tools/build_terrain_fr.py` (BD ALTI 25 m, UTM → WGS84) ;
+  **Martinique : 57 tuiles relief z4-12**, rendu vérifié (ombrage + courbes).
+- Prochaine étape : couches BD TOPO (eau, bâtiments, lieux) et RPG, puis assemblage
+  d'un pack département.
