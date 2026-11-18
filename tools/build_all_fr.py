@@ -183,6 +183,7 @@ def main():
     topo = json.loads((ign / 'ign-bdtopo.json').read_text(encoding='utf-8'))
     alti = json.loads((ign / 'ign-bdalti.json').read_text(encoding='utf-8'))
     regions = json.loads((ign / 'ign-bdtopo-regions.json').read_text(encoding='utf-8'))
+    rpg = json.loads((ign / 'ign-rpg-regions.json').read_text(encoding='utf-8'))
     codes = [c.strip() for c in a.only.split(',')] if a.only else [d[0] for d in DEPARTEMENTS]
     unknown = [c for c in codes if c not in {d[0] for d in DEPARTEMENTS}]
     if unknown:
@@ -259,6 +260,14 @@ def main():
                 run('build_topo_fr.py', '--dir', raw, '--departement', code, '--map', geo / 'national.sqlite', *box_args)
             if a.force or not target.exists():
                 run('build_bldg_fr.py', '--dir', raw, '--departement', code, '--out', target, *box_args)
+            # 5b. RPG : les parcelles de cultures pérennes (vignes, vergers, petits fruits)
+            target = geo / 'crops.sqlite'
+            if (a.force or not target.exists()) and REGION_CODE.get(code) in rpg:
+                entry = rpg[REGION_CODE[code]]
+                raw = unzip(fetch(entry['url'], cache / 'rpg' / f'{REGION_CODE[code]}.7z'),
+                            cache / 'rpg' / REGION_CODE[code])
+                run('build_crops_fr.py', '--dir', raw, '--departement', code, '--out', target, *box_args)
+                shutil.rmtree(cache / 'rpg' / REGION_CODE[code], ignore_errors=True)
             # 6. le pack
             run('build_pack_fr.py', '--data', work, '--departement', code, '--out', out / f'FR-{code}')
             done.append(code)

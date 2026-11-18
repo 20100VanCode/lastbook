@@ -66,12 +66,13 @@ def main():
     status = geo / 'national-status.json'
     socal = geo / 'socal-cells.json'
     buildings = geo / 'buildings.sqlite'
+    crops = geo / 'crops.sqlite'
     missing = [p.name for p in (national, terrain, status) if not p.is_file()]
     if missing:
         raise SystemExit('manquant dans ' + str(geo) + ' : ' + ', '.join(missing))
 
     # --- the map set, on disk as setup will see it after unpacking -------------
-    members = [('derived/geo/' + p.name, p) for p in (status, national, terrain, socal, buildings) if p.is_file()]
+    members = [('derived/geo/' + p.name, p) for p in (status, national, terrain, socal, buildings, crops) if p.is_file()]
     installed = sum(p.stat().st_size for _, p in members)
     set_json = {'name': pack_id, 'files': {rel: src.stat().st_size for rel, src in members}}
 
