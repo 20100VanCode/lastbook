@@ -79,7 +79,7 @@ const MapView = (() => {
   const y2lat = (y, z) => { const n = Math.PI - 2 * Math.PI * y / 2 ** z; return 180 / Math.PI * Math.atan(Math.sinh(n)) };
   const escH = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const $ = id => document.getElementById(id);
-  const dist = km => km < 1.6 ? Math.round(km * 1000) + ' m' : (km / 1.609).toFixed(km < 16 ? 1 : 0) + ' mi';
+  const dist = km => km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(km < 10 ? 1 : 0) + ' km';
   const kmBetween = (a, b, c, d) => { const r = Math.PI / 180, x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 12742 * Math.asin(Math.sqrt(x)) };
   const sym = (l, size = 22) => `<i class="msym" style="background:${l.col};width:${size}px;height:${size}px">${escH(l.sym)}</i>`;
   const layerOf = cls => BY_CLS[cls] || { sym: '•', col: '#555', label: cls };
@@ -525,7 +525,7 @@ const MapView = (() => {
     g.strokeStyle = 'rgba(0,0,0,.3)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(w / 2 - 7, h / 2); g.lineTo(w / 2 + 7, h / 2); g.moveTo(w / 2, h / 2 - 7); g.lineTo(w / 2, h / 2 + 7); g.stroke();
     const mpp = 156543.03 * Math.cos(st.lat * Math.PI / 180) / 2 ** st.z;
     const nice = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000].find(m => m / mpp > 60) || 100000;
-    const el = $('mscale'); if (el) el.innerHTML = `<span style="display:inline-block;width:${Math.round(nice / mpp)}px;border:2px solid #333;border-top:0;height:6px;vertical-align:middle"></span> ${nice >= 1000 ? nice / 1000 + ' km' : nice + ' m'} · ${(nice / 1609.34 < 1 ? Math.round(nice * 3.281) + ' ft' : (nice / 1609.34).toFixed(nice < 5000 ? 1 : 0) + ' mi')}`;
+    const el = $('mscale'); if (el) el.innerHTML = `<span style="display:inline-block;width:${Math.round(nice / mpp)}px;border:2px solid #333;border-top:0;height:6px;vertical-align:middle"></span> ${nice >= 1000 ? (nice / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 }) + ' km' : nice + ' m'}`;
     const at = el && el.parentNode.querySelector('.mapattr'); if (at) at.style.maxWidth = Math.max(120, el.parentNode.clientWidth - el.offsetWidth - 34) + 'px';   // the credits wrap before they reach the scale bar, however long it is
   }
 
@@ -588,16 +588,16 @@ const MapView = (() => {
     }
     g.putImageData(img, 0, 0); return t.shade = c;
   }
-  const CONTOUR = [[11, 200, 1000], [12, 100, 500], [13, 40, 200], [15, 20, 100], [16, 5, 25]];  // [from zoom, interval ft, index ft]; 5 ft only on lidar
+  const CONTOUR = [[11, 60, 300], [12, 30, 150], [13, 12, 60], [15, 6, 30], [16, 2, 8]];  // [from zoom, interval m, index m]
   function contours(t, step) {
     if (t.contours[step]) return t.contours[step];
-    const h = t.h, ft = 3.28084, lines = [];  // marching squares on the 256x256 grid, in feet
-    let lo = Infinity, hi = -Infinity; for (let i = 0; i < 65536; i++) { const v = h[i] * ft; if (v < lo) lo = v; if (v > hi) hi = v }
+    const h = t.h, lines = [];  // marching squares on the 256x256 grid, in metres
+    let lo = Infinity, hi = -Infinity; for (let i = 0; i < 65536; i++) { const v = h[i]; if (v < lo) lo = v; if (v > hi) hi = v }
     for (let lev = Math.ceil(lo / step) * step; lev <= hi; lev += step) {
       if (lev <= 0) continue;
       const seg = [];
       for (let y = 0; y < 255; y++) for (let x = 0; x < 255; x++) {
-        const a = h[y * 256 + x] * ft, b = h[y * 256 + x + 1] * ft, c = h[(y + 1) * 256 + x + 1] * ft, d = h[(y + 1) * 256 + x] * ft;
+        const a = h[y * 256 + x], b = h[y * 256 + x + 1], c = h[(y + 1) * 256 + x + 1], d = h[(y + 1) * 256 + x];
         const idx = (a > lev) | ((b > lev) << 1) | ((c > lev) << 2) | ((d > lev) << 3);
         if (idx === 0 || idx === 15) continue;
         const e = [[x + (lev - a) / (b - a), y], [x + 1, y + (lev - b) / (c - b)], [x + (lev - d) / (c - d), y + 1], [x, y + (lev - a) / (d - a)]];
@@ -654,7 +654,7 @@ const MapView = (() => {
         for (const L of contours(t, step)) { if (!L.index) continue; const a = L.seg;
           for (let i = 0; i < a.length && placed.length < 24; i += 4 * 61) { const x = sx + a[i] * k, y = sy + a[i + 1] * k; if (x < 40 || x > w - 70 || y < 70 || y > h - 50) continue;
             if (placed.some(p => Math.abs(p[0] - x) < 130 && Math.abs(p[1] - y) < 70)) continue; placed.push([x, y]);
-            const s = L.lev.toLocaleString() + ' ft'; g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.85)'; g.strokeText(s, x, y); g.fillStyle = 'rgba(120,76,36,.95)'; g.fillText(s, x, y) } }
+            const s = L.lev.toLocaleString() + ' m'; g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.85)'; g.strokeText(s, x, y); g.fillStyle = 'rgba(120,76,36,.95)'; g.fillText(s, x, y) } }
       }
       g.restore();
     }
@@ -751,7 +751,7 @@ const MapView = (() => {
     }
     return st ? elevAt(lat, lon) : null;
   }
-  const fmtElev = m => `${Math.round(m * 3.28084).toLocaleString()} ft (${Math.round(m).toLocaleString()} m)`;
+  const fmtElev = m => `${Math.round(m).toLocaleString()} m`;
 
   // ------------------------------------------------------------------ card ----
   function openCard(html) {

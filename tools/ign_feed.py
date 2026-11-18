@@ -19,6 +19,7 @@ from pathlib import Path
 FEEDS = {
     'bdtopo': 'https://data.geopf.fr/telechargement/resource/BDTOPO',
     'bdalti': 'https://data.geopf.fr/telechargement/resource/BDALTI',
+    'rpg': 'https://data.geopf.fr/telechargement/resource/RPG',
 }
 DEP = re.compile(r'_D(\d{2,3}[AB]?)(?:_\d{4}-\d{2}-\d{2})?$')
 REG = re.compile(r'_(R\d{2})_\d{4}-\d{2}-\d{2}$')
@@ -115,7 +116,7 @@ def main():
     ap.add_argument('--pages', help='directory of feed pages already downloaded, instead of the network')
     ap.add_argument('--regions-out', help='also write the regional editions, for départements published only as a region')
     a = ap.parse_args()
-    layer = a.layer.upper() if a.layer == 'bdtopo' else 'BDALTI'
+    layer = {'bdtopo': 'BDTOPO', 'rpg': 'RPG'}.get(a.layer, 'BDALTI')
     got = pick(FEEDS[a.layer], layer, a.pages)
     path = Path(a.out)
     path.parent.mkdir(parents=True, exist_ok=True)
