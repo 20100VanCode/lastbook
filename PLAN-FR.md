@@ -5,7 +5,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 
 ---
 
-## 0. Résumé d'étape — 18 nov. 2026
+## 0. Résumé d'étape — 19 nov. 2026
 
 | Jalon | Statut | Livré |
 |---|---|---|
@@ -14,14 +14,19 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2b** Adresses | **fait** | BAN : normalisateur + recherche français, rappel **100 %** mesuré ; index par département |
 | **J2b** Carte | **fait** | `national.sqlite` depuis Geofabrik (shapefiles DROM, **GeoPackage** métropole) borné à l'emprise BAN du département |
 | **J2b** Couches IGN | **fait** | BD ALTI (terrain), BD TOPO (noms d'eau, lieux-dits) en shapefiles **et** GPKG 3.5 ; bâtiments BD TOPO → vue 3D |
-| **J3** Contenus | à faire | d'abord le catalogue FR, puis les 14 sujets et les écarts |
-| **J4** Site + packs | **en cours** | **44 packs départements** au 18 nov. 19 h (carte + relief + bâtiments + adresses), relus par `install.check_zip` + `check_map` |
+| **J2b** RPG + unités | **fait** | `crops.sqlite` (vignoble, vergers, petits fruits) + overlay z7-13 ; échelle, courbes et altitude en **mètres** partout |
+| **J3** Contenus | **en cours** | **3 sujets français** (`eau`, `assainissement`, `alimentation`), 8 documents sources, **86 références vérifiées** |
+| **J4** Site + packs | **en cours** | **59 packs** au 19 nov. (5 DROM complets, 54 métropolitains), relus par `install.check_zip` + `check_map` |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
-- **Chaîne** : `tools/build_all_fr.py` (6 étapes par département, reprise, cache avec reprise `Range`),
+- **Chaîne** : `tools/build_all_fr.py` (7 étapes par département, reprise, cache avec reprise `Range`),
   sources résolues par `tools/ign_feed.py`.
-- **Prochain** : finir les 101 (57 restants, ~6 h), puis RPG, unités métriques 2D, puis J3.
+- **Contenu** : `content-fr/` (manifestes + documents + sujets), `content-fr/build.py` assemble et
+  indexe une bibliothèque d'essai, `validate_topics.py` vérifie chaque page citée.
+- **Stockage** : dépôt + 55 Go de données sur `/Volumes/EXTRADATA/RELIQUE` (disque externe, exFAT).
+- **Prochain** : J3 — `catastrophe` (cyclone, Météo-France / sécurité civile), puis `abri`, `énergie`,
+  `soins`, `blessures` ; et reprise du lot métropolitain (47 restants).
 
 ---
 
@@ -116,11 +121,18 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       BAN placée à l'écran)
 - [x] Crédit et date de la carte selon les données chargées (fini la liste US en dur)
 
-### J3 — Contenus français
-- [ ] Traduire et replacer les 14 sujets (clé, eau, nourriture, énergie, abri, santé,
-      blessures, assainissement, communication, terre, réparation, conservation, cicatrisation)
+### J3 — Contenus français _(en cours)_
+- [x] **Pilote** : `content-fr/` — manifestes + documents sources + sujets, `build.py`
+      assemble une bibliothèque d'essai et l'indexe ; `validate_topics.py` vérifie chaque page
+- [x] Sujet **`eau`** — « De l'eau potable sûre » : 8 situations, 7 limites, 37 références
+- [x] Sujet **`assainissement`** — « Évacuer les excréments sans risque » : 5 situations,
+      5 limites, 24 références
+- [x] Sujet **`alimentation`** — « Nourriture sûre et chaîne du froid » : 6 situations,
+      5 limites, 25 références
 - [ ] Sources françaises : SPF, ANS/AMELI, Croix-Rouge, MSF, FNOR, Secourisme, Préfectures,
       Météo-France, BRGM, Santé publique France, INSEE
+      *(acquis : ORSEC/Préfecture de l'Ain, FICR, HCSP, SIDESA-IODE, OMS/WEDC,
+      Croix-Rouge française, Anses, ARS/DDETSPP)*
 - [ ] Risques France/DROM : cyclone, tsunami, séisme, éruption, dengue/chikungunya,
       canicule, inondation, feu de forêt, neige/verglas, accident industriel
 - [ ] Encyclopédies ZIM francophones (Wikipédia, Wikisource, Wiktionnaire)
@@ -232,3 +244,25 @@ les limites et les « quand appeler à l'aide » restent cités.
 - Prochaine étape : J3 — les 13 autres besoins (assainissement, alimentation,
   abri, énergie, soins, blessures, communications, terrain…) sur les mêmes
   sources françaises.
+
+**19 nov. 2026**
+- **Stockage** : dépôt + `data/{cache,work,packs,ign}` (55 Go) déplacés sur
+  `/Volumes/EXTRADATA/RELIQUE` ; disque interne libéré (183 Go). Un débranchement
+  accidentel du volume exFAT a fait paniquer le montage — donnée intacte.
+- **Lot 101** : **59 packs** (5 DROM complets avec noms BD TOPO + cultures, 54
+  métropolitains), 0 échec. Correctif : l'étape « noms BD TOPO » se déclenche
+  désormais sur `meta.topo`, pas sur « la carte vient d'être reconstruite ».
+- **J3 (contenu)** : `content-fr/` — `build.py` assemble `library-data/` depuis
+  manifestes + documents, indexe avec `engine/library.py`, puis valide les sujets
+  avec `validate_topics.py`. **8 documents, 221 pages indexées.**
+  - `eau` : ORSEC Préfecture de l'Ain (2024), manuel FICR, avis HCSP (2023),
+    doctrine IODE — 37 références.
+  - `assainissement` : fiches OMS/WEDC (2013) + guide latrines Croix-Rouge
+    française (2018) — 24 références.
+  - `alimentation` : fiche hygiène domestique **Anses** (récupérée par `fetch`
+    dans le navigateur : ANSES bloque `curl`) + fiche ARS/DDETSPP sur les
+    coupures de courant — 25 références.
+  - **86 références, 0 erreur**, chaque page citée lue et vérifiée.
+- Prochaine étape : J3 — `catastrophe` (cyclone, Météo-France, sécurité civile),
+  puis `abri`, `énergie`, `soins`, `blessures`. Reprise du lot métropolitain
+  (47 restants) ensuite.
