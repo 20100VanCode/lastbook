@@ -388,5 +388,25 @@
   "collection": "AVRDC",
   "publisher": "AVRDC - The World Vegetable Center",
   "url": "https://www.saint-lunaire.fr/wp-content/uploads/2020/09/Produire-et-conserver-ses-graines.pdf"
+ },
+ {
+  "id": "calendrier-semis",
+  "kind": "pdf",
+  "path": "documents/calendrier-semis.pdf",
+  "title": "Calendrier des semis et récoltes des principaux légumes et aromates",
+  "category": "learn",
+  "collection": "Jardinage",
+  "publisher": "Comptoir des Jardins",
+  "url": "https://www.comptoirdesjardins.fr/img/cms/Calendrier%20des%20semis.pdf"
+ },
+ {
+  "id": "rsp-semences",
+  "kind": "pdf",
+  "path": "documents/semences-potageres.pdf",
+  "title": "Produire des semences potagères bio — recueil de savoir-faire paysans",
+  "category": "learn",
+  "collection": "Semences paysannes",
+  "publisher": "GABBAnjou / Réseau Semences Paysannes",
+  "url": "https://ressources.semencespaysannes.org/docs/guide_semences_potageres-2022-vf.pdf"
  }
 ]

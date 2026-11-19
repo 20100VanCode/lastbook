@@ -21,8 +21,9 @@ francophones, cités par leur page réelle.
 | `reparation` — Réparer, mettre hors d'eau, déclarer | 5 | 5 | 3 | 3 | 26 |
 | `terrain` — Connaître son terrain et ses risques | 6 | 5 | 3 | 3 | 28 |
 | `conservation` — Conserver pour durer | 5 | 5 | 3 | 3 | 25 |
+| `culture` — Cultiver et récolter | 4 | 3 | 3 | 4 | 21 |
 
-**366 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**387 références vérifiées — les 14 besoins couverts** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -62,6 +63,8 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `bp-hygiene` | Recueil de bonnes pratiques d'hygiène (consommateurs) | DILA / Léo Lagrange, 2013 | 101 |
 | `sante-conserves` | Conserves maison : comment éviter le botulisme | sante.fr | page web |
 | `avrdc-graines` | Produire et conserver ses propres semences | AVRDC | 32 |
+| `calendrier-semis` | Calendrier des semis et récoltes | Comptoir des Jardins | 2 |
+| `rsp-semences` | Produire des semences potagères bio | Réseau Semences Paysannes, 2022 | 28 |
 
 ## Reconstruire
 

@@ -1,0 +1,189 @@
+{
+ "id": "culture",
+ "mode": "learn",
+ "title": "Cultiver et récolter",
+ "short": "Potager, semis, semences",
+ "intro": "Lectures pour produire une partie de sa nourriture : le calendrier des semis et des récoltes, la production de ses propres semences de légumes, les variétés population et le cadre réglementaire de la production de semences.",
+ "keywords": [
+  "culture",
+  "potager",
+  "semis",
+  "récolte",
+  "calendrier",
+  "pleine terre",
+  "serre",
+  "plantation",
+  "semences",
+  "graines",
+  "variétés population",
+  "variétés anciennes",
+  "multiplication",
+  "maraîchage",
+  "rotation",
+  "arrosage",
+  "légumes",
+  "aromates",
+  "jardin",
+  "autoproduction"
+ ],
+ "choices": [
+  {
+   "id": "calendrier",
+   "label": "Semer et récolter au bon moment",
+   "hint": "Calendrier mois par mois",
+   "read": [
+    {
+     "doc": "calendrier-semis",
+     "page": 1,
+     "label": "Le calendrier mois par mois",
+     "note": "Comptoir des Jardins : mois par mois, les périodes de semis (au chaud, sous serre non chauffée, en pleine terre), de plantation et de récolte des principaux légumes et aromates."
+    },
+    {
+     "doc": "calendrier-semis",
+     "page": 1,
+     "label": "Février et mars",
+     "note": "Même calendrier : en février, semis au chaud (aubergine, tomate), sous serre (artichaut, carotte, chou-fleur, laitue, navet, menthe, radis) et en pleine terre (épinard, fève, poireau, pois) ; en mars, les semis au chaud s'élargissent au céleri, melon, pastèque, piment, poivron."
+    },
+    {
+     "doc": "calendrier-semis",
+     "page": 2,
+     "label": "Août et septembre",
+     "note": "Même calendrier : en août, semis en pleine terre (chicorée, chou pommé, épinard, fenouil, laitue, mâche, navet, poireau, radis, roquette) ; en septembre, semis en pleine terre (épinard, laitue, mâche, moutarde, radis, roquette) et plantation de fraise et de laitue."
+    }
+   ]
+  },
+  {
+   "id": "semences",
+   "label": "Produire ses propres semences de légumes",
+   "hint": "Récolte, séchage, isolement",
+   "read": [
+    {
+     "doc": "avrdc-graines",
+     "page": 3,
+     "label": "Un guide pour produire ses propres semences",
+     "note": "AVRDC - The World Vegetable Center : guide pour les producteurs sur la production et la conservation des semences de légumes, de la récolte au stockage."
+    },
+    {
+     "doc": "rsp-semences",
+     "page": 9,
+     "label": "Le matériel nécessaire à la production de semences",
+     "note": "Réseau Semences Paysannes : pour produire des semences potagères, le matériel de base du maraîchage (travail du sol, binage, irrigation, semoir de précision) et du matériel spécifique — récolte, tri, séchage, pré-nettoyage."
+    },
+    {
+     "doc": "avrdc-graines",
+     "page": 4,
+     "label": "Le séchage avant stockage",
+     "note": "AVRDC : les semences doivent être suffisamment sèches avant stockage (environ 7 à 8 % d'humidité), puis conservées dans un récipient hermétique, au frais et à l'abri de la lumière."
+    }
+   ]
+  },
+  {
+   "id": "varietes",
+   "label": "Choisir ses variétés",
+   "hint": "Variétés population, adaptation au terroir",
+   "read": [
+    {
+     "doc": "rsp-semences",
+     "page": 3,
+     "label": "Les différents types de variétés",
+     "note": "Réseau Semences Paysannes : le recueil définit les types de variétés, dont les variétés population, dont la diversité génétique permet de s'adapter à un environnement en changement."
+    },
+    {
+     "doc": "rsp-semences",
+     "page": 3,
+     "label": "Pourquoi les variétés population s'adaptent",
+     "note": "Même recueil : les variétés population sont celles qui existent depuis le début de l'agriculture, et il est possible d'en récolter les semences pour les ressemer année après année."
+    },
+    {
+     "doc": "rsp-semences",
+     "page": 4,
+     "label": "Les acteurs de la filière semences",
+     "note": "Même recueil : obtenteurs et sélectionneurs assurent la sélection, la création variétale et la maintenance des variétés ; le recueil décrit aussi les agriculteurs-multiplicateurs."
+    }
+   ]
+  },
+  {
+   "id": "cadre",
+   "label": "Le cadre de la production de semences",
+   "hint": "Enregistrement, SOC, agréage",
+   "read": [
+    {
+     "doc": "rsp-semences",
+     "page": 7,
+     "label": "Le cadre réglementaire et technique",
+     "note": "Réseau Semences Paysannes : toute personne qui produit et commercialise des semences doit être enregistrée auprès des autorités compétentes et disposer d'une autorisation ; en France, l'État a délégué cette compétence au SOC (Service Officiel de Contrôle des semences)."
+    },
+    {
+     "doc": "rsp-semences",
+     "page": 8,
+     "label": "L'agréage, vérification de la qualité",
+     "note": "Même recueil : pour les semences potagères, l'agréage se fait sur triage industriel et observe la pureté et la germination — la vérification des valeurs seuils que le lot doit atteindre ou ne pas dépasser."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Toute personne qui produit et commercialise des semences doit être enregistrée auprès des autorités compétentes et disposer d'une autorisation.",
+   "doc": "rsp-semences",
+   "page": 7
+  },
+  {
+   "text": "Les semences doivent être suffisamment sèches (environ 7 à 8 % d'humidité) avant d'être stockées dans un récipient hermétique.",
+   "doc": "avrdc-graines",
+   "page": 4
+  },
+  {
+   "text": "L'exposition à la lumière solaire réduit la durée de vie des semences : utiliser des récipients opaques ou non transparents.",
+   "doc": "avrdc-graines",
+   "page": 4
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "calendrier-semis",
+   "page": 1,
+   "label": "Se procurer un calendrier des semis",
+   "note": "Comptoir des Jardins : le calendrier mois par mois distingue semis au chaud, sous serre non chauffée et en pleine terre, avec les plantations et les récoltes."
+  },
+  {
+   "doc": "avrdc-graines",
+   "page": 4,
+   "label": "Préparer le stockage des semences",
+   "note": "AVRDC : bocaux à couvercle vissé, boîtes métalliques ou papier aluminium, dans un lieu sec, frais et sombre ; la plupart des semences maraîchères se conservent au moins trois à cinq ans."
+  },
+  {
+   "doc": "rsp-semences",
+   "page": 9,
+   "label": "Lister le matériel à prévoir",
+   "note": "Réseau Semences Paysannes : matériel de base du maraîchage et matériel spécifique — récolte, tri, séchage, pré-nettoyage, irrigation et abris."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "calendrier-semis",
+   "label": "Calendrier des semis et récoltes des légumes et aromates",
+   "note": "Document (2 pages) : mois par mois, les semis, plantations et récoltes des principaux légumes et aromates."
+  },
+  {
+   "doc": "avrdc-graines",
+   "label": "AVRDC : produire et conserver ses propres semences de légumes",
+   "note": "Guide (32 pages) : production, récolte, séchage et stockage des semences potagères."
+  },
+  {
+   "doc": "rsp-semences",
+   "label": "Réseau Semences Paysannes : produire des semences potagères bio",
+   "note": "Recueil de savoir-faire paysans (28 pages) : filière, types de variétés, réglementation, matériel et itinéraires."
+  },
+  {
+   "doc": "bp-hygiene",
+   "label": "DILA : recueil de bonnes pratiques d'hygiène pour les consommateurs",
+   "note": "Recueil (101 pages, 2013), référence hygiène alimentaire pour la cuisine et la conservation."
+  }
+ ],
+ "related": [
+  "conservation",
+  "alimentation",
+  "terrain"
+ ]
+}

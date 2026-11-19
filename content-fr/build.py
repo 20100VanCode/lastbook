@@ -50,9 +50,10 @@ def main():
     subprocess.run([sys.executable, str(REPO / 'engine/library.py'), 'build'],
                    env=env, check=True)
 
+    topics = [p for p in sorted((HERE / 'topics').glob('*.json'))
+              if not p.name.startswith('._')]
     subprocess.run([sys.executable, str(REPO / 'tools/validate_topics.py'),
-                    '--data', str(out)] + [str(p) for p in sorted((HERE / 'topics').glob('*.json'))],
-                   check=True)
+                    '--data', str(out)] + [str(p) for p in topics], check=True)
     print(f'\nbibliothèque prête: {lib}  ({len(records)} documents)')
 
 
