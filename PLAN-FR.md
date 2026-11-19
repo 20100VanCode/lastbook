@@ -15,7 +15,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2b** Carte | **fait** | `national.sqlite` depuis Geofabrik (shapefiles DROM, **GeoPackage** métropole) borné à l'emprise BAN du département |
 | **J2b** Couches IGN | **fait** | BD ALTI (terrain), BD TOPO (noms d'eau, lieux-dits) en shapefiles **et** GPKG 3.5 ; bâtiments BD TOPO → vue 3D |
 | **J2b** RPG + unités | **fait** | `crops.sqlite` (vignoble, vergers, petits fruits) + overlay z7-13 ; échelle, courbes et altitude en **mètres** partout |
-| **J3** Contenus | **en cours** | **6 sujets français** (`eau`, `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`), 18 documents sources, **180 références vérifiées** |
+| **J3** Contenus | **en cours** | **7 sujets français** (`eau`, `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`, `soins`), 23 documents sources, **204 références vérifiées** |
 | **J4** Site + packs | **en cours** | **59 packs** au 19 nov. (5 DROM complets, 54 métropolitains), relus par `install.check_zip` + `check_map` |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
@@ -135,6 +135,8 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       32 références (info.gouv, PCS, DICRIM)
 - [x] Sujet **`energie`** — « Électricité, gaz, monoxyde : éviter l'accident » : 6 situations,
       6 limites, 31 références (SPF, Enedis, RTE)
+- [x] Sujet **`soins`** — « Premiers secours et trousse d'urgence » : 5 situations, 5 limites,
+      24 références (Croix-Rouge, kit 72 h)
 - [ ] Sources françaises : SPF, ANS/AMELI, Croix-Rouge, MSF, FNOR, Secourisme, Préfectures,
       Météo-France, BRGM, Santé publique France, INSEE
       *(acquis : ORSEC/Préfecture de l'Ain, FICR, HCSP, SIDESA-IODE, OMS/WEDC,
