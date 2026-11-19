@@ -16,8 +16,9 @@ francophones, cités par leur page réelle.
 | `energie` — Électricité, gaz, monoxyde : éviter l'accident | 6 | 6 | 4 | 4 | 31 |
 | `soins` — Premiers secours et trousse d'urgence | 5 | 5 | 3 | 2 | 24 |
 | `blessures` — Plaies, brûlures, hémorragies : faire face | 5 | 5 | 3 | 3 | 24 |
+| `communications` — Alerter, être alerté, rester informé | 6 | 5 | 4 | 4 | 30 |
 
-**228 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**258 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -43,6 +44,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `rte-bons-reflexes` | Tension, attention — près des ouvrages électriques | RTE / Enedis, 2026 | 2 |
 | `kit72h` | Votre kit d'urgence 72 h | Géorisques | 1 |
 | `crf-*` | Gestes de premiers secours (étapes, PLS, étouffement, arrêt cardiaque, hémorragie, brûlure) | Croix-Rouge française | 6 pages web |
+| `service-public-numeros` | Les numéros en cas d'urgence et d'écoute | Service-Public / DILA | page web |
+| `masecurite-numeros` | Les numéros utiles nationaux | Ministère de l'Intérieur | page web |
+| `fr-alert` | FR-Alert — alerte et information des populations | Ministère de l'Intérieur | page web |
 
 ## Reconstruire
 

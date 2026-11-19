@@ -1,0 +1,250 @@
+{
+ "id": "communications",
+ "mode": "now",
+ "title": "Alerter, être alerté, rester informé",
+ "short": "Numéros d'urgence, FR-Alert, radio",
+ "intro": "Lectures pour joindre les secours et recevoir les consignes : les numéros d'urgence et d'écoute, la façon de donner un appel efficace, le dispositif FR-Alert, et les réflexes quand les réseaux sont saturés ou coupés.",
+ "keywords": [
+  "alerter",
+  "secours",
+  "numéro d'urgence",
+  "15",
+  "17",
+  "18",
+  "112",
+  "114",
+  "115",
+  "116",
+  "119",
+  "196",
+  "197",
+  "191",
+  "SAMU",
+  "pompiers",
+  "police secours",
+  "FR-Alert",
+  "notification",
+  "radio",
+  "VHF",
+  "canal 16",
+  "réseau saturé",
+  "téléphone",
+  "SMS",
+  "malentendant",
+  "sourds",
+  "écoute",
+  "numéros utiles",
+  "vigilance"
+ ],
+ "choices": [
+  {
+   "id": "numeros",
+   "label": "Quel numéro appeler",
+   "hint": "15, 17, 18, 112, 114, et les autres",
+   "read": [
+    {
+     "doc": "service-public-numeros",
+     "label": "Le tableau officiel des numéros",
+     "note": "Service-Public (DILA) : urgence médicale 15 (Samu), infraction 17 (Police secours), péril ou accident 18 (Pompiers) ; 112 pour l'urgence médicale, l'infraction ou le péril ; 114 pour les personnes sourdes, sourdaveugles, malentendantes et aphasiques ; 196 et canal 16 en mer."
+    },
+    {
+     "doc": "masecurite-numeros",
+     "label": "Les numéros utiles au-delà des secours",
+     "note": "Ministère de l'Intérieur : 115 hébergement d'urgence, 119 enfance maltraitée, 196 secours en mer, 3919 violences conjugales, 3018 harcèlement scolaire, et le 114 par SMS pour les personnes malentendantes."
+    },
+    {
+     "doc": "masecurite-numeros",
+     "label": "Le 15 et le 18, précisés",
+     "note": "Même page : le 15 est le numéro unique par département qui donne directement accès au Samu ; composez le 18 lorsqu'une ou des vies sont en danger (malaise, blessure grave, départ de feu, accident de la route, noyade, inondation…)."
+    }
+   ]
+  },
+  {
+   "id": "appel",
+   "label": "Donner un appel efficace",
+   "hint": "Qui, où, pourquoi",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Les trois questions à préparer",
+     "note": "Guide « Tous responsables » : pour faciliter le traitement de l'appel, sachez dire qui vous êtes (victime, témoin, accompagnant), où vous êtes (adresse précise) et pourquoi vous appelez (motifs précis)."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Le 112 et les numéros courts",
+     "note": "Même guide : le 112 est le numéro d'urgence européen, accessible depuis un fixe ou un portable ; les numéros d'urgence sont gratuits et joignables 24 h/24 et 7 j/7."
+    }
+   ]
+  },
+  {
+   "id": "fralert",
+   "label": "Recevoir l'alerte sur son téléphone",
+   "hint": "FR-Alert, notification, mode silencieux",
+   "read": [
+    {
+     "doc": "fr-alert",
+     "label": "Comment fonctionne FR-Alert",
+     "note": "FR-Alert (ministère de l'Intérieur) : le dispositif prévient en temps réel toute personne détentrice d'un téléphone portable de sa présence dans une zone de danger ; la réception ne nécessite aucune installation préalable."
+    },
+    {
+     "doc": "fr-alert",
+     "label": "Le signal sonore, même en silencieux",
+     "note": "Même page : dans une zone concernée par un danger imminent, la notification est accompagnée d'un signal sonore spécifique, même si le téléphone est en mode silencieux."
+    },
+    {
+     "doc": "fr-alert",
+     "label": "La carte des territoires et le fil d'alerte",
+     "note": "Même page : le site publie les dernières alertes en France et permet de visionner les territoires, y compris les DROM, la Nouvelle-Calélande, la Polynésie et Wallis-et-Futuna."
+    }
+   ]
+  },
+  {
+   "id": "radio",
+   "label": "Rester informé sans internet",
+   "hint": "Radio à piles, médias publics",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Les consignes viennent des autorités",
+     "note": "Guide « Tous responsables » : tenez-vous informés et respectez les consignes des autorités diffusées sur les canaux officiels ; consultez les chaînes de radio et de télévision."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 14,
+     "label": "Suivre la radio pendant une alerte cyclonique",
+     "note": "Mémento MRN : les premières consignes sont données par les médias publics ; un poste de radio à piles avec piles de rechange permet de suivre les bulletins d'alerte et les consignes de secours."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 11,
+     "label": "La radio dans le matériel à préparer",
+     "note": "Même mémento : prévoir une radio à piles (avec piles de rechange) afin de se tenir au courant des bulletins d'alerte, des consignes d'évacuation et des déviations routières."
+    }
+   ]
+  },
+  {
+   "id": "reseau",
+   "label": "Réseau saturé ou coupé",
+   "hint": "Ne pas téléphoner, SMS, 112 prioritaire",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Laisser les lignes libres",
+     "note": "Guide « Tous responsables » : évitez de téléphoner afin de laisser les réseaux disponibles pour les services de secours ; les appels d'urgence doivent pouvoir passer."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 15,
+     "label": "Ne pas téléphoner sauf pour demander du secours",
+     "note": "Mémento MRN : ne téléphonez pas afin de laisser les lignes libres pour les secours, sauf pour demander vous-même du secours."
+    },
+    {
+     "doc": "enedis-coupure",
+     "label": "L'information de coupure par SMS",
+     "note": "Enedis : pour une coupure imputable au réseau public, le gestionnaire prévient de la panne et du délai de rétablissement par SMS, à condition d'avoir communiqué son numéro de mobile."
+    }
+   ]
+  },
+  {
+   "id": "specifiques",
+   "label": "Cas particuliers : mer, sourds, écoute",
+   "hint": "196, canal 16, 114, 31 14",
+   "read": [
+    {
+     "doc": "service-public-numeros",
+     "label": "Le secours en mer",
+     "note": "Service-Public (DILA) : sauvetage en mer 196 et canal 16 en mer ; depuis le littoral, appelez le 196 ou le 112 ; en mer, privilégiez le canal 16 de la radio VHF."
+    },
+    {
+     "doc": "masecurite-numeros",
+     "label": "Le 114 pour les personnes malentendantes",
+     "note": "Ministère de l'Intérieur : le 114 est un numéro unique, national et gratuit, accessible en permanence par visiophonie, tchat, SMS ou fax."
+    },
+    {
+     "doc": "masecurite-numeros",
+     "label": "Les numéros d'écoute et d'aide",
+     "note": "Même page : 115 hébergement d'urgence, 119 enfance maltraitée, 3919 violences conjugales, 3018 harcèlement scolaire."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Uniquement en cas d'urgence : c'est lorsqu'une intervention rapide est nécessaire pour protéger les personnes et/ou les biens.",
+   "doc": "service-public-numeros"
+  },
+  {
+   "text": "Évitez de téléphoner afin de laisser les réseaux disponibles pour les services de secours.",
+   "doc": "tous-responsables",
+   "page": 10
+  },
+  {
+   "text": "Le 112 est réservé aux appels d'urgence dans l'ensemble de l'Union européenne.",
+   "doc": "masecurite-numeros"
+  },
+  {
+   "text": "Ne téléphonez pas afin de laisser les lignes libres pour les secours, sauf pour demander vous-même du secours.",
+   "doc": "mrn-cyclone",
+   "page": 15
+  },
+  {
+   "text": "En mer, privilégiez le canal 16 de la radio VHF.",
+   "doc": "service-public-numeros"
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "mrn-cyclone",
+   "page": 11,
+   "label": "Prévoir une radio à piles",
+   "note": "Mémento MRN : radio à piles avec piles de rechange, torches, et téléphone portable toujours en charge."
+  },
+  {
+   "doc": "kit72h",
+   "label": "Le kit 72 h et la radio",
+   "note": "Géorisques : une radio à piles avec piles de rechange pour suivre les consignes des autorités, et une lampe de poche avec piles de rechange."
+  },
+  {
+   "doc": "fr-alert",
+   "label": "Connaître FR-Alert avant la crise",
+   "note": "FR-Alert : aucune installation préalable n'est nécessaire pour recevoir les notifications ; le signal sonore fonctionne même en mode silencieux."
+  },
+  {
+   "doc": "tous-responsables",
+   "page": 10,
+   "label": "Noter les numéros utiles",
+   "note": "Guide « Tous responsables » : le guide comporte une page de notes pour les numéros de téléphone utiles et le lieu de regroupement."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "service-public-numeros",
+   "label": "Service-Public : les numéros en cas d'urgence et d'écoute",
+   "note": "Fiche officielle (DILA) : 15, 17, 18, 112, 114, 196, et les numéros d'écoute."
+  },
+  {
+   "doc": "masecurite-numeros",
+   "label": "Ministère de l'Intérieur : les numéros utiles nationaux",
+   "note": "Fiche « Ma Sécurité » : les numéros d'urgence et d'aide, dont le 114 par SMS."
+  },
+  {
+   "doc": "fr-alert",
+   "label": "FR-Alert — le dispositif national d'alerte",
+   "note": "Site officiel : fonctionnement, historique et carte des alertes, territoires d'outre-mer compris."
+  },
+  {
+   "doc": "tous-responsables",
+   "label": "info.gouv : Tous responsables — face aux risques, agissons",
+   "note": "Guide national du citoyen (15 pages), dont les numéros d'urgence et les consignes de communication."
+  }
+ ],
+ "related": [
+  "soins",
+  "abri",
+  "catastrophe"
+ ]
+}

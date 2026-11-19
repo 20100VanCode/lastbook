@@ -248,5 +248,35 @@
   "collection": "Croix-Rouge",
   "publisher": "Croix-Rouge française",
   "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/que-faire-en-cas-de-brulure"
+ },
+ {
+  "id": "service-public-numeros",
+  "kind": "html",
+  "path": "documents/service-public-numeros.html",
+  "title": "Quels sont les numéros en cas d'urgence (Samu, pompiers...) et les numéros d'écoute ?",
+  "category": "urgent",
+  "collection": "Service-Public",
+  "publisher": "Direction de l'information légale et administrative",
+  "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954?lang=fr"
+ },
+ {
+  "id": "masecurite-numeros",
+  "kind": "html",
+  "path": "documents/masecurite-numeros.html",
+  "title": "Les numéros utiles nationaux",
+  "category": "urgent",
+  "collection": "Ma Sécurité",
+  "publisher": "Ministère de l'Intérieur",
+  "url": "https://www.masecurite.interieur.gouv.fr/fr/fiches-pratiques/famille-et-aides-aux-victimes/numeros-utiles-nationaux"
+ },
+ {
+  "id": "fr-alert",
+  "kind": "html",
+  "path": "documents/fr-alert.html",
+  "title": "FR-Alert — dispositif d'alerte et d'information des populations",
+  "category": "urgent",
+  "collection": "FR-Alert",
+  "publisher": "Ministère de l'Intérieur",
+  "url": "https://fr-alert.gouv.fr/"
  }
 ]
