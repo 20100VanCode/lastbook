@@ -34,10 +34,12 @@ def delivery(src):
         finally:
             db.close()
         return 'gpkg', gpkg, int(row[0]) if row else 4326
-    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    prj = next(iter(sorted(p for p in src.rglob('*.prj') if not p.name.startswith('._'))), None)
     if prj is None:
         raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
-    return 'shp', src, CRS.from_wkt(prj.read_text(encoding='utf-8')).to_epsg() or 4326
+    # IGN écrit ses .prj en Latin-1 : on décode en tolérant.
+    text = prj.read_bytes().decode('utf-8', errors='replace')
+    return 'shp', src, CRS.from_wkt(text).to_epsg() or 4326
 
 WORLD = 2 ** 30
 STOREY = 3.2

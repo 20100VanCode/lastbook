@@ -109,7 +109,7 @@ def wkb_parts(b, o=0):
 
 def delivery(src):
     """(kind, target, epsg): IGN's 3.5 is a GeoPackage inside the 7z, 3.0 and older are shapefiles."""
-    gpkg = next(iter(sorted(src.rglob('*.gpkg'))), None)
+    gpkg = next(iter(sorted(p for p in src.rglob('*.gpkg') if not p.name.startswith('._'))), None)
     if gpkg:
         db = sqlite3.connect(f'file:{gpkg}?mode=ro', uri=True)
         try:
@@ -117,10 +117,12 @@ def delivery(src):
         finally:
             db.close()
         return 'gpkg', gpkg, int(row[0]) if row else 4326
-    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    prj = next(iter(sorted(p for p in src.rglob('*.prj') if not p.name.startswith('._'))), None)
     if prj is None:
         raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
-    crs = CRS.from_wkt(prj.read_text(encoding='utf-8'))
+    # IGN écrit ses .prj en Latin-1 (accentués non UTF-8) : on décode en tolérant.
+    text = prj.read_bytes().decode('utf-8', errors='replace')
+    crs = CRS.from_wkt(text)
     return 'shp', src, crs.to_epsg() or 4326
 
 
