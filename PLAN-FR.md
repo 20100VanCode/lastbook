@@ -15,7 +15,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2b** Carte | **fait** | `national.sqlite` depuis Geofabrik (shapefiles DROM, **GeoPackage** métropole) borné à l'emprise BAN du département |
 | **J2b** Couches IGN | **fait** | BD ALTI (terrain), BD TOPO (noms d'eau, lieux-dits) en shapefiles **et** GPKG 3.5 ; bâtiments BD TOPO → vue 3D |
 | **J2b** RPG + unités | **fait** | `crops.sqlite` (vignoble, vergers, petits fruits) + overlay z7-13 ; échelle, courbes et altitude en **mètres** partout |
-| **J3** Contenus | **en cours** | **13 sujets français** (`eau`, `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`, `soins`, `blessures`, `communications`, `sante`, `reparation`, `terrain`, `conservation`), 39 documents sources, **366 références vérifiées** |
+| **J3** Contenus | **fait** | **14 besoins français** (`eau`, `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`, `soins`, `blessures`, `communications`, `sante`, `reparation`, `terrain`, `conservation`, `culture`), 41 documents sources, **387 références vérifiées** |
 | **J4** Site + packs | **en cours** | **59 packs** au 19 nov. (5 DROM complets, 54 métropolitains), relus par `install.check_zip` + `check_map` |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
@@ -25,8 +25,8 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 - **Contenu** : `content-fr/` (manifestes + documents + sujets), `content-fr/build.py` assemble et
   indexe une bibliothèque d'essai, `validate_topics.py` vérifie chaque page citée.
 - **Stockage** : dépôt + 55 Go de données sur `/Volumes/EXTRADATA/RELIQUE` (disque externe, exFAT).
-- **Prochain** : J3 — `catastrophe` (cyclone, Météo-France / sécurité civile), puis `abri`, `énergie`,
-  `soins`, `blessures` ; et reprise du lot métropolitain (47 restants).
+- **Prochain** : J4 — packs Small/Medium/All France, site vitrine, manifest et
+  hébergement des téléchargements. Puis reprise du lot métropolitain (47 restants).
 
 ---
 
@@ -149,11 +149,14 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       5 limites, 28 références (MRN inondations/mvt, DICRIM)
 - [x] Sujet **`conservation`** — « Conserver pour durer » : 5 situations, 5 limites,
       25 références (DILA, sante.fr, AVRDC)
+- [x] Sujet **`culture`** — « Cultiver et récolter » : 4 situations, 3 limites,
+      21 références (calendrier des semis, AVRDC, Semences paysannes)
 - [ ] Sources françaises : SPF, ANS/AMELI, Croix-Rouge, MSF, FNOR, Secourisme, Préfectures,
       Météo-France, BRGM, Santé publique France, INSEE
       *(acquis : ORSEC/Préfecture de l'Ain, FICR, HCSP, SIDESA-IODE, OMS/WEDC,
       Croix-Rouge française, Anses, ARS/DDETSPP, MRN, ORSEC 974, Géorisques,
-      info.gouv/SGDSN, PCS, DICRIM, Santé publique France, Enedis, RTE)*
+      info.gouv/SGDSN, PCS, DICRIM, Santé publique France, Enedis, RTE, Service-Public,
+      Semences paysannes, AVRDC)*
 - [ ] Risques France/DROM : cyclone, tsunami, séisme, éruption, dengue/chikungunya,
       canicule, inondation, feu de forêt, neige/verglas, accident industriel
 - [ ] Encyclopédies ZIM francophones (Wikipédia, Wikisource, Wiktionnaire)
@@ -284,6 +287,13 @@ les limites et les « quand appeler à l'aide » restent cités.
     dans le navigateur : ANSES bloque `curl`) + fiche ARS/DDETSPP sur les
     coupures de courant — 25 références.
   - **86 références, 0 erreur**, chaque page citée lue et vérifiée.
-- Prochaine étape : J3 — `catastrophe` (cyclone, Météo-France, sécurité civile),
-  puis `abri`, `énergie`, `soins`, `blessures`. Reprise du lot métropolitain
-  (47 restants) ensuite.
+- **J3 terminé (19 nov., soir)** : les **14 besoins** sont couverts — `eau`,
+  `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`, `soins`,
+  `blessures`, `communications`, `sante`, `reparation`, `terrain`,
+  `conservation`, `culture`. **41 documents sources, 734 unités indexées,
+  387 références, `validate_topics.py` : 0 erreur.**
+  Sources ajoutées au fil : MRN (cyclone, tempêtes, inondations, mouvements de
+  terrain), ORSEC 974, Géorisques, info.gouv/SGDSN, PCS, DICRIM, SPF, Enedis,
+  RTE, Service-Public, ARS Mayotte, ameli, Semences paysannes, AVRDC, sante.fr.
+- Prochaine étape : **J4** — packs Small/Medium/All France, site vitrine,
+  manifest et hébergement. Puis reprise du lot métropolitain (47 restants).
