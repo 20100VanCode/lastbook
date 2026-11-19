@@ -2,6 +2,7 @@
 from the download site when setup is opened. A fetched one is used only if it parses, says version 1 and every address in it is
 allowed (download.url_allowed)."""
 import json
+import os
 import re
 import sys
 import threading
@@ -12,7 +13,8 @@ from ..regions import is_known_id
 
 REMOTE = 'https://downloads.lastbook.org/manifest-v1.json'
 SHA = re.compile(r'^[0-9a-f]{64}$')
-LIBRARY_HOSTS = frozenset({'downloads.lastbook.org'})   # packs and state maps come from Lastbook's own download site only
+LIBRARY_HOSTS = frozenset({'downloads.lastbook.org'} | (   # packs and state maps come from the download site
+    {os.environ['RELIQUE_DOWNLOAD_HOST']} if os.environ.get('RELIQUE_DOWNLOAD_HOST') else set()))
 MODEL_HOSTS = frozenset({'huggingface.co'})             # the model from Hugging Face only (it redirects to its own CDN hosts)
 
 

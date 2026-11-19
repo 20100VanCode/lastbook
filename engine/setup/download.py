@@ -29,6 +29,8 @@ ALLOWED_HOSTS = frozenset({
     'downloads.lastbook.org',
     'huggingface.co',
     'cas-bridge.xethub.hf.co',
+    # RELIQUE héberge ses propres lots ; l'hôte se règle à la publication.
+    *( [os.environ['RELIQUE_DOWNLOAD_HOST']] if os.environ.get('RELIQUE_DOWNLOAD_HOST') else [] ),
 })
 ALLOWED_SUFFIXES = ('.hf.co',)      # Hugging Face's download hosts (cas-bridge.xethub.hf.co and its siblings)
 MAX_REDIRECTS = 5
