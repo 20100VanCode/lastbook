@@ -168,6 +168,19 @@ def ban_bounds(path):
     return row[0] if row and row[0] else None
 
 
+def has_topo(path):
+    """Whether the national map already carries the BD TOPO names."""
+    if not path.is_file():
+        return False
+    db = sqlite3.connect(f'file:{path}?mode=ro', uri=True)
+    try:
+        return db.execute("SELECT 1 FROM meta WHERE key='topo'").fetchone() is not None
+    except sqlite3.Error:
+        return False
+    finally:
+        db.close()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--cache', required=True)
@@ -256,7 +269,7 @@ def main():
                 print('  édition régionale, découpée à la boîte BAN', flush=True)
             raw = unzip(fetch(entry['url'], cache / 'bdtopo' / f'{code}.7z'), cache / 'bdtopo' / code)
             target = geo / 'buildings.sqlite'
-            if made_map:
+            if a.force or not has_topo(geo / 'national.sqlite'):
                 run('build_topo_fr.py', '--dir', raw, '--departement', code, '--map', geo / 'national.sqlite', *box_args)
             if a.force or not target.exists():
                 run('build_bldg_fr.py', '--dir', raw, '--departement', code, '--out', target, *box_args)
