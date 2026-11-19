@@ -11,22 +11,21 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 |---|---|---|
 | **J1** Marque + UI | **fait** | RELIQUE (fiche, logo SVG/PNG/favicon), palette par jetons, UI 100 % française, rendu vérifié |
 | **J2a** Identifiants | **fait** | 101 départements + 18 régions ; règle `FR-…` acceptée dans manifest et switch |
-| **J2b** Adresses | **fait** | BAN : normalisateur + recherche français, rappel **100 %** mesuré ; index par département |
-| **J2b** Carte | **fait** | `national.sqlite` depuis Geofabrik (shapefiles DROM, **GeoPackage** métropole) borné à l'emprise BAN du département |
-| **J2b** Couches IGN | **fait** | BD ALTI (terrain), BD TOPO (noms d'eau, lieux-dits) en shapefiles **et** GPKG 3.5 ; bâtiments BD TOPO → vue 3D |
-| **J2b** RPG + unités | **fait** | `crops.sqlite` (vignoble, vergers, petits fruits) + overlay z7-13 ; échelle, courbes et altitude en **mètres** partout |
-| **J3** Contenus | **fait** | **14 besoins français** (`eau`, `assainissement`, `alimentation`, `catastrophe`, `abri`, `energie`, `soins`, `blessures`, `communications`, `sante`, `reparation`, `terrain`, `conservation`, `culture`), 41 documents sources, **387 références vérifiées** |
-| **J4** Site + packs | **en cours** | **59 packs** au 19 nov. (5 DROM complets, 54 métropolitains), relus par `install.check_zip` + `check_map` |
+| **J2b** Géographie + couches | **fait** | BAN (rappel **100 %**), OSM, BD ALTI (terrain), BD TOPO (noms, bâtiments, 3D), RPG (cultures), unités métriques ; projections et découpe par emprise BAN |
+| **J2b** Lot packs | **59 / 101** | 5 DROM complets (noms + cultures) + 54 métropolitains, **0 échec** ; relus par `install.check_zip` + `check_map` |
+| **J3** Contenus | **fait** | **14 besoins** rédigés en français, 41 documents sources, **387 références vérifiées** |
+| **J4** Site + distribution | **en cours** | pack d'un département vérifié et installable ; reste site vitrine, packs agrégés, manifest, hébergement, builds signés |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
 - **Chaîne** : `tools/build_all_fr.py` (7 étapes par département, reprise, cache avec reprise `Range`),
-  sources résolues par `tools/ign_feed.py`.
+  sources résolues par `tools/ign_feed.py` ; découpe calée sur l'**emprise BAN** du département.
 - **Contenu** : `content-fr/` (manifestes + documents + sujets), `content-fr/build.py` assemble et
   indexe une bibliothèque d'essai, `validate_topics.py` vérifie chaque page citée.
-- **Stockage** : dépôt + 55 Go de données sur `/Volumes/EXTRADATA/RELIQUE` (disque externe, exFAT).
-- **Prochain** : J4 — packs Small/Medium/All France, site vitrine, manifest et
-  hébergement des téléchargements. Puis reprise du lot métropolitain (47 restants).
+- **Stockage** : dépôt + 55 Go de données sur `/Volumes/EXTRADATA/RELIQUE` (disque externe, exFAT,
+  **fragile** : deux débranchements ont fait perdre le montage).
+- **Prochain** : **J4** — packs Small/Medium/All France, site vitrine, manifest, hébergement des
+  téléchargements, builds signés. Puis reprise du lot métropolitain (**42 restants**).
 
 ---
 
@@ -90,11 +89,12 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [x] À propos, recherche, listes, états vides, chat, carte en français
 - [x] Tests du dépôt au vert + vérification visuelle en local
 
-### J2 — Géographie France + DOM-TOM _(en cours)_
+### J2 — Géographie France + DOM-TOM _(fait)_
 - [x] Unité de découpe : **département** (101) — `engine/departements.py` ; les 18 régions restent le regroupement
 - [x] Codes : `FR-01`…`FR-95`, `FR-2A`/`FR-2B`, `FR-971`…`FR-976` — `engine/regions.py`
 - [x] Assouplir la règle `[A-Z]{2}` (manifest + install) sans casser les index US
-- [ ] Boîtes de découpe par département (ADMIN EXPRESS / IGN) — table en place, découpe à écrire
+- [x] Découpe : calée sur l'**emprise des adresses BAN** du département (`ban_bounds()` dans
+      `build_all_fr.py`) plutôt que sur des boîtes administratives — évite de ramener des traits étrangers
 - [x] Recherche d'adresses à la française (BAN, accents, *bis/ter*, communes nouvelles)
       — `engine/address_search.py` + `tools/build_addresses_fr.py` ; **rappel mesuré
       100 % sur 400 adresses réelles de Martinique × 5 variantes**
@@ -113,17 +113,26 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       (cellules cliquables + overlay z7-13) ; Corse : 4 692 parcelles, 317 tuiles
 - [x] Unités métriques à l'affichage — échelle en km/m, courbes en mètres,
       altitude en mètres (vue 3D et carte 2D)
-- [ ] Projections : Lambert-93 métropole, UTM + datums locaux pour la Corse et les DROM
+- [x] Projections — table CRS dans `build_terrain_fr.py` : LAMB93 (2154), zones UTM
+      WGS84 (20/21/22/38S/39S/40S) et datums locaux RGR92, RGM04, RGFG95, RGSPM06,
+      plus MART87 / GUAD88 / REUN89 ; le shapefile GPKG porte son CRS, les grilles
+      ALTI sont lues dans leur zone UTM
 - [x] Build complet d'un département (Martinique `FR-972`) + pack —
       `tools/build_pack_fr.py` : carte 24,4 Mo compressés / 64,3 Mo installés,
       adresses 7,1 Mo / 21,2 Mo ; vérifié par `install.check_zip` + `check_map`,
       installé dans une bibliothèque hôte, puis servi par l'appli (carte + adresse
       BAN placée à l'écran)
 - [x] Crédit et date de la carte selon les données chargées (fini la liste US en dur)
+- [x] **Lot 101** — `build_all_fr.py` enchaîne les 7 étapes (BAN, ALTI, OSM, noms,
+      bâtiments, RPG, pack) avec reprise ; **59 packs au 19 nov., 0 échec**
 
-### J3 — Contenus français _(en cours)_
+### J3 — Contenus français _(fait)_
 - [x] **Pilote** : `content-fr/` — manifestes + documents sources + sujets, `build.py`
       assemble une bibliothèque d'essai et l'indexe ; `validate_topics.py` vérifie chaque page
+- [x] **14 besoins rédigés**, 41 documents sources, 387 références, **0 erreur** :
+      `eau` 37 · `assainissement` 24 · `alimentation` 25 · `catastrophe` 31 · `abri` 32 ·
+      `energie` 31 · `soins` 24 · `blessures` 24 · `communications` 30 · `sante` 29 ·
+      `reparation` 26 · `terrain` 28 · `conservation` 25 · `culture` 21
 - [x] Sujet **`eau`** — « De l'eau potable sûre » : 8 situations, 7 limites, 37 références
 - [x] Sujet **`assainissement`** — « Évacuer les excréments sans risque » : 5 situations,
       5 limites, 24 références
@@ -151,14 +160,16 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
       25 références (DILA, sante.fr, AVRDC)
 - [x] Sujet **`culture`** — « Cultiver et récolter » : 4 situations, 3 limites,
       21 références (calendrier des semis, AVRDC, Semences paysannes)
-- [ ] Sources françaises : SPF, ANS/AMELI, Croix-Rouge, MSF, FNOR, Secourisme, Préfectures,
-      Météo-France, BRGM, Santé publique France, INSEE
+- [ ] Sources françaises encore à explorer : MSF, FNOR, Secourisme (ministère),
+      Météo-France, BRGM, INRAE/Agreste, DGCCRF, INSEE
       *(acquis : ORSEC/Préfecture de l'Ain, FICR, HCSP, SIDESA-IODE, OMS/WEDC,
       Croix-Rouge française, Anses, ARS/DDETSPP, MRN, ORSEC 974, Géorisques,
       info.gouv/SGDSN, PCS, DICRIM, Santé publique France, Enedis, RTE, Service-Public,
       Semences paysannes, AVRDC)*
-- [ ] Risques France/DROM : cyclone, tsunami, séisme, éruption, dengue/chikungunya,
-      canicule, inondation, feu de forêt, neige/verglas, accident industriel
+- [ ] Risques France/DROM — couverts en partie par les sujets `catastrophe`, `abri`,
+      `terrain` et `sante` (cyclone, inondation, mouvement de terrain, séisme, feu de
+      forêt, canicule, chaleur) ; restent à documenter : tsunami, éruption, dengue /
+      chikungunya, neige-verglas, accident industriel
 - [ ] Encyclopédies ZIM francophones (Wikipédia, Wikisource, Wiktionnaire)
 - [ ] Vidéos francophones sous-titrées
 - [ ] `content/gaps.json` français
@@ -187,8 +198,10 @@ Le document `docs/REGIONS-FR.md` fait foi. Résumé :
 - **Adresses** : BAN, un CSV par département ; `code_insee` pour découper (pas le code postal).
 - **Projections** : Lambert-93 en métropole ; UTM 20/GUAD88 (Guadeloupe), UTM 40 Sud/REUN89
   (La Réunion), etc. À écrire dans les outils.
-- **Essai déjà mesuré** (3 départements, 414 Mo sur disque, ~209 Mo gzip) : 28/28 requêtes
-  d'adresses trouvées avec le moteur français, 1/28 avec le moteur US.
+- **Essai de référence** (Martinique `FR-972`, pack vérifié et servi par l'appli) :
+  carte 24,4 Mo / 64,3 Mo installés, adresses 7,1 Mo / 21,2 Mo ; 317 074 traits OSM,
+  57 tuiles relief, 2 710 lieux-dits, 151 380 bâtiments. **Lot 101 : 59 packs au 19 nov.**
+  (5 DROM + 54 métropolitains), 0 échec ; coût observé 25 à 180 Mo par pack.
 
 ## 6. Contenu : sources françaises de référence
 
@@ -205,14 +218,24 @@ Le document `docs/REGIONS-FR.md` fait foi. Résumé :
 Règle héritée : les guides **décrivent** ce que dit la source, ne prescivent pas ;
 les limites et les « quand appeler à l'aide » restent cités.
 
+**État au 19 nov.** : les 14 besoins sont rédigés et vérifiés — voir `content-fr/README.md`
+pour la table des sujets et la liste complète des 41 documents sources.
+
 ## 7. Ce qui reste ouvert
 
-- Table/licence : une table par licence, ou fusion OSM + Licence Ouverte sous ODbL.
-- Unités : colonnes métriques (`height_m`, `area_ha`) ou conversion à l'affichage.
-- Lecteur IGN : BD ALTI / BD TOPO / RPG.
-- Projections d'outre-mer : UTM + datums locaux à écrire dans les outils.
-- Le pack d'un département (terrain, eau, bâtiments, parcelles, adresses) reste à assembler.
-- Financement / hébergement des packs (hors dépôt).
+- **Reprise du lot métropolitain** : 42 départements restants (le cache est en place,
+  `build_all_fr.py` reprend où il s'est arrêté).
+- **Packs agrégés** : Small / Medium / All France et cartes par région (J4).
+- **Distribution** : site vitrine français, manifest + sums, hébergement des zips,
+  builds Mac/Win/Linux signés.
+- **Licences** : une table par licence, ou fusion OSM + Licence Ouverte sous ODbL ;
+  l'attribution doit rester « Source : …, date de dernière mise à jour ».
+- **Encyclopédies** : ZIM francophones (Wikipédia, Wikisource, Wiktionnaire) à ajouter
+  à la bibliothèque.
+- **Vidéos** : contenus francophones sous-titrés, non encore collectés.
+- **`content/gaps.json` français** : lister ce que les sources n'ont pas couvert.
+- **Stockage** : l'exFAT du disque externe a déjà lâché deux fois — prévoir APFS
+  ou une sauvegarde secondaire avant d'aller plus loin.
 
 ---
 
@@ -265,14 +288,14 @@ les limites et les « quand appeler à l'aide » restent cités.
   (ORSEC Ain, manuel Croix-Rouge, avis HCSP, doctrine IODE), sujet rédigé en
   français, 37 références vérifiées par `validate_topics.py`, bibliothèque
   d'essai indexée par `content-fr/build.py`.
-- Prochaine étape : J3 — les 13 autres besoins (assainissement, alimentation,
-  abri, énergie, soins, blessures, communications, terrain…) sur les mêmes
-  sources françaises.
+- Prochaine étape : **J3** — rédiger les besoins restants sur les sources françaises
+  (assainissement, alimentation, abri, énergie, soins, blessures, communications…).
 
 **19 nov. 2026**
 - **Stockage** : dépôt + `data/{cache,work,packs,ign}` (55 Go) déplacés sur
-  `/Volumes/EXTRADATA/RELIQUE` ; disque interne libéré (183 Go). Un débranchement
-  accidentel du volume exFAT a fait paniquer le montage — donnée intacte.
+  `/Volumes/EXTRADATA/RELIQUE` ; disque interne libéré (183 Go). Le volume exFAT a
+  perdu son montage deux fois (débranchements) ; à chaque fois la donnée était
+  intacte, mais `diskutil` ne remonte plus qu'avec `fsck` — **à reformater en APFS**.
 - **Lot 101** : **59 packs** (5 DROM complets avec noms BD TOPO + cultures, 54
   métropolitains), 0 échec. Correctif : l'étape « noms BD TOPO » se déclenche
   désormais sur `meta.topo`, pas sur « la carte vient d'être reconstruite ».
