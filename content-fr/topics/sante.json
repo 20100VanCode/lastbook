@@ -1,0 +1,250 @@
+{
+ "id": "sante",
+ "mode": "now",
+ "title": "Soigner au quotidien, éviter l'aggravation",
+ "short": "Gastro, chaleur, médicaments, signes d'alerte",
+ "intro": "Lectures pour les situations qui reviennent à chaque crise : une gastro-entérite, un enfant par forte chaleur, la conservation des médicaments, et les signes qui doivent faire consulter ou appeler plutôt que d'attendre.",
+ "keywords": [
+  "santé",
+  "gastro-entérite",
+  "diarrhée",
+  "vomissement",
+  "fièvre",
+  "déshydratation",
+  "réhydratation",
+  "SRO",
+  "chaleur",
+  "canicule",
+  "coup de chaleur",
+  "enfant",
+  "nourrisson",
+  "médicaments",
+  "conservation",
+  "notice",
+  "paracétamol",
+  "armoire à pharmacie",
+  "signes d'alerte",
+  "consultation",
+  "15",
+  "gestes barrières",
+  "hygiène",
+  "Mayotte",
+  "fortes chaleurs",
+  "surveillance",
+  "hydratation"
+ ],
+ "choices": [
+  {
+   "id": "gastro",
+   "label": "Une gastro-entérite",
+   "hint": "Diarrhées, vomissements, douleurs",
+   "read": [
+    {
+     "doc": "ars-gastro",
+     "page": 1,
+     "label": "Ce qu'est une gastro-entérite et comment elle se transmet",
+     "note": "ARS de Mayotte : c'est une infection du tube digestif ; les microbes se transmettent par contact avec une personne malade ou en consommant des aliments ou de l'eau contaminée ; tout le monde peut la contracter et la transmettre."
+    },
+    {
+     "doc": "ars-gastro",
+     "page": 1,
+     "label": "S'alimenter et s'hydrater pendant la crise",
+     "note": "Même fiche : continuez à vous alimenter correctement en évitant les fruits, les crudités, les aliments riches en fibres, les produits laitiers et les boissons glacées ; hydratez-vous plus que d'habitude (eau en bouteille ou eau bouillie)."
+    },
+    {
+     "doc": "ars-gastro",
+     "page": 2,
+     "label": "Chez l'enfant : les signes à surveiller",
+     "note": "Même fiche : enfant anormalement apathique qui dort beaucoup, difficile à réveiller et gémit, pâle avec les yeux cernés, respiration rapide, vomissements malgré la prise de SRO — ou diarrhées et vomissements qui persistent plus de trois jours."
+    }
+   ]
+  },
+  {
+   "id": "deshydratation",
+   "label": "Un risque de déshydratation",
+   "hint": "SRO, fractions, consultation en urgence",
+   "read": [
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 4,
+     "label": "Pourquoi l'enfant déshydrate vite",
+     "note": "Santé publique France : plus l'enfant est jeune, plus la déshydratation peut évoluer rapidement vers un déséquilibre métabolique majeur, pouvant aller jusqu'à la défaillance multiviscérale."
+    },
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 4,
+     "label": "La réhydratation orale, fractionnée",
+     "note": "Même document : une réhydratation peut être tentée à domicile en proposant une SRO en la fractionnant — petites quantités fréquentes, par exemple 10 à 20 ml toutes les 10 à 15 minutes."
+    },
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 4,
+     "label": "Quand la réhydratation ne suffit pas",
+     "note": "Même document : si les vomissements persistent (plus de 2 à 3 heures) ou en cas de signes de déshydratation débutante, une consultation en urgence s'impose ; une réhydratation intraveineuse pourra être administrée en cas de perte de poids supérieure à 10 %."
+    }
+   ]
+  },
+  {
+   "id": "chaleur",
+   "label": "Un enfant par forte chaleur",
+   "hint": "Rafraîchir, hydrater, pièces fraîches",
+   "read": [
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 1,
+     "label": "Pourquoi les jeunes enfants sont à risque",
+     "note": "Santé publique France : les enfants, notamment ceux de moins de cinq ans, constituent des populations à risque d'accidents graves tels que le coup de chaleur ou la déshydratation rapide ; ces pathologies sont pour partie évitables par la prévention."
+    },
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 2,
+     "label": "Avant une vague de chaleur : la boîte à pharmacie",
+     "note": "Même document : thermomètre médical (non frontal, peu fiable en cas de pathologie liée à la chaleur), paracétamol, solution de réhydratation orale (SRO) ; vérifier les modalités de conservation des traitements au long cours sur les notices."
+    },
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 3,
+     "label": "Rafraîchir et hydrater l'enfant",
+     "note": "Même document : pulvériser de l'eau sur le visage et le corps et favoriser l'évaporation par un léger courant d'air ; proposer de l'eau à boire régulièrement même si l'enfant ne manifeste pas sa soif, au moins toutes les heures dans la journée."
+    }
+   ]
+  },
+  {
+   "id": "medicaments",
+   "label": "Conserver les médicaments",
+   "hint": "Notice, chaleur, réfrigérateur, transport",
+   "read": [
+    {
+     "doc": "ameli-medicaments",
+     "label": "Les trois cas de conservation selon la notice",
+     "note": "Assurance Maladie (ameli) : vérifier dans la notice les conditions de conservation — aucune précaution (emballage d'origine), moins de 25 °C ou 30 °C (dépassement ponctuel limité), ou entre +2 °C et +8 °C (réfrigérateur, température contrôlée)."
+    },
+    {
+     "doc": "ameli-medicaments",
+     "label": "Transporter sans casser la chaîne",
+     "note": "Même page : pour les médicaments entre +2 °C et +8 °C, utiliser un contenant isotherme réfrigéré ; veiller à ce que la durée de transport respecte la basse température du système et que le médicament ne se congèle pas au contact de l'accumulateur."
+    },
+    {
+     "doc": "ameli-medicaments",
+     "label": "Les médicaments sortis du réfrigérateur",
+     "note": "Même page : une fois sortis du réfrigérateur, utilisez-les rapidement et évitez de les remettre au froid s'ils sont restés exposés à la chaleur — cela pourrait les endommager."
+    }
+   ]
+  },
+  {
+   "id": "signes",
+   "label": "Les signes qui doivent faire appeler",
+   "hint": "Fièvre, somnolence, refus de boire",
+   "read": [
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 4,
+     "label": "Les signes d'alerte chez l'enfant",
+     "note": "Santé publique France : fièvre ≥ 38 °C, respiration ou pulsations cardiaques rapides, somnolence ou agitation inhabituelle, soif intense avec perte de poids (> 5 %), urines moins fréquentes et plus foncées."
+    },
+    {
+     "doc": "spf-chaleur-enfant",
+     "page": 4,
+     "label": "Les signes de gravité",
+     "note": "Même document : troubles de la conscience, refus ou impossibilité de boire, couleur anormale de la peau, fièvre > 39 °C — appeler immédiatement le SAMU en composant le 15."
+    },
+    {
+     "doc": "ars-gastro",
+     "page": 2,
+     "label": "Quand consulter ou appeler pour une gastro",
+     "note": "ARS de Mayotte : symptômes persistants plus de trois jours, fièvre de plus de 39 °C, vomissements ou douleurs intenses, plus de 75 ans, maladie chronique, grossesse, ou impossibilité de boire — appeler le 15 si une personne de l'entourage ne boit plus, est somnolente ou tient des propos confus."
+    }
+   ]
+  },
+  {
+   "id": "gestes",
+   "label": "Les gestes barrières",
+   "hint": "Mains, hydratation, isolement",
+   "read": [
+    {
+     "doc": "ars-gastro",
+     "page": 1,
+     "label": "Les gestes qui limitent la transmission",
+     "note": "ARS de Mayotte : lavage des mains régulier à l'eau et au savon ; lavage avec une solution hydroalcoolique si quelqu'un est malade dans l'entourage ; consommation d'eau potable (bouteille ou réseau selon les recommandations en vigueur)."
+    },
+    {
+     "doc": "ars-gastro",
+     "page": 2,
+     "label": "Dès les premiers symptômes",
+     "note": "Même fiche : consulter son médecin traitant ou le dispensaire dès l'apparition des premiers symptômes."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Si les vomissements persistent (plus de 2 à 3 heures) ou en cas de signes de déshydratation débutante, une consultation en urgence s'impose.",
+   "doc": "spf-chaleur-enfant",
+   "page": 4
+  },
+  {
+   "text": "En cas de signes de gravité (troubles de la conscience, refus ou impossibilité de boire, couleur anormale de la peau, fièvre > 39 °C), appeler immédiatement le SAMU en composant le 15.",
+   "doc": "spf-chaleur-enfant",
+   "page": 4
+  },
+  {
+   "text": "Une fois sortis du réfrigérateur, utilisez rapidement les médicaments et évitez de les remettre au froid s'ils sont restés exposés à la chaleur.",
+   "doc": "ameli-medicaments"
+  },
+  {
+   "text": "Si les diarrhées ou vomissements persistent plus de 3 jours, ou si la fièvre persiste plusieurs jours, consulter.",
+   "doc": "ars-gastro",
+   "page": 2
+  },
+  {
+   "text": "En cas de diarrhée, la perte d'eau et de sels minéraux majorée par la transpiration peut nécessiter une réhydratation intense.",
+   "doc": "spf-chaleur-enfant",
+   "page": 4
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "spf-chaleur-enfant",
+   "page": 2,
+   "label": "La boîte à pharmacie avant une vague de chaleur",
+   "note": "Santé publique France : thermomètre médical, paracétamol et solution de réhydratation orale (SRO) ; vérifier la conservation des traitements au long cours sur les notices."
+  },
+  {
+   "doc": "ameli-medicaments",
+   "label": "Vérifier les conditions de conservation",
+   "note": "Assurance Maladie (ameli) : toujours vérifier dans la notice les conditions dans lesquelles chaque médicament doit être conservé, y compris hors des périodes de fortes chaleurs."
+  },
+  {
+   "doc": "kit72h",
+   "label": "Médicaments et trousse dans le kit 72 h",
+   "note": "Géorisques : médicaments et trousse de premiers secours dans le sac, vérifiés une fois par an avec les dates de péremption."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "ars-gastro",
+   "label": "ARS de Mayotte : recommandations en cas de gastro-entérite",
+   "note": "Fiche (2 pages) : transmission, gestes barrières, alimentation, hydratation et signes qui doivent faire consulter ou appeler."
+  },
+  {
+   "doc": "spf-chaleur-enfant",
+   "label": "Santé publique France : fortes chaleurs et enfant",
+   "note": "Repères (4 pages) : vulnérabilité, conseils avant une vague, rafraîchissement, hydratation et réhydratation orale."
+  },
+  {
+   "doc": "ameli-medicaments",
+   "label": "Assurance Maladie : les médicaments en cas de fortes chaleurs",
+   "note": "Page ameli : les trois cas de conservation selon la notice, le transport et les précautions à la sortie du réfrigérateur."
+  },
+  {
+   "doc": "kit72h",
+   "label": "Géorisques : votre kit d'urgence 72 h",
+   "note": "Document officiel (1 page) sur le sac d'urgence et sa vérification annuelle."
+  }
+ ],
+ "related": [
+  "soins",
+  "alimentation",
+  "eau"
+ ]
+}

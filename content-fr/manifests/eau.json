@@ -278,5 +278,35 @@
   "collection": "FR-Alert",
   "publisher": "Ministère de l'Intérieur",
   "url": "https://fr-alert.gouv.fr/"
+ },
+ {
+  "id": "ars-gastro",
+  "kind": "pdf",
+  "path": "documents/ars-mayotte-gastro.pdf",
+  "title": "Recommandations en cas de gastro-entérite",
+  "category": "urgent",
+  "collection": "ARS",
+  "publisher": "Agence régionale de santé de Mayotte",
+  "url": "https://www.mayotte.ars.sante.fr/media/114114/download?inline"
+ },
+ {
+  "id": "spf-chaleur-enfant",
+  "kind": "pdf",
+  "path": "documents/spf-chaleur-enfant.pdf",
+  "title": "Prévenir les risques liés aux fortes chaleurs chez l'enfant — repères pour votre pratique",
+  "category": "urgent",
+  "collection": "Santé publique France",
+  "publisher": "Santé publique France",
+  "url": "https://www.santepubliquefrance.fr/sites/default/files/rdd/document/424019_spf00003179.pdf"
+ },
+ {
+  "id": "ameli-medicaments",
+  "kind": "html",
+  "path": "documents/ameli-medicaments-chaleur.html",
+  "title": "Prévenir les risques médicamenteux en cas de fortes chaleurs",
+  "category": "urgent",
+  "collection": "ameli",
+  "publisher": "Assurance Maladie (ameli.fr)",
+  "url": "https://www.ameli.fr/assure/sante/medicaments/effets-indesirables-et-interactions-lies-aux-medicaments/prevenir-risques-medicaments-canicule"
  }
 ]

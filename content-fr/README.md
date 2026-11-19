@@ -17,8 +17,9 @@ francophones, cités par leur page réelle.
 | `soins` — Premiers secours et trousse d'urgence | 5 | 5 | 3 | 2 | 24 |
 | `blessures` — Plaies, brûlures, hémorragies : faire face | 5 | 5 | 3 | 3 | 24 |
 | `communications` — Alerter, être alerté, rester informé | 6 | 5 | 4 | 4 | 30 |
+| `sante` — Soigner au quotidien, éviter l'aggravation | 6 | 5 | 3 | 4 | 29 |
 
-**258 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**287 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -47,6 +48,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `service-public-numeros` | Les numéros en cas d'urgence et d'écoute | Service-Public / DILA | page web |
 | `masecurite-numeros` | Les numéros utiles nationaux | Ministère de l'Intérieur | page web |
 | `fr-alert` | FR-Alert — alerte et information des populations | Ministère de l'Intérieur | page web |
+| `ars-gastro` | Recommandations en cas de gastro-entérite | ARS de Mayotte | 2 |
+| `spf-chaleur-enfant` | Fortes chaleurs et enfant — repères | Santé publique France | 4 |
+| `ameli-medicaments` | Médicaments et fortes chaleurs | Assurance Maladie | page web |
 
 ## Reconstruire
 
