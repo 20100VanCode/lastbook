@@ -10,8 +10,9 @@ francophones, cités par leur page réelle.
 |---|---|---|---|---|---|
 | `eau` — De l'eau potable sûre | 8 | 7 | 4 | 4 | 37 |
 | `assainissement` — Évacuer les excréments sans risque | 5 | 5 | 3 | 3 | 24 |
+| `alimentation` — Nourriture sûre et chaîne du froid | 6 | 5 | 3 | 3 | 25 |
 
-**61 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**86 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -23,6 +24,8 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `iode-territoriale` | Déclinaison territoriale de la doctrine IODE | SIDESA | 33 |
 | `oms-fiches-eha` | Fiches techniques eau, hygiène et assainissement | OMS / WEDC, 2013 | 64 |
 | `crf-latrines` | Latrines en situation d'urgence (montage ERU) | Croix-Rouge française, 2018 | 15 |
+| `anses-hygiene` | Hygiène domestique | Anses, 2013 | 5 |
+| `ars-coupures` | Coupures de courant : réfrigérateur, congélateur | ARS / DDETSPP | 1 |
 
 ## Reconstruire
 

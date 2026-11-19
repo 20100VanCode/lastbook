@@ -1,0 +1,231 @@
+{
+ "id": "alimentation",
+ "mode": "now",
+ "title": "Nourriture sûre et chaîne du froid",
+ "short": "Conserver, trier, cuisiner",
+ "intro": "Lectures pour garder les aliments sûrs quand le courant tombe ou que l'eau est douteuse : ce que le réfrigérateur et le congélateur peuvent encore donner, comment trier après une coupure, et les gestes de préparation qui limitent les toxi-infections.",
+ "keywords": [
+  "alimentation",
+  "nourriture",
+  "chaîne du froid",
+  "coupure de courant",
+  "réfrigérateur",
+  "congélateur",
+  "pourri",
+  "périmé",
+  "date limite",
+  "DLC",
+  "lavage",
+  "fruits",
+  "légumes",
+  "viande",
+  "poisson",
+  "biberon",
+  "nourrisson",
+  "inondation",
+  "toxi-infection",
+  "hygiène",
+  "planche à découper",
+  "température",
+  "thermomètre",
+  "congélation",
+  "décongélation",
+  "recongeler"
+ ],
+ "choices": [
+  {
+   "id": "coupure",
+   "label": "Le courant est coupé",
+   "hint": "Réfrigérateur et congélateur à l'arrêt",
+   "read": [
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "Combien de temps les aliments restent au froid",
+     "note": "Fiche ARS/DDETSPP : les aliments d'un réfrigérateur restent au froid au moins 4 heures sans ouvrir la porte ; un congélateur plein tient environ 48 heures. Au-delà de 6 heures de coupure, la chaîne du froid de certains aliments est considérée comme rompue."
+    },
+    {
+     "doc": "anses-hygiene",
+     "page": 5,
+     "label": "L'hygiène domestique en quelques repères",
+     "note": "Fiche Anses (2013) : environ un tiers des foyers déclarés de toxi-infection alimentaire collective surviennent au domicile ; la fiche décrit les voies d'entrée des micro-organismes et les moyens de lutte."
+    },
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "Préparer le congélateur en amont",
+     "note": "Même fiche : placer autant de bacs à glaçons et de bouteilles d'eau que possible dans le congélateur avant les coupures permet aux aliments de tenir plus longtemps."
+    }
+   ]
+  },
+  {
+   "id": "tri",
+   "label": "Triérer après la coupure",
+   "hint": "Savoir ce qui se garde et ce qui se jette",
+   "read": [
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "Ne pas recongeler un aliment décongelé",
+     "note": "Fiche ARS/DDETSPP : il ne faut pas recongeler un aliment qui a été décongelé ; si les aliments sont dégelés mais que l'appareil affiche 4 °C, ils peuvent être cuisinés pour une consommation rapide."
+    },
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "La prise de température comme critère",
+     "note": "Même fiche : une prise de température peut être réalisée ; si la surface affiche 4 °C, voire moins de 6 °C, les produits doivent être mis en décongélation et consommés rapidement. Attention particulière aux plats et produits crus ou cuits à base de viande, volaille, poisson ou fruits de mer."
+    },
+    {
+     "doc": "anses-hygiene",
+     "page": 3,
+     "label": "Ce qui se conserve, ce qui se consomme vite",
+     "note": "Fiche Anses (2013) : un repas pour bébé ou un biberon de lait ne doit pas être conservé plus de 48 heures à +4 °C ; pour les produits très périssables non préemballés, une durée inférieure à trois jours est fréquemment recommandée."
+    }
+   ]
+  },
+  {
+   "id": "conservation",
+   "label": "Mieux conserver au froid",
+   "hint": "Température, zone la plus froide, surcharge",
+   "read": [
+    {
+     "doc": "anses-hygiene",
+     "page": 3,
+     "label": "La température de référence et la date limite",
+     "note": "Fiche Anses (2013) : la température idéale de conservation se situe entre 0 et +4 °C ; la date limite de consommation vaut à condition de maintenir une température suffisamment basse et un emballage ni ouvert ni endommagé."
+    },
+    {
+     "doc": "anses-hygiene",
+     "page": 2,
+     "label": "Les transferts de micro-organismes",
+     "note": "Même fiche : une surface contaminée peut contaminer toutes les surfaces avec lesquelles elle entre en contact ; les mains sont le support qui permet le mieux ces transferts."
+    },
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "Ne pas ouvrir le réfrigérateur inutilement",
+     "note": "Fiche ARS/DDETSPP : après la coupure, ne pas ouvrir immédiatement le réfrigérateur ; lui laisser le temps de se remettre à bonne température."
+    }
+   ]
+  },
+  {
+   "id": "preparation",
+   "label": "Préparer sans contaminer",
+   "hint": "Mains, planches, ustensiles, éponges",
+   "read": [
+    {
+     "doc": "anses-hygiene",
+     "page": 5,
+     "label": "Éponges et torchons, vecteurs de contamination",
+     "note": "Fiche Anses (2013) : comme les mains, les éponges, torchons et autres ustensiles de nettoyage doivent être fréquemment lavés et désinfectés ou traités par la chaleur."
+    },
+    {
+     "doc": "anses-hygiene",
+     "page": 2,
+     "label": "Les voies d'entrée des micro-organismes",
+     "note": "Même fiche : les micro-organismes entrent dans la cuisine par les aliments, les personnes, l'eau, l'air et les animaux, puis sont transférés par les mains, les torchons et les ustensiles."
+    }
+   ]
+  },
+  {
+   "id": "lavage",
+   "label": "Laver les fruits et les légumes",
+   "hint": "À l'eau potable, y compris les graines germées",
+   "read": [
+    {
+     "doc": "anses-hygiene",
+     "page": 4,
+     "label": "Le lavage des fruits et légumes",
+     "note": "Fiche Anses (2013) : il est nécessaire de procéder à un lavage minutieux des fruits et légumes, y compris des graines germées, à l'eau potable, qui permet d'éliminer la terre et les contaminants de surface."
+    }
+   ]
+  },
+  {
+   "id": "bebe",
+   "label": "Nourrisson et biberon",
+   "hint": "Préparation, conservation, eau utilisée",
+   "read": [
+    {
+     "doc": "anses-hygiene",
+     "page": 3,
+     "label": "Les préparations pour nourrisson",
+     "note": "Fiche Anses (2013) : un repas pour bébé ou un biberon de lait ne doit pas être conservé plus de 48 heures à +4 °C ; le délai entre la préparation et la consommation compte aussi."
+    },
+    {
+     "doc": "ars-coupures",
+     "page": 1,
+     "label": "L'eau de préparation en cas de réseau dégradé",
+     "note": "Fiche ARS/DDETSPP : la chaîne du froid et l'eau de préparation sont les deux points de vigilance pendant une coupure ; la fiche renvoie aux sites de suivi des coupures pour anticiper."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "La chaîne du froid de certains aliments est considérée comme rompue si la coupure dure plus de 6 heures, en particulier pour la viande, le poisson, les fromages frais et les plats cuisinés.",
+   "doc": "ars-coupures",
+   "page": 1
+  },
+  {
+   "text": "Il ne faut pas recongeler un aliment qui a été décongelé.",
+   "doc": "ars-coupures",
+   "page": 1
+  },
+  {
+   "text": "La date limite de consommation vaut à condition de maintenir une température suffisamment basse et un emballage ni ouvert ni endommagé.",
+   "doc": "anses-hygiene",
+   "page": 3
+  },
+  {
+   "text": "Un repas pour bébé ou un biberon de lait ne doit pas être conservé plus de 48 heures à +4 °C.",
+   "doc": "anses-hygiene",
+   "page": 3
+  },
+  {
+   "text": "Une surface contaminée peut contaminer toutes les surfaces avec lesquelles elle entre en contact.",
+   "doc": "anses-hygiene",
+   "page": 2
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "ars-coupures",
+   "page": 1,
+   "label": "Remplir le congélateur avant une coupure annoncée",
+   "note": "Fiche ARS/DDETSPP : bacs à glaçons et bouteilles d'eau dans le congélateur prolongent la tenue au froid."
+  },
+  {
+   "doc": "ars-coupures",
+   "page": 1,
+   "label": "Connaître les outils de suivi des coupures",
+   "note": "Même fiche : les sites de suivi des coupures (Enedis, fournisseurs) permettent d'anticiper sur son secteur."
+  },
+  {
+   "doc": "anses-hygiene",
+   "page": 4,
+   "label": "Prévoir de quoi laver fruits et légumes à l'eau potable",
+   "note": "Fiche Anses (2013) : le lavage à l'eau potable est la base de la suppression des contaminants de surface."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "anses-hygiene",
+   "label": "Anses : fiche hygiène domestique",
+   "note": "Fiche de 5 pages (2013) sur les voies de contamination en cuisine, la conservation, la cuisson et le lavage des fruits et légumes."
+  },
+  {
+   "doc": "ars-coupures",
+   "label": "ARS/DDETSPP : coupures de courant et précautions alimentaires",
+   "note": "Fiche pratique (1 page) sur la tenue du froid, le tri après coupure et la prise de température."
+  },
+  {
+   "doc": "oms-fiches-eha",
+   "label": "OMS/WEDC : fiches techniques eau, hygiène et assainissement",
+   "note": "Série de fiches traduite en français (2013) couvrant aussi le traitement de l'eau de boisson et l'hygiène."
+  }
+ ],
+ "related": [
+  "eau",
+  "assainissement"
+ ]
+}

@@ -58,5 +58,25 @@
   "collection": "Croix-Rouge",
   "publisher": "Croix-Rouge française, pôle Urgences / ERU",
   "url": "https://wash.ifrc.org/wp-content/uploads/2025/06/CRF-2018-Doc-technique-Latrines.pdf"
+ },
+ {
+  "id": "anses-hygiene",
+  "kind": "pdf",
+  "path": "documents/anses-hygiene-domestique.pdf",
+  "title": "Hygiène domestique — fiche Anses",
+  "category": "urgent",
+  "collection": "Anses",
+  "publisher": "Agence nationale de sécurité sanitaire de l'alimentation, de l'environnement et du travail",
+  "url": "https://www.anses.fr/fr/system/files?file=MIC2012sa0005Fi.pdf"
+ },
+ {
+  "id": "ars-coupures",
+  "kind": "pdf",
+  "path": "documents/ars-coupures-courant.pdf",
+  "title": "Coupures de courant : réfrigérateur, congélateur… précautions alimentaires",
+  "category": "urgent",
+  "collection": "ARS",
+  "publisher": "ARS / DDETSPP de l'Ardèche",
+  "url": "https://www.empurany.fr/wp-content/uploads/2022/12/Delestage_Precautions-Alimentaires_ARS-DDETSPP07_VF.pdf"
  }
 ]
