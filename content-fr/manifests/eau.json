@@ -178,5 +178,55 @@
   "collection": "RTE/Enedis",
   "publisher": "RTE / Enedis",
   "url": "https://assets.rte-france.com/prod/public/2026-05/2026-05-22-bons-reflexes.pdf"
+ },
+ {
+  "id": "kit72h",
+  "kind": "pdf",
+  "path": "documents/kit72h.pdf",
+  "title": "Votre kit d'urgence 72 h",
+  "category": "urgent",
+  "collection": "Géorisques",
+  "publisher": "Ministère de la Transition écologique / Géorisques",
+  "url": "https://www.georisques.gouv.fr/sites/default/files/2022-08/KIT%2072H_A4-HD.pdf"
+ },
+ {
+  "id": "crf-etapes",
+  "kind": "html",
+  "path": "documents/crf-etapes.html",
+  "title": "Les étapes pour porter secours : protéger, alerter, secourir",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/4-etapes-pour-porter-secours"
+ },
+ {
+  "id": "crf-inconscience",
+  "kind": "html",
+  "path": "documents/crf-inconscience.html",
+  "title": "L'inconscience — libération des voies aériennes et PLS",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/inconscience"
+ },
+ {
+  "id": "crf-etouffement",
+  "kind": "html",
+  "path": "documents/crf-etouffement.html",
+  "title": "L'étouffement — claques dans le dos et compressions abdominales",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/etouffement"
+ },
+ {
+  "id": "crf-arret-cardiaque",
+  "kind": "html",
+  "path": "documents/crf-arret-cardiaque.html",
+  "title": "L'arrêt cardiaque — massage cardiaque et défibrillateur",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/arret-cardiaque"
  }
 ]

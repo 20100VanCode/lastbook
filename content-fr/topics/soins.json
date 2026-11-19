@@ -1,0 +1,200 @@
+{
+ "id": "soins",
+ "mode": "now",
+ "title": "Premiers secours et trousse d'urgence",
+ "short": "Protéger, alerter, secourir",
+ "intro": "Lectures pour les gestes de premiers secours en attendant les secours : l'ordre dans lequel il faut agir, les conduites à tenir face à un malaise, un étouffement ou un arrêt cardiaque, et ce que doit contenir une trousse et un kit d'urgence.",
+ "keywords": [
+  "premiers secours",
+  "secourir",
+  "protéger",
+  "alerter",
+  "PSC1",
+  "gestes qui sauvent",
+  "inconscience",
+  "PLS",
+  "position latérale de sécurité",
+  "arrêt cardiaque",
+  "massage cardiaque",
+  "défibrillateur",
+  "étouffement",
+  "claques",
+  "compressions",
+  "saignement",
+  "brûlure",
+  "plaie",
+  "trousse de secours",
+  "kit d'urgence",
+  "médicaments",
+  "ordonnaance",
+  "15",
+  "18",
+  "112",
+  "Croix-Rouge",
+  "secouriste",
+  "réanimation"
+ ],
+ "choices": [
+  {
+   "id": "etapes",
+   "label": "Être témoin d'un accident",
+   "hint": "L'ordre des gestes : protéger, alerter, secourir",
+   "read": [
+    {
+     "doc": "crf-etapes",
+     "label": "Les quatre étapes dans l'ordre",
+     "note": "Croix-Rouge française : sécurisez le lieu de l'accident et les personnes impliquées, appréciez l'état de la victime, demandez de l'aide, puis effectuez les gestes de premiers secours."
+    },
+    {
+     "doc": "crf-etapes",
+     "label": "Évaluer les conditions de sécurité",
+     "note": "Même page : évaluez les conditions de sécurité et vérifiez qu'il n'existe aucun danger supplémentaire (circulation, incendie, électricité…) avant d'approcher la victime."
+    },
+    {
+     "doc": "crf-etapes",
+     "label": "Ce que l'on peut faire en attendant les secours",
+     "note": "Même page : si vous avez été formé aux gestes qui sauvent, vous pouvez agir en attendant les secours — PLS si la personne est inconsciente, massage cardiaque en cas d'arrêt, compression d'une plaie pour arrêter un saignement."
+    }
+   ]
+  },
+  {
+   "id": "inconscience",
+   "label": "Une personne est inconsciente",
+   "hint": "Libération des voies aériennes, PLS",
+   "read": [
+    {
+     "doc": "crf-inconscience",
+     "label": "Pourquoi basculer la tête en arrière",
+     "note": "Croix-Rouge française : en cas de perte de conscience, les muscles sont relâchés et la langue peut obstruer les voies aériennes ; basculer la tête en arrière et soulever le menton l'écarter du fond de la gorge."
+    },
+    {
+     "doc": "crf-inconscience",
+     "label": "Vérifier la respiration",
+     "note": "Même page : vérifiez que la poitrine se soulève et s'abaisse régulièrement, écoutez les bruits de la respiration et sentez le souffle pendant 10 secondes ; n'exercez aucune pression sous le menton."
+    },
+    {
+     "doc": "crf-inconscience",
+     "label": "La position latérale de sécurité",
+     "note": "Même page : mettez la victime en PLS, ouvrez la bouche sans mobiliser la tête pour laisser s'écouler les liquides, demandez à quelqu'un d'appeler les secours, puis vérifiez régulièrement que la respiration est normale."
+    }
+   ]
+  },
+  {
+   "id": "arret",
+   "label": "Un arrêt cardiaque",
+   "hint": "Massage cardiaque, défibrillateur",
+   "read": [
+    {
+     "doc": "crf-arret-cardiaque",
+     "label": "La séquence de réanimation",
+     "note": "Croix-Rouge française : recherchez la respiration, demandez à quelqu'un de prévenir le 15 ou le 18 et d'apporter un défibrillateur automatisé externe s'il est disponible, puis alternez 30 compressions thoraciques et 2 insufflations."
+    },
+    {
+     "doc": "crf-arret-cardiaque",
+     "label": "Le geste de compression",
+     "note": "Même page : placez la victime sur un plan dur, agenouillez-vous à côté, placez le talon d'une main au milieu de la poitrine nue puis l'autre main par-dessus ; effectuez 30 compressions à une fréquence de 100 par minute."
+    },
+    {
+     "doc": "crf-arret-cardiaque",
+     "label": "Jusqu'à quand poursuivre",
+     "note": "Même page : poursuivez la réanimation jusqu'à ce que les secours arrivent ou que la victime reprenne une respiration normale."
+    }
+   ]
+  },
+  {
+   "id": "etouffement",
+   "label": "Un étouffement",
+   "hint": "La victime ne peut ni tousser ni parler",
+   "read": [
+    {
+     "doc": "crf-etouffement",
+     "label": "Reconnaître l'obstruction",
+     "note": "Croix-Rouge française : la victime ne peut ni tousser, ni parler, ni crier ; elle peut émettre des sifflements ou tenter de tousser sans bruit."
+    },
+    {
+     "doc": "crf-etouffement",
+     "label": "Les claques puis les compressions abdominales",
+     "note": "Même page : un maximum de 5 claques dans le dos ; si elles n'ont pas d'effet, un maximum de 5 compressions abdominales, puis alternez 5 claques et 5 compressions."
+    },
+    {
+     "doc": "crf-etouffement",
+     "label": "Si la victime perd connaissance",
+     "note": "Même page : posez-la délicatement au sol, alertez immédiatement les secours et entreprenez une réanimation cardio-pulmonaire en commençant par 30 compressions thoraciques."
+    }
+   ]
+  },
+  {
+   "id": "trousse",
+   "label": "Préparer la trousse de premiers secours",
+   "hint": "Contenu, entretien, médicaments",
+   "read": [
+    {
+     "doc": "kit72h",
+     "label": "Le kit d'urgence 72 heures",
+     "note": "Géorisques : la trousse de premiers secours (alcool, pansements, compresses) et les médicaments font partie du kit ; placez le sac dans un endroit facile d'accès et vérifiez une fois par an la date de péremption des médicaments et des denrées."
+    },
+    {
+     "doc": "kit72h",
+     "label": "Pourquoi le kit sert aussi au départ précipité",
+     "note": "Même document : le kit préparé à l'avance permet de rester chez soi plus sereinement dans l'attente des secours, et sera aussi très utile en cas de départ précipité."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "N'exercez aucune pression sur la région molle située sous le menton, pour ne pas entraver la respiration.",
+   "doc": "crf-inconscience"
+  },
+  {
+   "text": "Pour assurer votre propre sécurité et celle de la victime, sécurisez le lieu de l'accident avant de porter secours.",
+   "doc": "crf-etapes"
+  },
+  {
+   "text": "Demandez à quelqu'un d'appeler les secours ou allez chercher de l'aide si vous êtes seul.",
+   "doc": "crf-inconscience"
+  },
+  {
+   "text": "Poursuivez la réanimation jusqu'à ce que les secours arrivent ou que la victime reprenne une respiration normale.",
+   "doc": "crf-arret-cardiaque"
+  },
+  {
+   "text": "Vérifiez une fois par an le contenu de votre kit, en particulier la date de péremption des médicaments et des denrées.",
+   "doc": "kit72h"
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "kit72h",
+   "label": "Le contenu du kit 72 h",
+   "note": "Géorisques : radio à piles, médicaments, trousse de premiers secours, outils de base, eau potable et nourriture non périssable, lampe, documents essentiels, argent liquide."
+  },
+  {
+   "doc": "crf-etapes",
+   "label": "Se former aux gestes qui sauvent",
+   "note": "Croix-Rouge française : la formation aux gestes qui sauvent (GQS, 2 h) permet de connaître les gestes à pratiquer lors d'accidents de la vie quotidienne ou de situations exceptionnelles."
+  },
+  {
+   "doc": "crf-etapes",
+   "label": "Savoir faire la différence entre les gestes",
+   "note": "Même page : PLS pour une personne inconsciente, massage cardiaque en cas d'arrêt, compression d'une plaie pour arrêter un saignement — chaque geste correspond à une situation."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "crf-etapes",
+   "label": "Croix-Rouge française : les gestes de premiers secours",
+   "note": "Pages extraites du guide des gestes qui sauvent (PSC1) : les étapes, l'inconscience, l'étouffement et l'arrêt cardiaque."
+  },
+  {
+   "doc": "kit72h",
+   "label": "Géorisques : votre kit d'urgence 72 h",
+   "note": "Document officiel (1 page) sur le sac d'urgence et sa vérification annuelle."
+  }
+ ],
+ "related": [
+  "blessures",
+  "catastrophe",
+  "abri"
+ ]
+}

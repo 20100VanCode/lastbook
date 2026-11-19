@@ -14,8 +14,9 @@ francophones, cités par leur page réelle.
 | `catastrophe` — Cyclone : se préparer, se confiner, revenir | 6 | 6 | 4 | 3 | 31 |
 | `abri` — Se mettre à l'abri et être hébergé | 6 | 6 | 4 | 4 | 32 |
 | `energie` — Électricité, gaz, monoxyde : éviter l'accident | 6 | 6 | 4 | 4 | 31 |
+| `soins` — Premiers secours et trousse d'urgence | 5 | 5 | 3 | 2 | 24 |
 
-**180 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**204 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -39,6 +40,8 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `spf-monoxyde-page` | Intoxications au CO — les bons gestes | Santé publique France | page web |
 | `enedis-coupure` | Je n'ai plus d'électricité : les bons gestes | Enedis | page web |
 | `rte-bons-reflexes` | Tension, attention — près des ouvrages électriques | RTE / Enedis, 2026 | 2 |
+| `kit72h` | Votre kit d'urgence 72 h | Géorisques | 1 |
+| `crf-*` | Gestes de premiers secours (étapes, PLS, étouffement, arrêt cardiaque) | Croix-Rouge française | 4 pages web |
 
 ## Reconstruire
 
