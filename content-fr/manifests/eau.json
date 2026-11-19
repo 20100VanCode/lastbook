@@ -1,0 +1,42 @@
+[
+ {
+  "id": "orsec-eau-ain",
+  "kind": "pdf",
+  "path": "documents/orsec-eau-potable-ain.pdf",
+  "title": "ORSEC — Mode d'action « Eau potable », gestion des perturbations importantes de l'approvisionnement",
+  "category": "urgent",
+  "collection": "ORSEC",
+  "publisher": "Préfecture de l'Ain",
+  "url": "https://www.ain.gouv.fr/contenu/telechargement/27132/189309/file/2024-06-20%20Mode%20action%20eau%20potable.pdf"
+ },
+ {
+  "id": "ficr-hwts",
+  "kind": "pdf",
+  "path": "documents/ficr-traitement-eau-domicile.pdf",
+  "title": "Traitement et stockage sûr de l'eau à domicile dans les situations d'urgence — manuel de terrain",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Fédération internationale des Sociétés de la Croix-Rouge et du Croissant-Rouge",
+  "url": "https://wash.ifrc.org/wp-content/uploads/2025/01/ifrc-hwts-manual-fr.pdf"
+ },
+ {
+  "id": "hcsp-comprimes",
+  "kind": "pdf",
+  "path": "documents/hcsp-comprimes-chlore-2023.pdf",
+  "title": "Avis relatif à l'utilisation de comprimés désinfectants à Mayotte (sécheresse durable)",
+  "category": "urgent",
+  "collection": "HCSP",
+  "publisher": "Haut Conseil de la santé publique",
+  "url": "https://www.hcsp.fr/Explore.cgi/Telecharger?NomFichier=hcspa20230926_utdecodsmadalecadunpidescdu.pdf"
+ },
+ {
+  "id": "iode-territoriale",
+  "kind": "pdf",
+  "path": "documents/iode-declinaison-territoriale.pdf",
+  "title": "Déclinaison territoriale de la doctrine IODE — eau potable",
+  "category": "urgent",
+  "collection": "IODE",
+  "publisher": "SIDESA",
+  "url": "https://www.sidesa.fr/upload/files/pdf/eaupotable/distribution/170619-I-ORSEC.pdf"
+ }
+]

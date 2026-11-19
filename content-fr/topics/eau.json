@@ -1,0 +1,317 @@
+{
+ "id": "eau",
+ "mode": "now",
+ "title": "De l'eau potable sûre",
+ "short": "Traiter, trouver et stocker l'eau",
+ "intro": "Lectures pour les moments où l'eau du robinet est coupée, ou soupçonnée de ne plus être potable : comment la traiter à domicile, quelles quantités prévoir, et comment la garder propre une fois traitée. Elles disent aussi ce que l'ébullition et le chlore ne peuvent pas enlever.",
+ "keywords": [
+  "eau",
+  "eau potable",
+  "ébullition",
+  "faire bouillir",
+  "eau de javel",
+  "chlore",
+  "décontaminer",
+  "filtrer",
+  "pastilles",
+  "comprimés",
+  "turbidité",
+  "eau trouble",
+  "coupure d'eau",
+  "non potable",
+  "non conforme",
+  "risque",
+  "cyclone",
+  "inondation",
+  "sécheresse",
+  "stockage",
+  "réserve",
+  "pluie",
+  "puits",
+  "source",
+  "rivière",
+  "soif",
+  "hydratation",
+  "mayotte",
+  "métropole"
+ ],
+ "choices": [
+  {
+   "id": "nonconforme",
+   "label": "L'eau du robinet est coupée ou déclarée non conforme",
+   "hint": "Avis d'ébullition, coupure, inondation, sécheresse",
+   "read": [
+    {
+     "doc": "orsec-eau-ain",
+     "page": 41,
+     "label": "À quel moment la désinfection à domicile devient nécessaire",
+     "note": "Fiche ORSEC du préfet de l'Ain (2024) : l'ARS peut juger la désinfection par l'usager « absolument nécessaire » quand l'eau est non conforme sur le plan microbiologique et qu'aucune distribution d'eau conditionnée n'est possible. Précisé comme une mesure d'extrême urgence."
+    },
+    {
+     "doc": "orsec-eau-ain",
+     "page": 41,
+     "label": "Pourquoi filtrer d'abord si l'eau est trouble",
+     "note": "Même fiche : les procédés de désinfection sont moins efficaces sur une eau turbide, il faut alors filtrer ou laisser décanter avant."
+    },
+    {
+     "doc": "iode-territoriale",
+     "page": 31,
+     "label": "Ce que la doctrine IODE reprend de l'Anses",
+     "note": "Déclinaison territoriale (SIDESA) : l'ébullition est la priorité ; le chlore à domicile n'est qu'une alternative en cas d'extrême urgence, quand l'ébullition est impossible techniquement."
+    }
+   ]
+  },
+  {
+   "id": "ebullition",
+   "label": "Je peux faire bouillir l'eau",
+   "hint": "Cuisinière, réchaud, feu",
+   "read": [
+    {
+     "doc": "orsec-eau-ain",
+     "page": 42,
+     "label": "Le mode opératoire officiel : 5 minutes à gros bouillons",
+     "note": "Fiche ORSEC du préfet de l'Ain (2024) : porter à ébullition à gros bouillons à feu très fort pendant 5 minutes, dans un récipient avec un couvercle ; laisser refroidir ; transvaser dans un récipient propre et fermé."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 11,
+     "label": "La Croix-Rouge : une minute, ou trois en altitude",
+     "note": "Manuel de la Fédération internationale de la Croix-Rouge : une minute à gros bouillons à basse altitude, trois minutes à haute altitude. Le goût fade s'atténue en secouant l'eau ou avec une pincée de sel par litre."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 10,
+     "label": "Ce que l'ébullition fait, et ne fait pas",
+     "note": "Même manuel : l'ébullition tue les germes pathogènes mais ne rend pas l'eau moins trouble, et son effet n'est pas durable. Un kilo de bois est nécessaire pour faire bouillir un litre pendant une minute."
+    }
+   ]
+  },
+  {
+   "id": "javel",
+   "label": "Je n'ai que de l'eau de Javel",
+   "hint": "Eau de Javel sans additif, ni cuisinière ni réchaud",
+   "read": [
+    {
+     "doc": "orsec-eau-ain",
+     "page": 42,
+     "label": "L'eau de Javel : un recours « très exceptionnel »",
+     "note": "Fiche ORSEC du préfet de l'Ain (2024) : la désinfection à l'eau de Javel à domicile est présentée comme très exceptionnelle, en raison de la difficulté de mise en œuvre par les particuliers. Eau de Javel à 2,6 % de chlore actif ; les autres dilutions s'utilisent dans les 24 heures."
+    },
+    {
+     "doc": "hcsp-comprimes",
+     "page": 3,
+     "label": "Ce que le chlore ne supprime pas",
+     "note": "Avis du Haut Conseil de la santé publique (2023) : les oocystes de Cryptosporidium et d'autres parasites résistent aux doses de chlore habituelles ; l'eau doit être claire, et des réducteurs invisibles peuvent neutraliser l'agent actif."
+    },
+    {
+     "doc": "iode-territoriale",
+     "page": 32,
+     "label": "Les doses d'eau de Javel et la conservation de l'eau traitée",
+     "note": "Annexe 6 de la déclinaison IODE : un tableau donne les gouttes par litre (1 goutte = 0,05 mL) selon le volume ajouté, et l'eau désinfectée se conserve 72 heures maximum, de préférence au réfrigérateur."
+    }
+   ]
+  },
+  {
+   "id": "filtre",
+   "label": "J'ai un filtre, des pastilles ou du soleil",
+   "hint": "Filtre de camping, comprimés, bouteilles claires",
+   "read": [
+    {
+     "doc": "ficr-hwts",
+     "page": 23,
+     "label": "Les filtres : ce qu'ils retiennent, ce qu'ils laissent passer",
+     "note": "Manuel Croix-Rouge : la filtration sur sable est un prétraitement qui réduit les impuretés ; les filtres retiennent les impuretés physiquement en laissant passer l'eau."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 14,
+     "label": "Les pastilles de chlore, étape par étape",
+     "note": "Même manuel : une tablette dans le récipient, fermer, attendre 30 minutes. Le mode d'emploi du fabricant donne le nombre de pastilles selon le volume et la concentration."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 12,
+     "label": "La désinfection solaire en bouteilles claires",
+     "note": "Même manuel : l'exposition au soleil détruit la plupart des germes ; remplir aux trois quarts, secouer, compléter, puis exposer."
+    },
+    {
+     "doc": "hcsp-comprimes",
+     "page": 1,
+     "label": "Pourquoi l'Anses confirme l'ébullition en situation d'urgence",
+     "note": "Avis HCSP (2023) : l'Anses confirme, pour la meilleure garantie de protection sanitaire, la nécessité de faire bouillir l'eau, 5 minutes à partir des premiers gros bouillons."
+    }
+   ]
+  },
+  {
+   "id": "domicile",
+   "label": "Trouver de l'eau déjà dans le logement",
+   "hint": "Chauffe-eau, canalisations, glaçons",
+   "read": [
+    {
+     "doc": "orsec-eau-ain",
+     "page": 39,
+     "label": "Les usages qui exigent une eau de qualité potable",
+     "note": "Fiche ORSEC : l'hygiène des nourrissons, le brossage des dents, la préparation des médicaments et la boisson exigent une eau de qualité potable ; la toilette ou le linge peuvent, au cas par cas, utiliser le réseau affecté."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 24,
+     "label": "Récipients à ouverture étroite ou large : le compromis",
+     "note": "Manuel Croix-Rouge : les récipients à ouverture étroite limitent la contamination mais sont difficiles à nettoyer ; les récipients à ouverture large sont facilement contaminés mais facilement nettoyés."
+    }
+   ]
+  },
+  {
+   "id": "exterieur",
+   "label": "Aller chercher de l'eau dehors",
+   "hint": "Pluie, rivière, source, puits",
+   "read": [
+    {
+     "doc": "ficr-hwts",
+     "page": 17,
+     "label": "La décantation avant traitement",
+     "note": "Manuel Croix-Rouge : si l'eau est boueuse, la laisser reposer, ou utiliser des produits chimiques pour que la saleté se dépose au fond."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 18,
+     "label": "La méthode des trois récipients",
+     "note": "Même manuel : une mesure provisoire d'urgence pour réduire les impuretés et les germes, en attendant mieux."
+    },
+    {
+     "doc": "orsec-eau-ain",
+     "page": 30,
+     "label": "Utiliser une ressource de secours",
+     "note": "Fiche ORSEC : l'avantage d'une ressource de secours est de garantir une continuité ; dans certains cas l'urgence impose de l'utiliser avant les résultats d'analyse."
+    }
+   ]
+  },
+  {
+   "id": "chimique",
+   "label": "L'eau peut contenir des substances chimiques",
+   "hint": "Odeur ou couleur anormale, déversement, inondation",
+   "read": [
+    {
+     "doc": "hcsp-comprimes",
+     "page": 3,
+     "label": "Chlore et ébullition ne suppriment pas tout",
+     "note": "Avis HCSP (2023) : les parasites résistent au chlore ; les réducteurs dans l'eau (ammonium par exemple) sont invisibles et neutralisent l'agent actif."
+    },
+    {
+     "doc": "iode-territoriale",
+     "page": 2,
+     "label": "La condition préalable de l'Anses : ni risque chimique ni risque radiologique",
+     "note": "Déclinaison territoriale (SIDESA) : les procédures de désinfection à domicile ne peuvent être proposées que si la conformité aux risques chimiques et radiologiques est garantie."
+    }
+   ]
+  },
+  {
+   "id": "stockage",
+   "label": "Garder l'eau traitée propre",
+   "hint": "Récipients, louche, quantités par personne",
+   "read": [
+    {
+     "doc": "ficr-hwts",
+     "page": 25,
+     "label": "Couvrir et prélever sans toucher l'eau",
+     "note": "Manuel Croix-Rouge : couvrir les récipients, prélever avec une louche à long manche ou un robinet au fond, et se laver les mains avant de manipuler l'eau potable."
+    },
+    {
+     "doc": "orsec-eau-ain",
+     "page": 40,
+     "label": "Les quantités de référence par personne",
+     "note": "Fiche ORSEC : 3 litres par jour et par personne pour la boisson ; 12 litres par jour et par personne pour boisson, hygiène et cuisine."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "La désinfection à domicile n'est recommandée que si l'eau est non conforme uniquement sur le plan microbiologique, sans risque chimique ni radiologique.",
+   "doc": "iode-territoriale",
+   "page": 31
+  },
+  {
+   "text": "La désinfection à l'eau de Javel par les particuliers est présentée comme très exceptionnelle, en raison de sa difficulté de mise en œuvre.",
+   "doc": "orsec-eau-ain",
+   "page": 42
+  },
+  {
+   "text": "Les procédés de désinfection sont moins efficaces sur une eau turbide : il faut filtrer ou laisser décanter avant.",
+   "doc": "orsec-eau-ain",
+   "page": 41
+  },
+  {
+   "text": "Après désinfection, l'eau conditionnée se conserve 72 heures maximum, de préférence au réfrigérateur.",
+   "doc": "iode-territoriale",
+   "page": 32
+  },
+  {
+   "text": "L'ébullition ne rend pas l'eau moins trouble et son effet n'est pas durable : mal conservée, l'eau peut être recontaminée.",
+   "doc": "ficr-hwts",
+   "page": 10
+  },
+  {
+   "text": "Les oocystes de Cryptosporidium et d'autres parasites résistent aux doses de chlore habituelles.",
+   "doc": "hcsp-comprimes",
+   "page": 3
+  },
+  {
+   "text": "Un kilo de bois est nécessaire pour faire bouillir un litre d'eau pendant une minute : la méthode est déconseillée là où le bois est rare.",
+   "doc": "ficr-hwts",
+   "page": 10
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "orsec-eau-ain",
+   "page": 40,
+   "label": "Combien d'eau prévoir par personne",
+   "note": "Fiche ORSEC : 3 litres par jour pour la boisson, 12 litres par jour pour boisson, hygiène et cuisine ; les établissements de santé ont des besoins bien supérieurs."
+  },
+  {
+   "doc": "orsec-eau-ain",
+   "page": 39,
+   "label": "Distinguer les usages qui exigent une eau potable",
+   "note": "Même fiche : boisson, préparation des aliments sans cuisson, hygiène des nourrissons et soins exigent une eau potable ; le linge ou la toilette peuvent être réévalués au cas par cas."
+  },
+  {
+   "doc": "orsec-eau-ain",
+   "page": 36,
+   "label": "L'approvisionnement en eau des usagers",
+   "note": "Fiche ORSEC : organiser l'approvisionnement de substitution de la population, avec des lieux de distribution et des horaires communiqués."
+  },
+  {
+   "doc": "orsec-eau-ain",
+   "page": 34,
+   "label": "Les recommandations à diffuser lors d'une coupure",
+   "note": "Fiche ORSEC : le message annonçant une coupure peut porter des restrictions d'usage pour éviter les risques sanitaires ultérieurs."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "ficr-hwts",
+   "label": "Manuel Croix-Rouge : traitement et stockage sûr de l'eau à domicile",
+   "note": "Manuel de terrain de la Fédération internationale (44 pages) : filtrage, décantation, trois récipients, ébullition, désinfection solaire, produits chimiques et stockage."
+  },
+  {
+   "doc": "orsec-eau-ain",
+   "label": "ORSEC — Mode d'action « Eau potable » (préfecture de l'Ain)",
+   "note": "Plan de gestion des perturbations importantes de l'approvisionnement : acteurs, coupures, ressources de secours, approvisionnement des usagers, désinfection à domicile."
+  },
+  {
+   "doc": "iode-territoriale",
+   "label": "Déclinaison territoriale de la doctrine IODE",
+   "note": "Texte territorial qui reprend la doctrine nationale sur l'eau potable, dont les modes opératoires de désinfection à domicile."
+  },
+  {
+   "doc": "hcsp-comprimes",
+   "label": "HCSP : avis sur les comprimés désinfectants à Mayotte",
+   "note": "Avis de 2023 sur l'emploi de pastilles de chlore en contexte de sécheresse durable, avec les limites du chlore et la confirmation de l'ébullition."
+  }
+ ],
+ "related": [
+  "assainissement",
+  "alimentation"
+ ]
+}

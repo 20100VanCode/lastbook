@@ -19,3 +19,7 @@ build/
 *.dmg
 *.exe
 *.zip
+
+# métadonnées Apple (disques externes)
+._*
+.DS_Store
