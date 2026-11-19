@@ -228,5 +228,25 @@
   "collection": "Croix-Rouge",
   "publisher": "Croix-Rouge française",
   "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/arret-cardiaque"
+ },
+ {
+  "id": "crf-hemorragie",
+  "kind": "html",
+  "path": "documents/crf-hemorragie.html",
+  "title": "L'hémorragie — compresser la plaie",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/hemorragie"
+ },
+ {
+  "id": "crf-brulure",
+  "kind": "html",
+  "path": "documents/crf-brulure.html",
+  "title": "Que faire en cas de brûlure ?",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française",
+  "url": "https://www.croix-rouge.fr/les-gestes-de-premiers-secours/que-faire-en-cas-de-brulure"
  }
 ]

@@ -1,0 +1,197 @@
+{
+ "id": "blessures",
+ "mode": "now",
+ "title": "Plaies, brûlures, hémorragies : faire face",
+ "short": "Comprimer, refroidir, alerter",
+ "intro": "Lectures pour les blessures courantes : arrêter un saignement sans se contaminer, refroidir une brûlure, distinguer une brûlure simple d'une brûlure grave, et savoir quand les gestes suffisent ou quand il faut alerter.",
+ "keywords": [
+  "blessure",
+  "plaie",
+  "saignement",
+  "hémorragie",
+  "comprimer",
+  "compression",
+  "brûlure",
+  "cloque",
+  "brûlure grave",
+  "brûlure simple",
+  "refroidir",
+  "eau tempérée",
+  "pansement",
+  "trousse de secours",
+  "gants",
+  "infection",
+  "corps gras",
+  "gestes à proscrire",
+  "secours",
+  "15",
+  "18",
+  "112",
+  "accident",
+  "chute",
+  "coupure"
+ ],
+ "choices": [
+  {
+   "id": "hemorragie",
+   "label": "Un saignement important",
+   "hint": "Plaie qui coule, hémorragie",
+   "read": [
+    {
+     "doc": "crf-hemorragie",
+     "label": "Compresser la plaie, la séquence complète",
+     "note": "Croix-Rouge française : évitez si possible tout contact avec le sang de la victime et demandez-lui de comprimer elle-même sa blessure ; sinon exercez une pression directe avec les mains protégées (gants jetables, sac plastique ou linge)."
+    },
+    {
+     "doc": "crf-hemorragie",
+     "label": "Allonger et alerter",
+     "note": "Même page : allongez la victime en position horizontale, demandez à une personne présente d'alerter les secours ou faites-le vous-même si vous êtes seul."
+    },
+    {
+     "doc": "crf-hemorragie",
+     "label": "Maintenir la compression jusqu'aux secours",
+     "note": "Même page : si la plaie continue de saigner, comprimez encore plus fermement et poursuivez la compression jusqu'à l'arrivée des secours."
+    }
+   ]
+  },
+  {
+   "id": "brulure-simple",
+   "label": "Une brûlure simple",
+   "hint": "Rougeur, petite cloque",
+   "read": [
+    {
+     "doc": "crf-brulure",
+     "label": "Refroidir immédiatement à l'eau tempérée",
+     "note": "Croix-Rouge française : refroidissez immédiatement la surface brûlée avec de l'eau courante tempérée à faible pression pendant au moins 10 minutes, idéalement 20 minutes ; retirez vêtements et bijoux s'ils ne sont pas collés à la peau."
+    },
+    {
+     "doc": "crf-brulure",
+     "label": "Ce qui distingue une brûlure simple",
+     "note": "Même page : brûlure simple lorsqu'il s'agit de rougeurs de la peau chez l'adulte ou d'une cloque dont la surface est inférieure à celle de la moitié de la paume de la main de la victime."
+    },
+    {
+     "doc": "crf-brulure",
+     "label": "Protéger sans percer les cloques",
+     "note": "Même page : protégez la brûlure avec un pansement ou un tissu propre ; en cas d'ampoules, ne les crevez pas — elles agissent comme une barrière naturelle contre les infections."
+    }
+   ]
+  },
+  {
+   "id": "brulure-grave",
+   "label": "Une brûlure qui doit alerter",
+   "hint": "Cloques étendues, visage, enfant, chimique",
+   "read": [
+    {
+     "doc": "crf-brulure",
+     "label": "Les signes de brûlure grave",
+     "note": "Croix-Rouge française : une ou plusieurs cloques dont la surface totale dépasse celle de la moitié de la paume de la main de la victime ; une destruction plus profonde (aspect blanchâtre ou noirâtre, parfois indolore) ; une brûlure sur le visage, le cou, les mains, les articulations ou près des orifices ; une rougeur étendue chez l'enfant ; une brûlure chimique, électrique ou radiologique."
+    },
+    {
+     "doc": "crf-brulure",
+     "label": "Les gestes à proscrire",
+     "note": "Même page : ne pas percer les cloques et ne pas appliquer de corps gras."
+    },
+    {
+     "doc": "crf-brulure",
+     "label": "Alerter quand la brûlure est grave ou étendue",
+     "note": "Même page : si la brûlure est grave ou étendue, alertez immédiatement les secours."
+    }
+   ]
+  },
+  {
+   "id": "gestes-proscrire",
+   "label": "Les gestes à proscrire",
+   "hint": "Ce qu'il ne faut pas faire sur une plaie",
+   "read": [
+    {
+     "doc": "crf-brulure",
+     "label": "Ne pas mettre de corps gras sur une brûlure",
+     "note": "Croix-Rouge française : ne pas appliquer de corps gras, et ne pas percer les cloques."
+    },
+    {
+     "doc": "crf-hemorragie",
+     "label": "Éviter le contact direct avec le sang",
+     "note": "Même page : demandez à la victime de comprimer elle-même sa blessure si possible ; sinon protégez vos mains."
+    }
+   ]
+  },
+  {
+   "id": "trousse",
+   "label": "La trousse pour les blessures",
+   "hint": "Pansements, compresses, sérum physiologique",
+   "read": [
+    {
+     "doc": "kit72h",
+     "label": "La trousse dans le kit 72 h",
+     "note": "Géorisques : la trousse de premiers secours (alcool, pansements, compresses) fait partie du kit d'urgence, avec les médicaments et l'eau potable."
+    },
+    {
+     "doc": "crf-hemorragie",
+     "label": "De quoi comprimer proprement",
+     "note": "Croix-Rouge française : des gants jetables, un sac plastique ou un linge propre permettent de comprimer une plaie sans contact direct avec le sang."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Évitez si possible tout contact avec le sang de la victime ; protégez vos mains.",
+   "doc": "crf-hemorragie"
+  },
+  {
+   "text": "Poursuivez la compression sur la plaie jusqu'à l'arrivée des secours.",
+   "doc": "crf-hemorragie"
+  },
+  {
+   "text": "Ne percer pas les cloques : elles agissent comme une barrière naturelle contre les infections.",
+   "doc": "crf-brulure"
+  },
+  {
+   "text": "Ne pas appliquer de corps gras sur une brûlure.",
+   "doc": "crf-brulure"
+  },
+  {
+   "text": "Si la brûlure est grave ou étendue, alertez immédiatement les secours.",
+   "doc": "crf-brulure"
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "kit72h",
+   "label": "La trousse de premiers secours du kit",
+   "note": "Géorisques : alcool, pansements et compresses dans la trousse, vérifiée une fois par an avec les médicaments et les denrées."
+  },
+  {
+   "doc": "crf-hemorragie",
+   "label": "Prévoir de quoi se protéger les mains",
+   "note": "Croix-Rouge française : gants jetables, sac plastique ou linge propre pour comprimer sans contact direct avec le sang."
+  },
+  {
+   "doc": "crf-brulure",
+   "label": "Savoir évaluer une brûlure avant de la traiter",
+   "note": "Même page : la surface des cloques par rapport à la moitié de la paume de la main de la victime, l'aspect des tissus et la localisation permettent d'estimer la gravité."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "crf-hemorragie",
+   "label": "Croix-Rouge française : l'hémorragie",
+   "note": "Page extraite du guide des gestes qui sauvent (PSC1) : compression de la plaie, allongement, alerte et maintien de la compression."
+  },
+  {
+   "doc": "crf-brulure",
+   "label": "Croix-Rouge française : que faire en cas de brûlure",
+   "note": "Page extraite du guide PSC1 : évaluation de la gravité, refroidissement à l'eau tempérée, protection et gestes à proscrire."
+  },
+  {
+   "doc": "kit72h",
+   "label": "Géorisques : votre kit d'urgence 72 h",
+   "note": "Document officiel (1 page) sur le sac d'urgence, dont la trousse de premiers secours."
+  }
+ ],
+ "related": [
+  "soins",
+  "catastrophe",
+  "energie"
+ ]
+}
