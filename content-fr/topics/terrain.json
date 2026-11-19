@@ -1,0 +1,249 @@
+{
+ "id": "terrain",
+ "mode": "now",
+ "title": "Connaître son terrain et ses risques",
+ "short": "Inondation, mouvement de terrain, choix du site",
+ "intro": "Lectures pour comprendre le terrain sur lequel on vit : la mémoire des inondations et des mouvements de terrain, les signes annonciateurs, les façons de rendre l'habitat moins vulnérable, et ce qu'il faut faire quand l'eau monte ou que le sol bouge.",
+ "keywords": [
+  "terrain",
+  "parcelle",
+  "inondation",
+  "crue",
+  "zone inondable",
+  "PPRI",
+  "mouvement de terrain",
+  "glissement",
+  "éboulement",
+  "fissures",
+  "retrait-gonflement",
+  "argile",
+  "pente",
+  "étude de sol",
+  "certificat d'urbanisme",
+  "mairie",
+  "DDRM",
+  "Géorisques",
+  "signes annonciateurs",
+  "batardeau",
+  "drain",
+  "évacuation",
+  "réflexes qui sauvent",
+  "nettoyage",
+  "moisissure"
+ ],
+ "choices": [
+  {
+   "id": "informer",
+   "label": "Se renseigner sur son terrain",
+   "hint": "Mémoire des événements, mairie, documents officiels",
+   "read": [
+    {
+     "doc": "mrn-inondations",
+     "page": 5,
+     "label": "La mémoire des inondations de votre terrain",
+     "note": "Mémento MRN (2005) : renseignez-vous, au-delà de votre propre expérience, sur la mémoire des inondations de votre terrain et de votre habitation ; notez date, durée, hauteur d'eau maximale, dommages et mesures prises."
+    },
+    {
+     "doc": "mrn-mvt",
+     "page": 5,
+     "label": "Les questions essentielles sur les mouvements de terrain",
+     "note": "Mémento MRN : vivez-vous en zone à risque ? Quels types de mouvement peuvent se produire ? Quelle a été leur extension ? Quels dégâts pourraient-ils produire ? Interrogez mairie, services techniques, pompiers et préfecture."
+    },
+    {
+     "doc": "dicrim-bergheim",
+     "page": 8,
+     "label": "Les documents d'information officiels",
+     "note": "DICRIM de Bergheim (Géorisques) : le Dossier Départemental des Risques Majeurs (DDRM) est établi par la préfecture ; il décrit les risques naturels et technologiques auxquels les communes sont exposées."
+    }
+   ]
+  },
+  {
+   "id": "inondable",
+   "label": "Rendre l'habitat moins vulnérable à l'eau",
+   "hint": "Batardeaux, évents, clapet anti-refoulement, chaudière",
+   "read": [
+    {
+     "doc": "mrn-inondations",
+     "page": 7,
+     "label": "Les mesures prioritaires à faible coût",
+     "note": "Mémento MRN : neutraliser la pénétration de l'eau par une ventilation et des évents adaptés, des canalisations dotées de clapet anti-refoulement, des batardeaux sur les portes, portes-fenêtres et fenêtres de sous-sol, et le démontage des volets."
+    },
+    {
+     "doc": "mrn-inondations",
+     "page": 7,
+     "label": "Chaudière et installation électrique hors d'eau",
+     "note": "Même mémento : placez la chaudière et les centrales de ventilation hors d'atteinte d'eau, scellez la chaudière sur appuis lestés, remontez l'évent au-dessus du niveau d'eau maximum ; prévoyez une distribution électrique venant du plafond vers des prises à hauteur adaptée."
+    },
+    {
+     "doc": "dicrim-bergheim",
+     "page": 26,
+     "label": "Les réflexes qui sauvent face à une inondation",
+     "note": "DICRIM de Bergheim : fermez les portes et les aérations, coupez l'électricité et le gaz, montez immédiatement à pied dans les étages."
+    }
+   ]
+  },
+  {
+   "id": "signes",
+   "label": "Reconnaître les signes d'un mouvement de terrain",
+   "hint": "Fissures, portes qui ferment mal, poteaux inclinés",
+   "read": [
+    {
+     "doc": "mrn-mvt",
+     "page": 13,
+     "label": "Les signes des phénomènes lents",
+     "note": "Mémento MRN : portes ou fenêtres qui ferment mal, fissures dans le plâtre, les tuiles, les murs et les fondations, escaliers ou murs extérieurs qui s'éloignent du bâtiment, craquements dans les carrelages, conduits souterrains cassés, eau qui monte à la surface du sol, barrières et arbres qui s'inclinent."
+    },
+    {
+     "doc": "mrn-mvt",
+     "page": 13,
+     "label": "Les signes des phénomènes rapides",
+     "note": "Même mémento : bruits peu usuels — craquements d'arbre, chocs de rochers pouvant indiquer l'approche de débris mobiles — et un grondement croissant qui signe l'approche d'un éboulement."
+    },
+    {
+     "doc": "dicrim-bergheim",
+     "page": 29,
+     "label": "Ce que le sol et les constructions disent",
+     "note": "DICRIM de Bergheim : un mouvement de terrain est un déplacement plus ou moins brutal du sol et/ou du sous-sol, d'origine naturelle ou anthropique, dont les signes se lisent sur les constructions et le paysage."
+    }
+   ]
+  },
+  {
+   "id": "survie",
+   "label": "Aménager une zone de survie en zone inondable",
+   "hint": "Au-dessus de la plus haute crue",
+   "read": [
+    {
+     "doc": "mrn-inondations",
+     "page": 10,
+     "label": "La zone de survie",
+     "note": "Mémento MRN : si votre habitation est exposée à des crues rapides ou torrentielles et ne comporte qu'un seul étage, il peut être intéressant de se ménager une zone de survie au-dessus du niveau de la plus haute crue constatée — combles, grenier, au-dessus d'un garage."
+    },
+    {
+     "doc": "mrn-inondations",
+     "page": 12,
+     "label": "La liste des biens à mettre à l'abri",
+     "note": "Même mémento : avant l'inondation, établissez une liste de vos biens mobiliers à mettre à l'abri, par ordre de priorité (échelles de valeur et de poids), en fonction des lieux d'accueil accessibles dans l'urgence."
+    }
+   ]
+  },
+  {
+   "id": "crue",
+   "label": "Quand la crue arrive",
+   "hint": "S'adresser à la mairie, protéger les biens",
+   "read": [
+    {
+     "doc": "mrn-inondations",
+     "page": 15,
+     "label": "Le maire, interlocuteur de la sécurité communale",
+     "note": "Mémento MRN : c'est le maire qui a la charge de la sécurité de votre commune ; c'est à lui et aux personnes qu'il a désignées que vous devez vous adresser pour obtenir renseignements, aide et secours."
+    },
+    {
+     "doc": "mrn-inondations",
+     "page": 15,
+     "label": "À l'imminence d'une crue, mobilisez-vous",
+     "note": "Même mémento : suivez la météo et observez la nature ; lorsque vous êtes prévenus de l'imminence d'une crue, protégez vos biens autant qu'il est possible."
+    },
+    {
+     "doc": "dicrim-bergheim",
+     "page": 26,
+     "label": "Les consignes du DICRIM",
+     "note": "DICRIM de Bergheim : fermez portes et aérations, coupez l'électricité et le gaz, montez à pied dans les étages."
+    }
+   ]
+  },
+  {
+   "id": "apres",
+   "label": "Après l'inondation",
+   "hint": "Nettoyage, moisissures, appareils électriques",
+   "read": [
+    {
+     "doc": "mrn-inondations",
+     "page": 19,
+     "label": "Le premier nettoyage et les heures passées",
+     "note": "Mémento MRN : procédez à un premier nettoyage, notez les heures consacrées à cette tâche car certaines assurances indemnisent ce poste."
+    },
+    {
+     "doc": "mrn-inondations",
+     "page": 19,
+     "label": "Décoller les papiers peints pour sécher les murs",
+     "note": "Même mémento : décollez les papiers peints, faute de quoi les murs ne sécheraient pas et le papier contribuerait à garder l'humidité, ce qui générerait de la moisissure."
+    },
+    {
+     "doc": "mrn-inondations",
+     "page": 19,
+     "label": "Les appareils électriques, sans précipitation",
+     "note": "Même mémento : pour les appareils électriques, ne vous précipitez pas — aérez et séchez-les bien avant de les remettre en service."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Les suggestions techniques doivent être envisagées avec un professionnel compétent, pour en apprécier la pertinence au cas par cas.",
+   "doc": "mrn-inondations",
+   "page": 7
+  },
+  {
+   "text": "Évitez les terrains à trop forte pente et les sols instables ; faites si possible réaliser une étude de sol.",
+   "doc": "mrn-mvt",
+   "page": 8
+  },
+  {
+   "text": "En cas de risque d'inondation, c'est le maire qui a la charge de la sécurité de la commune et qui dispose des informations.",
+   "doc": "mrn-inondations",
+   "page": 15
+  },
+  {
+   "text": "Un grondement croissant signe l'approche d'un éboulement.",
+   "doc": "mrn-mvt",
+   "page": 13
+  },
+  {
+   "text": "Pour les appareils électriques après une inondation, aérez et séchez-les bien avant de les remettre en service.",
+   "doc": "mrn-inondations",
+   "page": 19
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "mrn-inondations",
+   "page": 7,
+   "label": "Les mesures à faible coût avant la saison",
+   "note": "Mémento MRN : ventilation et évents adaptés, clapet anti-refoulement, batardeaux, démontage des volets, matériaux hydrofuges et revêtements de sol collés ou carrelés."
+  },
+  {
+   "doc": "mrn-mvt",
+   "page": 8,
+   "label": "Avant de construire : le choix du terrain",
+   "note": "Mémento MRN : consulter en mairie l'atlas communal des risques majeurs, les cartes de micro-zonages et le Plan de Prévention des Risques ; demander un certificat d'urbanisme."
+  },
+  {
+   "doc": "mrn-inondations",
+   "page": 12,
+   "label": "La liste des biens à mettre à l'abri",
+   "note": "Mémento MRN : établir la liste des biens mobiliers à mettre à l'abri, par ordre de priorité, et la liste des objets utiles en période d'inondation."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "mrn-inondations",
+   "label": "MRN : mémento pratique du particulier — risque inondations",
+   "note": "Mémento de 20 pages (2005) : mémoire des crues, habitat moins vulnérable, zone de survie, réflexes et nettoyage."
+  },
+  {
+   "doc": "mrn-mvt",
+   "label": "MRN : mémento pratique du particulier — mouvements de terrain",
+   "note": "Mémento de 21 pages (2005) : signes annonciateurs, choix du terrain, parades techniques et conduite pendant le phénomène."
+  },
+  {
+   "doc": "dicrim-bergheim",
+   "label": "DICRIM de Bergheim — risques majeurs",
+   "note": "Document communal (63 pages) : inondation, mouvements de terrain, transport de matières dangereuses et séisme, avec les consignes associées."
+  }
+ ],
+ "related": [
+  "catastrophe",
+  "reparation",
+  "eau"
+ ]
+}

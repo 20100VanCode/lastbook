@@ -19,8 +19,9 @@ francophones, cités par leur page réelle.
 | `communications` — Alerter, être alerté, rester informé | 6 | 5 | 4 | 4 | 30 |
 | `sante` — Soigner au quotidien, éviter l'aggravation | 6 | 5 | 3 | 4 | 29 |
 | `reparation` — Réparer, mettre hors d'eau, déclarer | 5 | 5 | 3 | 3 | 26 |
+| `terrain` — Connaître son terrain et ses risques | 6 | 5 | 3 | 3 | 28 |
 
-**313 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**341 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -54,6 +55,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `ameli-medicaments` | Médicaments et fortes chaleurs | Assurance Maladie | page web |
 | `mrn-tempetes` | Mémento pratique du particulier — risque tempêtes | MRN, 2005 | 19 |
 | `sp-degat-eaux` | Assurance dégâts des eaux | Service-Public / DILA | 5 |
+| `mrn-inondations` | Mémento pratique du particulier — inondations | MRN, 2005 | 20 |
+| `mrn-mvt` | Mémento pratique du particulier — mouvements de terrain | MRN, 2005 | 21 |
+| `dicrim-bergheim` | DICRIM — risques majeurs (inondation, mvt, TMD, séisme) | Ville de Bergheim / Géorisques | 63 |
 
 ## Reconstruire
 
