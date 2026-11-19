@@ -138,5 +138,45 @@
   "collection": "DICRIM",
   "publisher": "Ville de Rochefort",
   "url": "https://www.ville-rochefort.fr/sites/default/files/Mediatheque/Vie%20municipale/actions%20municipales/Cadre%20de%20vie/Risques%20majeurs/Document%20d_information%20communale%20sur%20les%20risques%20majeurs.pdf"
+ },
+ {
+  "id": "spf-monoxyde",
+  "kind": "pdf",
+  "path": "documents/spf-monoxyde.pdf",
+  "title": "Les intoxications au monoxyde de carbone (CO) — infographie",
+  "category": "urgent",
+  "collection": "Santé publique France",
+  "publisher": "Santé publique France",
+  "url": "https://www.santepubliquefrance.fr/sites/default/files/rdd/document/37477_11779-ps.pdf"
+ },
+ {
+  "id": "spf-monoxyde-page",
+  "kind": "html",
+  "path": "documents/spf-monoxyde-page.html",
+  "title": "Intoxications au monoxyde de carbone — adopter les bons gestes peut sauver des vies",
+  "category": "urgent",
+  "collection": "Santé publique France",
+  "publisher": "Santé publique France",
+  "url": "https://www.santepubliquefrance.fr/index.php/presse/intoxications-au-monoxyde-de-carbone-adopter-les-bons-gestes-peut-sauver-des-vies"
+ },
+ {
+  "id": "enedis-coupure",
+  "kind": "html",
+  "path": "documents/enedis-coupure.html",
+  "title": "Je n'ai plus d'électricité : les bons gestes à adopter",
+  "category": "urgent",
+  "collection": "Enedis",
+  "publisher": "Enedis",
+  "url": "https://www.enedis.fr/reagir-coupure-de-courant"
+ },
+ {
+  "id": "rte-bons-reflexes",
+  "kind": "pdf",
+  "path": "documents/rte-bons-reflexes.pdf",
+  "title": "Tension, attention — les bons réflexes près des ouvrages électriques",
+  "category": "urgent",
+  "collection": "RTE/Enedis",
+  "publisher": "RTE / Enedis",
+  "url": "https://assets.rte-france.com/prod/public/2026-05/2026-05-22-bons-reflexes.pdf"
  }
 ]

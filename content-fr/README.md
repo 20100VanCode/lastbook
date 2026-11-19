@@ -13,8 +13,9 @@ francophones, cités par leur page réelle.
 | `alimentation` — Nourriture sûre et chaîne du froid | 6 | 5 | 3 | 3 | 25 |
 | `catastrophe` — Cyclone : se préparer, se confiner, revenir | 6 | 6 | 4 | 3 | 31 |
 | `abri` — Se mettre à l'abri et être hébergé | 6 | 6 | 4 | 4 | 32 |
+| `energie` — Électricité, gaz, monoxyde : éviter l'accident | 6 | 6 | 4 | 4 | 31 |
 
-**149 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**180 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -34,6 +35,10 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `tous-responsables` | Tous responsables — face aux risques, agissons | info.gouv / SGDSN | 15 |
 | `pcs66` | Canevas de Plan Communal de Sauvegarde | Préfecture des Pyrénées-Orientales | 53 |
 | `dicrim-rochefort` | DICRIM — consignes de sécurité | Ville de Rochefort | 12 |
+| `spf-monoxyde` | Intoxications au monoxyde de carbone (infographie) | Santé publique France | 1 |
+| `spf-monoxyde-page` | Intoxications au CO — les bons gestes | Santé publique France | page web |
+| `enedis-coupure` | Je n'ai plus d'électricité : les bons gestes | Enedis | page web |
+| `rte-bons-reflexes` | Tension, attention — près des ouvrages électriques | RTE / Enedis, 2026 | 2 |
 
 ## Reconstruire
 

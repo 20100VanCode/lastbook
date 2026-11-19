@@ -28,8 +28,9 @@ def main():
     (lib / 'documents').mkdir(parents=True, exist_ok=True)
 
     docs = HERE / 'documents'
-    for pdf in sorted(docs.glob('*.pdf')):
-        shutil.copy2(pdf, lib / 'documents' / pdf.name)
+    for f in sorted(docs.iterdir()):
+        if f.is_file() and not f.name.startswith('._'):
+            shutil.copy2(f, lib / 'documents' / f.name)
 
     records = []
     for m in sorted((HERE / 'manifests').glob('*.json')):

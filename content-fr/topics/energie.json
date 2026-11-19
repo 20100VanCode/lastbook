@@ -1,0 +1,243 @@
+{
+ "id": "energie",
+ "mode": "now",
+ "title": "Électricité, gaz, monoxyde : éviter l'accident",
+ "short": "Coupures, appareils à combustion, lignes électriques",
+ "intro": "Lectures pour traverser une coupure de courant et utiliser des appareils à combustion sans s'intoxiquer : les gestes de premiers secours en électricité, l'usage des groupes électrogènes et des chauffages d'appoint, et les réflexes à adopter près des ouvrages électriques.",
+ "keywords": [
+  "électricité",
+  "coupure de courant",
+  "délestage",
+  "Ecowatt",
+  "groupe électrogène",
+  "gaz",
+  "monoxyde de carbone",
+  "CO",
+  "intoxication",
+  "brasero",
+  "chauffage d'appoint",
+  "bougie",
+  "câble électrique",
+  "ligne électrique",
+  "pylône",
+  "poste électrique",
+  "électrisation",
+  "réfrigérateur",
+  "congélateur",
+  "ascenseur",
+  "Enedis",
+  "RTE",
+  "secours",
+  "15",
+  "18",
+  "112"
+ ],
+ "choices": [
+  {
+   "id": "coupure",
+   "label": "Plus d'électricité dans le logement",
+   "hint": "Panne, délestage, travaux programmés",
+   "read": [
+    {
+     "doc": "enedis-coupure",
+     "label": "Les bons gestes en cas de coupure",
+     "note": "Enedis : n'ouvrez pas la porte du réfrigérateur ou du congélateur sans nécessité ; ne jamais utiliser d'appareils au charbon de bois ou au gaz dans le logement ; ne jamais laisser de bougies allumées sans surveillance et les éteindre avant de se coucher."
+    },
+    {
+     "doc": "enedis-coupure",
+     "label": "Les situations où il ne faut toucher à rien",
+     "note": "Même page Enedis : câble électrique à terre, coffret cassé, odeur de brûlé ou trace de noir, compteur ou disjoncteur sans capot — contacter le service d'urgence dépannage (09 72 67 50 + numéro du département, 24 h/24)."
+    },
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Pourquoi une coupure expose au monoxyde",
+     "note": "Santé publique France : le risque d'intoxication au CO augmente avec les appareils de chauffage non électriques, les groupes électrogènes ou les pompes à eau en cas d'inondations ou de coupures d'électricité, et tous les appareils à moteur thermique."
+    }
+   ]
+  },
+  {
+   "id": "monoxyde",
+   "label": "Risque de monoxyde de carbone",
+   "hint": "Maux de tête, fatigue, nausées dans le foyer",
+   "read": [
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Les causes identifiées",
+     "note": "Santé publique France : appareils raccordés à un conduit mal entretenus ou mal réglés ; appareils mobiles mal utilisés (chauffages d'appoint, braseros, barbecues, groupes électrogènes, pompes à eau) ; véhicules au moteur en route dans un local non ventilé."
+    },
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Reconnaître les symptômes et réagir vite",
+     "note": "Même page : maux de tête, grande fatigue, nausées, vomissements, vertiges, surtout s'ils touchent plusieurs personnes ou animaux en même temps. Aérer immédiatement, arrêter les appareils si possible, évacuer, appeler le 15, le 18, le 112 ou le 114."
+    },
+    {
+     "doc": "spf-monoxyde",
+     "label": "L'ampleur du risque en France",
+     "note": "Infographie Santé publique France : environ 1 000 foyers intoxiqués accidentellement au CO par an, 3 000 personnes dont 100 décès ; le monoxyde est imperceptible et asphyxiant."
+    }
+   ]
+  },
+  {
+   "id": "appareils",
+   "label": "Utiliser un groupe électrogène ou un chauffage d'appoint",
+   "hint": "Brasero, réchaud, pompe à eau thermique",
+   "read": [
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "La règle d'or : jamais en espace clos",
+     "note": "Santé publique France : les groupes électrogènes, braseros et barbecues ne doivent en aucun cas être utilisés dans un espace clos (habitation, garage, cave, camping-car) ni placés à proximité des portes, fenêtres ou bouches d'aération."
+    },
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "En cas d'inondation ou de tempête",
+     "note": "Même page : il est impératif de ne jamais utiliser à l'intérieur les pompes de relevage ou pompes à eau à moteur thermique ni les groupes électrogènes."
+    },
+    {
+     "doc": "enedis-coupure",
+     "label": "Ce qu'il ne faut pas utiliser dans le logement",
+     "note": "Enedis : ne jamais utiliser d'appareils fonctionnant au charbon de bois ou au gaz dans le logement (réchaud de camping…) — ils produisent du monoxyde de carbone, un gaz toxique, inodore et incolore."
+    }
+   ]
+  },
+  {
+   "id": "conduite",
+   "label": "La conduite au logement et le chauffage",
+   "hint": "Entretien, ventilation, entrées d'air",
+   "read": [
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Faire vérifier les installations chaque année",
+     "note": "Santé publique France : faire vérifier et entretenir au moins une fois par an, et avant toute remise en fonctionnement, les installations de chauffage, de production d'eau chaude et les conduits de fumée par un professionnel qualifié."
+    },
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Aérer et ne pas boucher les entrées d'air",
+     "note": "Même page : aérez au moins 10 minutes par jour même s'il fait froid ; maintenez les systèmes de ventilation en bon état et ne bouchez jamais les entrées et sorties d'air."
+    },
+    {
+     "doc": "spf-monoxyde-page",
+     "label": "Chauffage d'appoint et cuisson",
+     "note": "Même page : respectez les consignes du fabricant, n'employez que le combustible préconisé, ne faites jamais fonctionner les chauffages d'appoint en continu, et n'utilisez jamais les appareils de cuisson pour vous chauffer."
+    }
+   ]
+  },
+  {
+   "id": "lignes",
+   "label": "Près des lignes électriques",
+   "hint": "Travaux, élagage, véhicule en contact",
+   "read": [
+    {
+     "doc": "rte-bons-reflexes",
+     "page": 2,
+     "label": "Les distances à respecter",
+     "note": "RTE / Enedis : rester éloigné des lignes et ne jamais passer d'objets à moins de 5 m d'une ligne (risque d'arc sans contact) ; ne jamais pénétrer dans un poste électrique ni escalader un pylône ; ne jamais s'approcher à moins de 10 m d'un véhicule ou d'un objet en contact avec un ouvrage."
+    },
+    {
+     "doc": "rte-bons-reflexes",
+     "page": 2,
+     "label": "Un véhicule en contact avec un fil",
+     "note": "Même document : demander aux occupants de rester à l'intérieur, où ils sont en sécurité ; en cas d'incendie, sortir sans toucher le véhicule puis s'éloigner en sautant à pieds joints."
+    },
+    {
+     "doc": "enedis-coupure",
+     "label": "Fils tombés à terre : ne toucher à rien",
+     "note": "Enedis : ne touchez jamais des fils tombés à terre ni un objet en contact avec une ligne électrique, n'intervenez jamais sur les installations du réseau et respectez les zones de danger balisées."
+    }
+   ]
+  },
+  {
+   "id": "delestage",
+   "label": "Délestage et coupures organisées",
+   "hint": "Alerte Ecowatt, services non prioritaires",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Couper les réseaux sans danger pendant une crise",
+     "note": "Guide « Tous responsables » : en cas d'inondation, coupez si possible et sans vous mettre en danger les réseaux de gaz, d'électricité et de chauffage."
+    },
+    {
+     "doc": "enedis-coupure",
+     "label": "Anticiper l'information de coupure",
+     "note": "Enedis : pour une coupure imputable au réseau public, le gestionnaire prévient de la panne et du délai de rétablissement par SMS — il faut avoir communiqué son numéro de mobile."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Ne jamais utiliser d'appareils fonctionnant au charbon de bois ou au gaz dans le logement.",
+   "doc": "enedis-coupure"
+  },
+  {
+   "text": "Ne jamais laisser de bougies allumées sans surveillance et les éteindre avant de se coucher.",
+   "doc": "enedis-coupure"
+  },
+  {
+   "text": "Les groupes électrogènes, braseros et barbecues ne doivent en aucun cas être utilisés dans un espace clos, ni placés à proximité des portes, fenêtres ou bouches d'aération.",
+   "doc": "spf-monoxyde-page"
+  },
+  {
+   "text": "En cas d'inondation ou de tempête, il est impératif de ne jamais utiliser à l'intérieur les pompes à eau à moteur thermique ni les groupes électrogènes.",
+   "doc": "spf-monoxyde-page"
+  },
+  {
+   "text": "Ne touchez jamais des fils tombés à terre ni un objet en contact avec une ligne électrique.",
+   "doc": "enedis-coupure"
+  },
+  {
+   "text": "Ne jamais faire fonctionner les chauffages d'appoint en continu et ne jamais utiliser les appareils de cuisson pour se chauffer.",
+   "doc": "spf-monoxyde-page"
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "spf-monoxyde-page",
+   "label": "L'entretien annuel des installations",
+   "note": "Santé publique France : faire vérifier et entretenir au moins une fois par an les installations de chauffage, de production d'eau chaude et les conduits de fumée par un professionnel qualifié."
+  },
+  {
+   "doc": "spf-monoxyde-page",
+   "label": "Aérer quotidiennement",
+   "note": "Même page : aérez au moins 10 minutes par jour même s'il fait froid, et ne bouchez jamais les entrées et sorties d'air."
+  },
+  {
+   "doc": "enedis-coupure",
+   "label": "Savoir à qui signaler une situation dangereuse",
+   "note": "Enedis : service d'urgence dépannage 09 72 67 50 + numéro du département (appel non surtaxé, 24 h/24 et 7 j/7)."
+  },
+  {
+   "doc": "rte-bons-reflexes",
+   "page": 2,
+   "label": "Repérer les lignes avant des travaux",
+   "note": "RTE / Enedis : l'application « LigneAlerte » localise les lignes électriques aériennes à proximité et permet de planifier ses activités en sécurité."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "spf-monoxyde-page",
+   "label": "Santé publique France : les intoxications au monoxyde de carbone",
+   "note": "Communiqué et dossier : causes, bons gestes dans le logement et pour les appareils mobiles, symptômes et conduite à tenir."
+  },
+  {
+   "doc": "enedis-coupure",
+   "label": "Enedis : les bons gestes en cas de coupure de courant",
+   "note": "Page officielle du gestionnaire du réseau de distribution : conservation des aliments, appareils interdits, situations dangereuses, contacts."
+  },
+  {
+   "doc": "rte-bons-reflexes",
+   "label": "RTE / Enedis : les bons réflexes près des ouvrages électriques",
+   "note": "Document « Tension, attention » (2 pages) : distances à respecter, conduite en cas de véhicule en contact avec un fil, application LigneAlerte."
+  },
+  {
+   "doc": "tous-responsables",
+   "label": "info.gouv : Tous responsables — face aux risques, agissons",
+   "note": "Guide national du citoyen (15 pages), dont les consignes de coupure des réseaux en cas d'inondation."
+  }
+ ],
+ "related": [
+  "abri",
+  "catastrophe",
+  "alimentation"
+ ]
+}
