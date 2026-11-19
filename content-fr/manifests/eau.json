@@ -78,5 +78,35 @@
   "collection": "ARS",
   "publisher": "ARS / DDETSPP de l'Ardèche",
   "url": "https://www.empurany.fr/wp-content/uploads/2022/12/Delestage_Precautions-Alimentaires_ARS-DDETSPP07_VF.pdf"
+ },
+ {
+  "id": "mrn-cyclone",
+  "kind": "pdf",
+  "path": "documents/mrn-memento-cyclone.pdf",
+  "title": "Mémento pratique du particulier — Risque cyclonique",
+  "category": "urgent",
+  "collection": "MRN",
+  "publisher": "Mission des sociétés d'assurances pour la connaissance et la prévention des risques naturels",
+  "url": "https://www.mrn.asso.fr/wp-content/uploads/2018/01/2005-memento-pratique-du-particulier-cyclones-mrn.pdf"
+ },
+ {
+  "id": "orsec-reunion-cyclone",
+  "kind": "pdf",
+  "path": "documents/orsec-reunion-cyclone.pdf",
+  "title": "ORSEC 974 — Dispositif spécifique cyclones (arrêté n°5179 du 3 décembre 2014)",
+  "category": "urgent",
+  "collection": "ORSEC",
+  "publisher": "Préfecture de La Réunion",
+  "url": "https://www.meteo-reunion.com/Plan_Orsec_Cyclone_DSO_cyclone.pdf"
+ },
+ {
+  "id": "georisques-cyclone",
+  "kind": "pdf",
+  "path": "documents/georisques-cyclonique.pdf",
+  "title": "Consignes à la population — risque cyclonique (plaquette)",
+  "category": "urgent",
+  "collection": "Géorisques",
+  "publisher": "Ministère de la Transition écologique / Géorisques",
+  "url": "https://georisques.gouv.fr/sites/default/files/2023-10/Plaquette%20Risque%20Cyclonique.pdf"
  }
 ]

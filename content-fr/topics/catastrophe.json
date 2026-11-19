@@ -1,0 +1,273 @@
+{
+ "id": "catastrophe",
+ "mode": "now",
+ "title": "Cyclone : se préparer, se confiner, revenir",
+ "short": "Avant, pendant, après le passage",
+ "intro": "Lectures pour la saison cyclonique : ce que valent les différentes alertes, comment préparer le logement et les réserves, que faire pendant le passage, et les gestes qui comptent au retour. Les consignes de sécurité relèvent des autorités ; ces pages les décrivent.",
+ "keywords": [
+  "cyclone",
+  "ouragan",
+  "tempête",
+  "alerte",
+  "alerte orange",
+  "alerte rouge",
+  "vigilance",
+  "pré-alerte",
+  "sauvegarde",
+  "confinement",
+  "œil du cyclone",
+  "évacuation",
+  "abri",
+  "kit",
+  "réserve",
+  "eau",
+  "radio",
+  "piles",
+  "toiture",
+  "obscurcissement",
+  "projectile",
+  "ravine",
+  "inondation",
+  "fil électrique",
+  "Martinique",
+  "Guadeloupe",
+  "Réunion",
+  "DOM",
+  "ORSEC",
+  "Météo-France",
+  "DDRM",
+  "PCS"
+ ],
+ "choices": [
+  {
+   "id": "alertes",
+   "label": "Comprendre les niveaux d'alerte",
+   "hint": "Jaune, orange, rouge, violet, sauvegarde",
+   "read": [
+    {
+     "doc": "georisques-cyclone",
+     "page": 1,
+     "label": "Les phases d'alerte et ce qu'elles signifient",
+     "note": "Plaquette Géorisques : pré-alerte jaune (menace potentielle au-delà de 24 h), alerte orange (danger dans les 24 heures), alerte rouge (danger imminent), alerte violette (danger exceptionnel), phase de sauvegarde (menace écartée, dangers résiduels)."
+    },
+    {
+     "doc": "orsec-reunion-cyclone",
+     "page": 8,
+     "label": "Pourquoi la marge d'incertitude est prise en compte",
+     "note": "Dispositif ORSEC de La Réunion (2014) : l'incertitude des prévisions est prise en compte dans le déclenchement des alertes, pour laisser un préavis suffisant aux populations ; tout état d'alerte a une portée départementale."
+    },
+    {
+     "doc": "orsec-reunion-cyclone",
+     "page": 10,
+     "label": "Le tableau d'enchaînement des alertes",
+     "note": "Même dispositif : pré-alerte cyclonique (menace au-delà de 24 h), alerte orange (danger dans les 24 h), alerte rouge (danger imminent, préavis de trois heures), phase de sauvegarde."
+    }
+   ]
+  },
+  {
+   "id": "avant",
+   "label": "Préparer le logement avant la saison",
+   "hint": "Toiture, ouvertures, gouttières, projectiles",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 9,
+     "label": "Les mesures prioritaires à faible coût",
+     "note": "Mémento MRN (2005) : consolider les antennes, contrôler portes et fenêtres, vérifier et fixer chaque année les tôles de toiture, dégager gouttières et ravines, stocker des panneaux de contreplaqué pour occulter les ouvertures."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 10,
+     "label": "Tester sa capacité à réagir en famille",
+     "note": "Même mémento : discuter en famille de l'attitude à adopter, fixer des points de ralliement, effectuer des simulations et informer les personnes qui fréquentent la résidence."
+    },
+    {
+     "doc": "georisques-cyclone",
+     "page": 1,
+     "label": "Le kit d'urgence de 72 heures",
+     "note": "Plaquette Géorisques : eau (dix litres par personne en petites bouteilles) et outils de base — couteau de poche multifonction, ouvre-boîte — figurent dans le kit d'urgence recommandé."
+    }
+   ]
+  },
+  {
+   "id": "reserves",
+   "label": "Constituer les réserves",
+   "hint": "Eau, nourriture, radio, piles, papiers",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 11,
+     "label": "Radio à piles, lampes et outils",
+     "note": "Mémento MRN (2005) : une radio à piles avec piles de rechange pour suivre les bulletins d'alerte, des torches, des outils dans un lieu défini et accessible, et de quoi nettoyer après coup."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 12,
+     "label": "Les papiers et documents à protéger",
+     "note": "Même mémento : identité, santé, paiements, actes notariés et contrat d'assurance ; conserver aussi factures importantes et photos de l'habitation pour l'assurance."
+    },
+    {
+     "doc": "orsec-reunion-cyclone",
+     "page": 8,
+     "label": "Pourquoi anticiper plutôt qu'attendre",
+     "note": "Dispositif ORSEC de La Réunion (2014) : le préavis laissé aux populations sert à « prendre les précautions et dispositions indispensables avant l'arrivée éventuelle du phénomène »."
+    }
+   ]
+  },
+  {
+   "id": "pendant",
+   "label": "Pendant le passage",
+   "hint": "Confinement, œil du cyclone, coupures",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 15,
+     "label": "Rester calme, ne pas se déplacer",
+     "note": "Mémento MRN (2005) : restez calme et communiquez ce calme ; n'allez pas dans une zone à risque ; aidez en priorité les personnes âgées ou handicapées ; ne téléphonez pas pour laisser les lignes libres aux secours."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 16,
+     "label": "Protéger les biens pendant le passage",
+     "note": "Même mémento : débrancher antennes et appareils électriques ; couper le courant, l'eau et le gaz si les autorités le demandent ; ne pas utiliser de flamme nue ; sinon régler le réfrigérateur au minimum et ne l'ouvrir que si nécessaire."
+    },
+    {
+     "doc": "georisques-cyclone",
+     "page": 1,
+     "label": "Se confiner et attendre la levée de l'alerte",
+     "note": "Plaquette Géorisques : attendre la levée de l'alerte rouge cyclonique pour sortir, et ne prendre son véhicule que si le réseau routier est annoncé praticable."
+    }
+   ]
+  },
+  {
+   "id": "apres",
+   "label": "Au retour, tant que l'alerte n'est pas levée",
+   "hint": "Fils électriques, bâtiments, déplacements",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 17,
+     "label": "Les premières choses à faire",
+     "note": "Mémento MRN (2005) : tout risque n'est pas écarté tant que l'alerte n'est pas levée ; rester informé, ne se déplacer qu'en cas d'urgence absolue, faire le tour de l'habitation et signaler les personnes blessées ou en danger."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 18,
+     "label": "Une fois l'alerte levée",
+     "note": "Même mémento : ne pas franchir les zones dangereuses signalées ; conduire avec la plus grande prudence ; se méfier des bâtiments entourés d'eau ; ne pas toucher les fils électriques tombés à terre ; examiner murs, sols, portes, escaliers et fenêtres."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 19,
+     "label": "Le bilan des dégâts",
+     "note": "Même mémento : avant tout nettoyage, noter tout ce qui est détruit ou endommagé et photographier ; ne rien jeter avant le passage de l'expert de l'assureur ; déclarer le dommage en mairie."
+    }
+   ]
+  },
+  {
+   "id": "conduite",
+   "label": "La conduite officielle pendant les alertes",
+   "hint": "Consignes des autorités, sauvegarde",
+   "read": [
+    {
+     "doc": "orsec-reunion-cyclone",
+     "page": 12,
+     "label": "Les conduites à tenir lors des alertes cycloniques",
+     "note": "Dispositif ORSEC de La Réunion (2014) : les services doivent décliner leur organisation en plan de continuité ; la pré-alerte cyclonique est une mise en garde contre le danger cyclonique pour chacun."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 13,
+     "label": "Qui décide : le maire et le préfet",
+     "note": "Mémento MRN (2005) : le maire a la charge de la sécurité de la commune ; le plan d'urgence est propre à chaque zone, et les consignes sont données par les médias publics et les autorités."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 14,
+     "label": "Être attentif aux informations de vigilance",
+     "note": "Même mémento : observer la nature, suivre les messages météo et les consignes des autorités ; un baromètre permet de suivre la progression du cyclone en temps réel."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Tout état d'alerte cyclonique a une portée départementale : la phase en vigueur s'applique à tout le département, en toutes circonstances.",
+   "doc": "orsec-reunion-cyclone",
+   "page": 8
+  },
+  {
+   "text": "Ne téléphonez pas afin de laisser les lignes libres pour les secours, sauf pour demander vous-même du secours.",
+   "doc": "mrn-cyclone",
+   "page": 15
+  },
+  {
+   "text": "N'allez pas à pied ou en voiture dans une zone à risque : vous iriez au devant du danger.",
+   "doc": "mrn-cyclone",
+   "page": 15
+  },
+  {
+   "text": "Après le passage, tout risque n'est pas écarté tant que l'alerte n'a pas été levée.",
+   "doc": "mrn-cyclone",
+   "page": 17
+  },
+  {
+   "text": "Ne touchez pas et signalez immédiatement les fils électriques rompus et tombés à terre.",
+   "doc": "mrn-cyclone",
+   "page": 18
+  },
+  {
+   "text": "Il est préférable de ne rien jeter avant le passage de l'expert mandaté par votre assureur.",
+   "doc": "mrn-cyclone",
+   "page": 19
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "mrn-cyclone",
+   "page": 8,
+   "label": "Rendre l'habitat moins vulnérable",
+   "note": "Mémento MRN (2005) : les suggestions techniques doivent être envisagées avec un professionnel compétent, au cas par cas ; les constructions neuves respectent la norme neige et vent."
+  },
+  {
+   "doc": "mrn-cyclone",
+   "page": 11,
+   "label": "La liste des objets à préparer",
+   "note": "Même mémento : radio à piles et piles de rechange, torches, outils dans un lieu accessible, extincteurs, et téléphone portable toujours en charge."
+  },
+  {
+   "doc": "mrn-cyclone",
+   "page": 12,
+   "label": "Les papiers et documents à mettre à l'abri",
+   "note": "Même mémento : identité, santé, paiements, actes notariés, contrat d'assurance ; photos de l'habitation et factures importantes."
+  },
+  {
+   "doc": "georisques-cyclone",
+   "page": 1,
+   "label": "Le kit d'urgence avant la saison",
+   "note": "Plaquette Géorisques : eau (dix litres par personne en petites bouteilles) et outils de base pour le kit de 72 heures."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "mrn-cyclone",
+   "label": "MRN : mémento pratique du particulier — risque cyclonique",
+   "note": "Mémento de 20 pages (2005) : prévention, habitat, organisation familiale, conduite pendant l'alerte, retour et bilan."
+  },
+  {
+   "doc": "orsec-reunion-cyclone",
+   "label": "ORSEC 974 — dispositif spécifique cyclones",
+   "note": "Arrêté n°5179 du 3 décembre 2014 (98 pages) : alertes cycloniques, autorité du préfet et du maire, protection de la population, centres d'hébergement."
+  },
+  {
+   "doc": "georisques-cyclone",
+   "label": "Géorisques : consignes à la population — risque cyclonique",
+   "note": "Plaquette officielle (1 page) des phases d'alerte et des consignes associées, avec le kit d'urgence."
+  }
+ ],
+ "related": [
+  "abri",
+  "energie",
+  "eau"
+ ]
+}

@@ -11,8 +11,9 @@ francophones, cités par leur page réelle.
 | `eau` — De l'eau potable sûre | 8 | 7 | 4 | 4 | 37 |
 | `assainissement` — Évacuer les excréments sans risque | 5 | 5 | 3 | 3 | 24 |
 | `alimentation` — Nourriture sûre et chaîne du froid | 6 | 5 | 3 | 3 | 25 |
+| `catastrophe` — Cyclone : se préparer, se confiner, revenir | 6 | 6 | 4 | 3 | 31 |
 
-**86 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**117 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -26,6 +27,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `crf-latrines` | Latrines en situation d'urgence (montage ERU) | Croix-Rouge française, 2018 | 15 |
 | `anses-hygiene` | Hygiène domestique | Anses, 2013 | 5 |
 | `ars-coupures` | Coupures de courant : réfrigérateur, congélateur | ARS / DDETSPP | 1 |
+| `mrn-cyclone` | Mémento pratique du particulier — risque cyclonique | MRN, 2005 | 20 |
+| `orsec-reunion-cyclone` | ORSEC 974 — dispositif spécifique cyclones | Préfecture de La Réunion, 2014 | 98 |
+| `georisques-cyclone` | Consignes à la population — risque cyclonique | Géorisques | 1 |
 
 ## Reconstruire
 
