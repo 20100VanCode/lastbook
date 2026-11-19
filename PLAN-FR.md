@@ -14,7 +14,7 @@ Branche de travail : `relique-fr` (syncable avec `Immortal-Protocols/lastbook`).
 | **J2b** Géographie + couches | **fait** | BAN (rappel **100 %**), OSM, BD ALTI (terrain), BD TOPO (noms, bâtiments, 3D), RPG (cultures), unités métriques ; projections et découpe par emprise BAN |
 | **J2b** Lot packs | **59 / 101** | 5 DROM complets (noms + cultures) + 54 métropolitains, **0 échec** ; relus par `install.check_zip` + `check_map` |
 | **J3** Contenus | **fait** | **14 besoins** rédigés en français, 41 documents sources, **387 références vérifiées** |
-| **J4** Site + distribution | **en cours** | pack d'un département vérifié et installable ; reste site vitrine, packs agrégés, manifest, hébergement, builds signés |
+| **J4** Site + distribution | **en cours** | site vitrine FR (`website-fr/`), manifeste des 59 packs + `SHA256SUMS.txt` validés ; reste packs agrégés, hébergement, builds signés |
 
 - **Tests** : 338, dont 2 échecs PDF préexistants (identiques sur `main` propre).
 - **Branche** : `relique-fr`, poussée sur `20100VanCode/lastbook` ; `main` reste le miroir upstream.
@@ -174,11 +174,15 @@ sous forme de proposition vérifiée (17 nov. 2026). Elle n'attend que des codes
 - [ ] Vidéos francophones sous-titrées
 - [ ] `content/gaps.json` français
 
-### J4 — Site, packs, distribution
+### J4 — Site, packs, distribution _(en cours)_
 - [x] Pack d'un département (carte + adresses), vérifié et installable par setup
-- [ ] Site vitrine français (landing, téléchargements, crédits)
+- [x] **Site vitrine français** — `website-fr/` (landing + crédits), marque RELIQUE,
+      chiffres réels, installation en trois étapes, sources et licences
+- [x] **Manifeste des packs** — `packaging/publish_packs_fr.py` écrit
+      `manifest-v1.json` + `SHA256SUMS.txt` (118 archives, `manifest.validate` : OK) ;
+      hôte de téléchargement configurable (`RELIQUE_DOWNLOAD_HOST`)
 - [ ] Packs Small/Medium/All France + cartes par région
-- [ ] Manifest, sums, hébergement des téléchargements
+- [ ] Hébergement des téléchargements (DNS + `_headers`) et manifeste publié
 - [ ] Builds Mac/Win/Linux signés
 
 ---
