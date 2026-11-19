@@ -12,8 +12,9 @@ francophones, cités par leur page réelle.
 | `assainissement` — Évacuer les excréments sans risque | 5 | 5 | 3 | 3 | 24 |
 | `alimentation` — Nourriture sûre et chaîne du froid | 6 | 5 | 3 | 3 | 25 |
 | `catastrophe` — Cyclone : se préparer, se confiner, revenir | 6 | 6 | 4 | 3 | 31 |
+| `abri` — Se mettre à l'abri et être hébergé | 6 | 6 | 4 | 4 | 32 |
 
-**117 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**149 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -30,6 +31,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `mrn-cyclone` | Mémento pratique du particulier — risque cyclonique | MRN, 2005 | 20 |
 | `orsec-reunion-cyclone` | ORSEC 974 — dispositif spécifique cyclones | Préfecture de La Réunion, 2014 | 98 |
 | `georisques-cyclone` | Consignes à la population — risque cyclonique | Géorisques | 1 |
+| `tous-responsables` | Tous responsables — face aux risques, agissons | info.gouv / SGDSN | 15 |
+| `pcs66` | Canevas de Plan Communal de Sauvegarde | Préfecture des Pyrénées-Orientales | 53 |
+| `dicrim-rochefort` | DICRIM — consignes de sécurité | Ville de Rochefort | 12 |
 
 ## Reconstruire
 

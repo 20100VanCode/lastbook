@@ -1,0 +1,276 @@
+{
+ "id": "abri",
+ "mode": "now",
+ "title": "Se mettre à l'abri et être hébergé",
+ "short": "Choisir la pièce, évacuer, centre d'accueil",
+ "intro": "Lectures pour choisir où se mettre à l'abri, que prendre avec soi, comment se déroule une évacuation et un centre d'hébergement, et ce qu'il faut savoir au retour. Les consignes relèvent des autorités ; ces pages les décrivent.",
+ "keywords": [
+  "abri",
+  "s'abriter",
+  "se réfugier",
+  "confinement",
+  "mise à l'abri",
+  "pièce",
+  "évacuation",
+  "centre d'accueil",
+  "hébergement",
+  "point de regroupement",
+  "gymnase",
+  "DICRIM",
+  "PCS",
+  "sinistré",
+  "inondation",
+  "submersion",
+  "séisme",
+  "vent violent",
+  "feu de forêt",
+  "fenêtres",
+  "baies vitrées",
+  "sous-sol",
+  "voiture",
+  "enfants",
+  "école",
+  "PPMS",
+  "kit d'urgence",
+  "couvertures",
+  "médicaments",
+  "papiers"
+ ],
+ "choices": [
+  {
+   "id": "generales",
+   "label": "Les consignes générales d'abri",
+   "hint": "Rester, ne pas sortir, ne pas téléphoner",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Ne pas quitter son abri sans consigne",
+     "note": "Guide « Tous responsables » (info.gouv) : ne sortez pas dehors et ne quittez pas votre abri sans consigne des autorités ; si vous êtes à l'extérieur, rejoignez un bâtiment. Évitez de téléphoner pour laisser les réseaux disponibles aux secours ; ne restez pas près des fenêtres."
+    },
+    {
+     "doc": "dicrim-rochefort",
+     "page": 11,
+     "label": "La mise à l'abri à domicile",
+     "note": "DICRIM de Rochefort : choisissez une pièce avec peu d'ouvertures et prévenez la chute d'objets ; emportez vêtements chauds, couvertures, vivres et eau, médicaments, lampe de poche ou bougies, et un poste radio."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Ne pas aller chercher les enfants à l'école",
+     "note": "Même guide : les établissements scolaires disposent de plans particuliers de mise en sûreté (PPMS) ; les enfants sont pris en charge par les équipes pédagogiques ou les secours."
+    }
+   ]
+  },
+  {
+   "id": "risques",
+   "label": "S'abriter selon le risque",
+   "hint": "Inondation, séisme, feu, vent, mouvement de terrain",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Inondation : rester à l'abri, n'évacuer que sur ordre",
+     "note": "Guide « Tous responsables » : ne prenez pas votre voiture (quelques centimètres d'eau suffisent à l'emporter), ne descendez pas dans les sous-sols ou parkings souterrains, coupez si possible et sans danger les réseaux, éloignez-vous des cours d'eau, des berges et des ponts, et n'évacuez que sur ordre des autorités."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Séisme : pendant et après les secousses",
+     "note": "Même guide : pendant les secousses, abritez-vous près d'un mur, d'une structure porteuse ou sous des meubles solides, loin des fenêtres ; en voiture, ne sortez pas ; après, sortez du bâtiment et éloignez-vous de ce qui pourrait s'effondrer."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Feu de forêt et fumées",
+     "note": "Même guide : restez ou mettez-vous à l'abri, ne prenez pas votre voiture, bouchez les aérations et les bas de porte pour empêcher l'entrée des fumées toxiques et des flammèches, couvrez-vous le nez et la bouche d'un linge humide."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Tempêtes, orages et mouvements de terrain",
+     "note": "Même guide : abritez-vous dans un bâtiment solide, fermez portes, fenêtres et volets, éloignez-vous des baies vitrées ; éloignez-vous des zones à forte pente en cas de mouvement de terrain."
+    }
+   ]
+  },
+  {
+   "id": "evacuation",
+   "label": "Évacuer",
+   "hint": "Point de regroupement, itinéraire, affaires",
+   "read": [
+    {
+     "doc": "pcs66",
+     "page": 41,
+     "label": "Organiser une évacuation",
+     "note": "Canevas PCS (Pyrénées-Orientales) : transmettre l'ordre d'évacuation aux habitants, conseiller les personnes qui doivent évacuer, repérer les personnes vulnérables ; la fiche est prévue pour être renseignée par la commune."
+    },
+    {
+     "doc": "dicrim-rochefort",
+     "page": 10,
+     "label": "Le point de regroupement et le centre d'accueil",
+     "note": "DICRIM de Rochefort : le point de regroupement est désigné par la commune (devant l'école élémentaire la plus proche dans cet exemple) ; emportez papiers personnels, vêtements chauds et de rechange, médicaments et de quoi occuper les enfants."
+    },
+    {
+     "doc": "pcs66",
+     "page": 45,
+     "label": "Ce que la commune met en place",
+     "note": "Canevas PCS : un bureau d'accueil relève les identités, note les problèmes de regroupement familial et dirige les sinistrés vers les lieux d'hébergement."
+    }
+   ]
+  },
+  {
+   "id": "hebergement",
+   "label": "Être hébergé dans un centre",
+   "hint": "Espace, couchage, accueil, animaux",
+   "read": [
+    {
+     "doc": "pcs66",
+     "page": 45,
+     "label": "L'espace prévu par personne",
+     "note": "Canevas PCS : pour organiser un centre d'hébergement, compter environ 6 m² par personne pour la zone de couchage (2 pour le lit, 2 pour la descente de lit, 2 pour la circulation)."
+    },
+    {
+     "doc": "pcs66",
+     "page": 46,
+     "label": "Le comité d'accueil et les besoins des sinistrés",
+     "note": "Même canevas : accueillir les sinistrés sur leur lieu d'hébergement, les soutenir en alimentation et en couchage, identifier les besoins en soins, aider les isolés et les personnes vulnérables, et prendre en charge les enfants isolés."
+    },
+    {
+     "doc": "dicrim-rochefort",
+     "page": 10,
+     "label": "Signaler les animaux restés au domicile",
+     "note": "DICRIM de Rochefort : signalez aux secouristes la présence d'animaux à votre domicile."
+    }
+   ]
+  },
+  {
+   "id": "deplacement",
+   "label": "Être à l'extérieur ou en véhicule",
+   "hint": "Pas d'abri disponible, route, arbre",
+   "read": [
+    {
+     "doc": "tous-responsables",
+     "page": 10,
+     "label": "Ne pas rester dans un véhicule",
+     "note": "Guide « Tous responsables » : en cas d'alerte, ne restez pas dans un véhicule."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "La voiture face à une inondation",
+     "note": "Même guide : quelques centimètres d'eau suffisent à emporter une voiture — ne prenez pas votre voiture et ne descendez pas dans les sous-sols ou parkings souterrains."
+    },
+    {
+     "doc": "tous-responsables",
+     "page": 7,
+     "label": "Le séisme en voiture",
+     "note": "Même guide : en voiture pendant un séisme, ne sortez pas et arrêtez-vous à distance des bâtiments."
+    }
+   ]
+  },
+  {
+   "id": "retour",
+   "label": "Revenir et se réinstaller",
+   "hint": "Retour au domicile, dégâts, réparations",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 18,
+     "label": "À la levée de l'alerte",
+     "note": "Mémento MRN : retournez chez vous lorsque les autorités confirment l'absence de danger, ne franchissez pas les zones dangereuses signalées, conduisez avec la plus grande prudence et examinez murs, sols, portes, escaliers et fenêtres."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 19,
+     "label": "Le bilan et les réparations sommaires",
+     "note": "Même mémento : photographiez les dégâts avant tout nettoyage, ne rien jeter avant l'expert de l'assureur, déclarez le dommage en mairie et procédez à des réparations sommaires."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Ne sortez pas dehors et ne quittez pas votre abri sans consigne des autorités.",
+   "doc": "tous-responsables",
+   "page": 10
+  },
+  {
+   "text": "Évitez de téléphoner afin de laisser les réseaux disponibles pour les services de secours.",
+   "doc": "tous-responsables",
+   "page": 10
+  },
+  {
+   "text": "N'évacuez votre domicile que sur ordre des autorités.",
+   "doc": "tous-responsables",
+   "page": 7
+  },
+  {
+   "text": "N'allez pas chercher vos enfants à l'école : ils sont pris en charge par les équipes pédagogiques ou les secours.",
+   "doc": "tous-responsables",
+   "page": 10
+  },
+  {
+   "text": "Pour organiser un centre d'hébergement, compter environ 6 m² par personne pour la zone de couchage.",
+   "doc": "pcs66",
+   "page": 45
+  },
+  {
+   "text": "Ne restez pas dans un véhicule en cas d'alerte.",
+   "doc": "tous-responsables",
+   "page": 10
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "tous-responsables",
+   "page": 7,
+   "label": "Repérer les comportements à adopter selon le risque",
+   "note": "Guide « Tous responsables » : informez-vous sur les risques et les menaces et sur les comportements à adopter pour y faire face."
+  },
+  {
+   "doc": "dicrim-rochefort",
+   "page": 11,
+   "label": "La liste des objets à emporter en mise à l'abri",
+   "note": "DICRIM de Rochefort : vêtements chauds, couvertures, vivres et eau, médicaments, lampe de poche ou bougies, poste radio."
+  },
+  {
+   "doc": "dicrim-rochefort",
+   "page": 10,
+   "label": "Connaître son point de regroupement",
+   "note": "DICRIM de Rochefort : le point de regroupement et le centre d'accueil d'urgence sont indiqués dans le document communal."
+  },
+  {
+   "doc": "pcs66",
+   "page": 41,
+   "label": "Ce que prévoit un Plan Communal de Sauvegarde",
+   "note": "Canevas PCS : le plan organise l'évacuation, le point de regroupement et l'orientation des sinistrés vers les lieux d'hébergement."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "tous-responsables",
+   "label": "info.gouv : Tous responsables — face aux risques, agissons",
+   "note": "Guide national du citoyen (15 pages) : préparation, protection face aux risques naturels et aux menaces, numéros d'urgence et consignes générales."
+  },
+  {
+   "doc": "pcs66",
+   "label": "Canevas de Plan Communal de Sauvegarde",
+   "note": "Modèle PCS (53 pages) : schéma d'alerte, fiches par risque, et annexes évacuation / hébergement avec l'espace par personne."
+  },
+  {
+   "doc": "dicrim-rochefort",
+   "label": "DICRIM — Document d'information communale sur les risques majeurs",
+   "note": "Exemple communal (12 pages) : consignes de sécurité, points de regroupement, mise à l'abri à domicile et plan communal de sauvegarde."
+  },
+  {
+   "doc": "mrn-cyclone",
+   "label": "MRN : mémento pratique du particulier — risque cyclonique",
+   "note": "Mémento de 20 pages (2005) : conduite au retour, bilan des dégâts et relations avec l'assureur."
+  }
+ ],
+ "related": [
+  "catastrophe",
+  "eau",
+  "alimentation"
+ ]
+}

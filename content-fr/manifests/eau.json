@@ -108,5 +108,35 @@
   "collection": "Géorisques",
   "publisher": "Ministère de la Transition écologique / Géorisques",
   "url": "https://georisques.gouv.fr/sites/default/files/2023-10/Plaquette%20Risque%20Cyclonique.pdf"
+ },
+ {
+  "id": "tous-responsables",
+  "kind": "pdf",
+  "path": "documents/infogouv-tous-responsables.pdf",
+  "title": "Tous responsables — face aux risques, agissons",
+  "category": "urgent",
+  "collection": "info.gouv",
+  "publisher": "Ministère de l'Intérieur / SGDSN",
+  "url": "https://www.info.gouv.fr/upload/media/mixed/0001/15/0f52e90c8641ac288227151331c995a566d14fdb.pdf"
+ },
+ {
+  "id": "pcs66",
+  "kind": "pdf",
+  "path": "documents/pcs66-canevas.pdf",
+  "title": "Canevas de Plan Communal de Sauvegarde (PCS) — évacuation et hébergement",
+  "category": "urgent",
+  "collection": "PCS",
+  "publisher": "Préfecture des Pyrénées-Orientales",
+  "url": "https://www.pyrenees-orientales.gouv.fr/contenu/telechargement/40151/317138/file/canevas_PCS66_simplif_V2024.pdf"
+ },
+ {
+  "id": "dicrim-rochefort",
+  "kind": "pdf",
+  "path": "documents/dicrim-rochefort.pdf",
+  "title": "Document d'Information Communale sur les Risques Majeurs — consignes de sécurité",
+  "category": "urgent",
+  "collection": "DICRIM",
+  "publisher": "Ville de Rochefort",
+  "url": "https://www.ville-rochefort.fr/sites/default/files/Mediatheque/Vie%20municipale/actions%20municipales/Cadre%20de%20vie/Risques%20majeurs/Document%20d_information%20communale%20sur%20les%20risques%20majeurs.pdf"
  }
 ]
