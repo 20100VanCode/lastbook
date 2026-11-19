@@ -18,8 +18,9 @@ francophones, cités par leur page réelle.
 | `blessures` — Plaies, brûlures, hémorragies : faire face | 5 | 5 | 3 | 3 | 24 |
 | `communications` — Alerter, être alerté, rester informé | 6 | 5 | 4 | 4 | 30 |
 | `sante` — Soigner au quotidien, éviter l'aggravation | 6 | 5 | 3 | 4 | 29 |
+| `reparation` — Réparer, mettre hors d'eau, déclarer | 5 | 5 | 3 | 3 | 26 |
 
-**287 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**313 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -51,6 +52,8 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `ars-gastro` | Recommandations en cas de gastro-entérite | ARS de Mayotte | 2 |
 | `spf-chaleur-enfant` | Fortes chaleurs et enfant — repères | Santé publique France | 4 |
 | `ameli-medicaments` | Médicaments et fortes chaleurs | Assurance Maladie | page web |
+| `mrn-tempetes` | Mémento pratique du particulier — risque tempêtes | MRN, 2005 | 19 |
+| `sp-degat-eaux` | Assurance dégâts des eaux | Service-Public / DILA | 5 |
 
 ## Reconstruire
 

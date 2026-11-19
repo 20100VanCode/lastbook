@@ -308,5 +308,25 @@
   "collection": "ameli",
   "publisher": "Assurance Maladie (ameli.fr)",
   "url": "https://www.ameli.fr/assure/sante/medicaments/effets-indesirables-et-interactions-lies-aux-medicaments/prevenir-risques-medicaments-canicule"
+ },
+ {
+  "id": "mrn-tempetes",
+  "kind": "pdf",
+  "path": "documents/mrn-memento-tempetes.pdf",
+  "title": "Mémento pratique du particulier — Risque tempêtes",
+  "category": "urgent",
+  "collection": "MRN",
+  "publisher": "Mission des sociétés d'assurances pour la connaissance et la prévention des risques naturels",
+  "url": "https://www.indre-et-loire.gouv.fr/contenu/telechargement/2225/10684/file/Memento_tempetes.pdf"
+ },
+ {
+  "id": "sp-degat-eaux",
+  "kind": "pdf",
+  "path": "documents/service-public-degat-eaux.pdf",
+  "title": "Assurance dégâts des eaux",
+  "category": "urgent",
+  "collection": "Service-Public",
+  "publisher": "Direction de l'information légale et administrative",
+  "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1352"
  }
 ]

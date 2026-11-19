@@ -1,0 +1,231 @@
+{
+ "id": "reparation",
+ "mode": "now",
+ "title": "Réparer, mettre hors d'eau, déclarer",
+ "short": "Sécuriser, réparer l'urgence, assuré",
+ "intro": "Lectures pour la période qui suit le sinistre : sécuriser les lieux sans s'exposer, faire réparer l'urgence, rassembler les preuves, déclarer à l'assureur et distinguer la mesure conservatoire de la remise en état.",
+ "keywords": [
+  "réparation",
+  "fuite",
+  "dégât des eaux",
+  "toiture",
+  "bâchage",
+  "hors d'eau",
+  "sinistre",
+  "assureur",
+  "mesure conservatoire",
+  "mesure d'urgence",
+  "déclaration",
+  "délai",
+  "expert",
+  "constat",
+  "photos",
+  "factures",
+  "devis",
+  "remise en état",
+  "tempête",
+  "inondation",
+  "infiltration",
+  "électricité",
+  "gaz",
+  "couvreur",
+  "travaux",
+  "indemnisation"
+ ],
+ "choices": [
+  {
+   "id": "apres",
+   "label": "Immédiatement après la tempête",
+   "hint": "Sécuriser sans s'exposer",
+   "read": [
+    {
+     "doc": "mrn-tempetes",
+     "page": 17,
+     "label": "Les premières choses à faire",
+     "note": "Mémento MRN (2005) : rester informé, s'éloigner des zones dangereuses, ne pas aller dans les secteurs endommagés sauf à la demande, aider les personnes en difficulté et signaler les blessés aux secours."
+    },
+    {
+     "doc": "mrn-tempetes",
+     "page": 17,
+     "label": "Ne pas déplacer les personnes gravement blessées",
+     "note": "Même mémento : n'essayez pas de déplacer les personnes sérieusement blessées, sauf en cas de risque immédiat de nouvelle blessure (chute de mur, etc.) ; les renforts professionnels ont l'équipement adéquat."
+    },
+    {
+     "doc": "mrn-tempetes",
+     "page": 15,
+     "label": "Si vous êtes en voiture pendant la tempête",
+     "note": "Même mémento : les chutes d'arbres et les branches font partie des dangers pendant et après le phénomène ; le document décrit les réflexes qui sauvent en voiture."
+    }
+   ]
+  },
+  {
+   "id": "eau",
+   "label": "Une fuite ou un dégât des eaux",
+   "hint": "Fuite identifiée, voisin, électricité",
+   "read": [
+    {
+     "doc": "sp-degat-eaux",
+     "page": 2,
+     "label": "Réparer la fuite immédiatement, sans attendre",
+     "note": "Service-Public (DILA) : une fois la fuite identifiée, faites-la réparer immédiatement pour éviter l'aggravation des dommages ; cette intervention est une mesure d'urgence et n'empêche pas l'indemnisation."
+    },
+    {
+     "doc": "sp-degat-eaux",
+     "page": 2,
+     "label": "Couper l'électricité avant tout",
+     "note": "Même fiche : prenez toutes les mesures de sécurité nécessaires, par exemple couper l'électricité pour éviter un risque d'électrocution ; si le sinistre vient d'un autre logement, demandez aux voisins concernés de couper l'arrivée d'eau."
+    },
+    {
+     "doc": "sp-degat-eaux",
+     "page": 1,
+     "label": "Ce qui est couvert, et ce qui ne l'est pas",
+     "note": "Même fiche : les infiltrations d'eau (toiture, murs, fenêtres) peuvent être couvertes si elles résultent d'un événement soudain et accidentel comme une forte pluie ou une tempête ; elles sont généralement exclues en cas de manque d'entretien ou de vétusté."
+    }
+   ]
+  },
+  {
+   "id": "travaux",
+   "label": "Réparation d'urgence ou remise en état",
+   "hint": "La différence qui compte pour l'indemnisation",
+   "read": [
+    {
+     "doc": "sp-degat-eaux",
+     "page": 2,
+     "label": "Ne pas remettre en état avant l'accord",
+     "note": "Service-Public (DILA) : n'entamez pas les travaux de remise en état (peinture, sols, plafonds, mobilier) sans l'accord de votre assureur ; l'assureur ou l'expert doit pouvoir constater les dégâts avant toute réparation définitive, sous peine de réduction ou de refus d'indemnisation."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 18,
+     "label": "Les réparations sommaires après une alerte levée",
+     "note": "Mémento MRN : à la levée de l'alerte, examinez murs, sols, portes, escaliers et fenêtres, ouvrez pour ventiler, puis procédez à des réparations sommaires ; consultez ensuite votre assureur."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 19,
+     "label": "Demander la différence entre provisoire et définitif",
+     "note": "Mémento MRN : avant tout nettoyage, faites un premier constat des dégâts, photographiez et ne jetez rien avant le passage de l'expert ; demandez au professionnel de distinguer la mesure conservatoire de la réparation définitive."
+    }
+   ]
+  },
+  {
+   "id": "preuves",
+   "label": "Rassembler les preuves du sinistre",
+   "hint": "Photos, objets conservés, descriptions datées",
+   "read": [
+    {
+     "doc": "mrn-cyclone",
+     "page": 18,
+     "label": "Le premier constat, avant tout nettoyage",
+     "note": "Mémento MRN : notez tout ce qui est détruit ou endommagé, photographiez tous les objets, meubles et toitures endommagés, et conservez les biens irrécupérables autant que faire se peut."
+    },
+    {
+     "doc": "mrn-cyclone",
+     "page": 19,
+     "label": "Ne rien jeter avant l'expert",
+     "note": "Même mémento : il est préférable de ne rien jeter avant le passage de l'expert mandaté par votre assureur."
+    },
+    {
+     "doc": "sp-degat-eaux",
+     "page": 2,
+     "label": "Conserver les factures et justificatifs",
+     "note": "Service-Public (DILA) : conservez toutes les factures et justificatifs des réparations d'urgence afin de les transmettre à l'assureur ou à l'expert."
+    }
+   ]
+  },
+  {
+   "id": "assurance",
+   "label": "Déclarer le sinistre",
+   "hint": "Délai, courrier recommandé, mairie",
+   "read": [
+    {
+     "doc": "sp-degat-eaux",
+     "page": 3,
+     "label": "Le délai de déclaration",
+     "note": "Service-Public (DILA) : prévenez votre assureur dès que vous avez connaissance du sinistre et au plus tard dans le délai fixé par le contrat, au minimum cinq jours ouvrés ; la déclaration peut se faire par téléphone, à l'agence ou en ligne, ou par courrier recommandé avec accusé de réception."
+    },
+    {
+     "doc": "mrn-tempetes",
+     "page": 18,
+     "label": "L'appel puis le courrier circonstancié",
+     "note": "Mémento MRN : passez un premier appel téléphonique à votre assureur, puis confirmez par courrier recommandé avec accusé de réception votre déclaration circonstanciée, dans les cinq jours ouvrés à partir de la connaissance du sinistre."
+    },
+    {
+     "doc": "mrn-tempetes",
+     "page": 18,
+     "label": "Déclarer aussi en mairie",
+     "note": "Même mémento : déclarez votre dommage en mairie et procurez-vous les devis de réparation ou de remplacement des biens détruits ou endommagés."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "N'entamez pas les travaux de remise en état sans avoir obtenu l'accord de votre assureur : l'expert doit pouvoir constater les dégâts avant toute réparation définitive.",
+   "doc": "sp-degat-eaux",
+   "page": 2
+  },
+  {
+   "text": "Il est préférable de ne rien jeter avant le passage de l'expert mandaté par votre assureur.",
+   "doc": "mrn-cyclone",
+   "page": 18
+  },
+  {
+   "text": "N'essayez pas de déplacer les personnes sérieusement blessées, sauf en cas de risque immédiat de nouvelle blessure.",
+   "doc": "mrn-tempetes",
+   "page": 17
+  },
+  {
+   "text": "Coupez l'électricité pour éviter un risque d'électrocution en cas de dégât des eaux.",
+   "doc": "sp-degat-eaux",
+   "page": 2
+  },
+  {
+   "text": "Les infiltrations dues à un manque d'entretien ou à la vétusté des installations sont généralement exclues de la garantie dégâts des eaux.",
+   "doc": "sp-degat-eaux",
+   "page": 1
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "mrn-cyclone",
+   "page": 12,
+   "label": "Les papiers et documents à protéger",
+   "note": "Mémento MRN : identité, santé, paiements, actes notariés et contrat d'assurance ; conservez factures importantes et photos de l'habitation et des biens mobiliers."
+  },
+  {
+   "doc": "sp-degat-eaux",
+   "page": 2,
+   "label": "Conserver les justificatifs des mesures d'urgence",
+   "note": "Service-Public (DILA) : factures et justificatifs des réparations d'urgence à transmettre à l'assureur ou à l'expert."
+  },
+  {
+   "doc": "mrn-tempetes",
+   "page": 8,
+   "label": "Rendre l'habitat moins vulnérable avant la saison",
+   "note": "Mémento MRN : les suggestions techniques doivent être envisagées avec un professionnel compétent, au cas par cas ; vérifier et fixer chaque année les tôles de toiture."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "mrn-tempetes",
+   "label": "MRN : mémento pratique du particulier — risque tempêtes",
+   "note": "Mémento de 19 pages (2005) : prévention, conduite pendant la tempête, gestes qui sauvent, retour et bilan."
+  },
+  {
+   "doc": "sp-degat-eaux",
+   "label": "Service-Public : assurance dégâts des eaux",
+   "note": "Fiche officielle (DILA) : réparation de la fuite, déclaration, délais et justificatifs."
+  },
+  {
+   "doc": "mrn-cyclone",
+   "label": "MRN : mémento pratique du particulier — risque cyclonique",
+   "note": "Mémento de 20 pages (2005) : bilan des dégâts, réparations sommaires et relation avec l'assureur."
+  }
+ ],
+ "related": [
+  "catastrophe",
+  "abri",
+  "terrain"
+ ]
+}
