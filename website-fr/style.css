@@ -1,0 +1,189 @@
+/* RELIQUE — site vitrine. Monochrome, tramage, rétro-technique. */
+
+:root {
+  --fond: #141414;
+  --papier: #f2efe7;
+  --encre: #111111;
+  --texte: #5c5c56;
+  --texte-fonce: #a9a79e;
+  --ligne: #d9d5c9;
+  --ligne-fonce: #33322e;
+  --accent: #c24a3a;
+  --accent-fonce: #8a2b1f;
+  --ardoise: #4f7a6e;
+  --max: 1080px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--papier);
+  font: 17px/1.6 "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0 0 .5em;
+  text-transform: uppercase;
+}
+h1 { font-size: clamp(2.2rem, 7vw, 4.4rem); letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.4rem, 3.4vw, 2rem); }
+h3 { font-size: 1rem; letter-spacing: .04em; }
+
+p { margin: 0 0 1em; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- structure --- */
+
+.bar, main, footer { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+.bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 22px; padding-bottom: 22px;
+  border-bottom: 1px solid var(--ligne-fonce);
+}
+.brand { display: flex; align-items: center; gap: 10px; color: var(--papier); }
+.brand span { font-weight: 650; letter-spacing: .14em; }
+.bar nav { display: flex; gap: 22px; }
+.bar nav a { color: var(--texte-fonce); font-size: .92rem; }
+.bar nav a:hover { color: var(--papier); }
+
+.hero { padding: clamp(56px, 12vw, 120px) 0 clamp(40px, 8vw, 72px); }
+.kicker {
+  color: var(--accent); text-transform: uppercase; letter-spacing: .16em;
+  font-size: .8rem; margin-bottom: 18px;
+}
+.lede { max-width: 60ch; font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: #e6e3d9; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 18px; }
+
+.bouton {
+  display: inline-block; padding: 13px 22px;
+  border: 1px solid var(--papier); border-radius: 3px;
+  color: var(--papier); font-weight: 600; letter-spacing: .02em;
+  background: var(--papier); color: var(--encre);
+}
+.bouton:hover { text-decoration: none; background: transparent; color: var(--papier); }
+.bouton.ghost { background: transparent; color: var(--papier); }
+.bouton.ghost:hover { background: var(--papier); color: var(--encre); }
+
+.note { color: var(--texte-fonce); font-size: .9rem; max-width: 62ch; }
+
+/* --- filet + tramage --- */
+
+.filet {
+  height: 10px;
+  border-top: 1px solid var(--ligne-fonce);
+  border-bottom: 1px solid var(--ligne-fonce);
+  background-image: radial-gradient(var(--ligne-fonce) 1px, transparent 1.4px);
+  background-size: 7px 7px;
+}
+
+/* --- chiffres --- */
+
+.chiffres {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-bottom: 1px solid var(--ligne-fonce);
+}
+.chiffres div {
+  padding: 26px 18px; border-right: 1px solid var(--ligne-fonce);
+}
+.chiffres div:last-child { border-right: 0; }
+.chiffres strong {
+  display: block; font-size: clamp(1.9rem, 4.4vw, 3rem); font-weight: 650;
+  letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+}
+.chiffres span {
+  color: var(--texte-fonce); font-size: .82rem;
+  text-transform: uppercase; letter-spacing: .1em;
+}
+
+/* --- blocs --- */
+
+.bloc { padding: clamp(48px, 9vw, 88px) 0; border-bottom: 1px solid var(--ligne-fonce); }
+.bloc.fond {
+  background-image: radial-gradient(var(--ligne-fonce) 1px, transparent 1.4px);
+  background-size: 9px 9px;
+}
+
+.grille {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px; background: var(--ligne-fonce); border: 1px solid var(--ligne-fonce);
+  margin-top: 26px;
+}
+.grille article { background: var(--fond); padding: 22px; }
+.grille article p { color: var(--texte-fonce); font-size: .95rem; margin: 0; }
+
+.etapes { list-style: none; margin: 26px 0 0; padding: 0; }
+.etapes li {
+  display: flex; gap: 20px; padding: 20px 0;
+  border-top: 1px solid var(--ligne-fonce);
+}
+.etapes li:last-child { border-bottom: 1px solid var(--ligne-fonce); }
+.etapes .num {
+  flex: 0 0 44px; height: 44px; display: grid; place-items: center;
+  border: 1px solid var(--papier); border-radius: 3px;
+  font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.etapes h3 { margin-bottom: .3em; }
+.etapes p { color: var(--texte-fonce); margin: 0; font-size: .95rem; }
+
+/* --- tableaux --- */
+
+table {
+  width: 100%; border-collapse: collapse; margin: 20px 0 8px;
+  font-size: .92rem; display: block; overflow-x: auto;
+}
+th, td {
+  text-align: left; padding: 10px 12px;
+  border-bottom: 1px solid var(--ligne-fonce); vertical-align: top;
+}
+th {
+  text-transform: uppercase; letter-spacing: .1em; font-size: .76rem;
+  color: var(--texte-fonce); font-weight: 600;
+}
+td:first-child { color: var(--papier); }
+
+/* --- pied --- */
+
+footer {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  padding-top: 34px; padding-bottom: 46px;
+}
+footer .marque { display: flex; align-items: center; gap: 8px; }
+footer .marque span { font-weight: 650; letter-spacing: .14em; font-size: .9rem; }
+footer .base { margin: 6px 0 0; color: var(--texte-fonce); }
+footer .leg { margin: 0; color: var(--texte-fonce); font-size: .82rem; }
+
+/* --- clair (impression, contraste élevé) --- */
+
+@media (prefers-color-scheme: light) {
+  body { background: var(--papier); color: var(--encre); }
+  .brand, .bar nav a:hover, .bouton, .bouton:hover { color: var(--encre); }
+  .lede { color: #2b2b27; }
+  .bar nav a, .note, .chiffres span, .grille article p,
+  .etapes p, footer .base, footer .leg { color: var(--texte); }
+  .bar, .chiffres, .chiffres div, .bloc,
+  .etapes li, .etapes li:last-child { border-color: var(--ligne); }
+  .filet { border-color: var(--ligne); background-image: radial-gradient(var(--ligne) 1px, transparent 1.4px); }
+  .bloc.fond { background-image: radial-gradient(var(--ligne) 1px, transparent 1.4px); }
+  .bouton { background: var(--encre); color: var(--papier); border-color: var(--encre); }
+  .bouton:hover { background: transparent; color: var(--encre); }
+  .bouton.ghost { background: transparent; color: var(--encre); }
+  .bouton.ghost:hover { background: var(--encre); color: var(--papier); }
+  .etapes .num { border-color: var(--encre); }
+  .grille { background: var(--ligne); border-color: var(--ligne); }
+  .grille article { background: var(--papier); }
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  .bar nav, .cta { display: none; }
+}

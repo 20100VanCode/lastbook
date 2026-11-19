@@ -1,0 +1,14 @@
+{
+  "name": "RELIQUE — Bibliothèque hors-ligne",
+  "short_name": "RELIQUE",
+  "description": "Le savoir qui survit. Bibliothèque hors-ligne : cartes des 101 départements, adresses, guides en français et encyclopédies.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
