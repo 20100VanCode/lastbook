@@ -4,11 +4,14 @@ Contenu francophone pour RELIQUE. Même modèle que `content/topics/` (voir
 `content/SCHEMA.md`), mais les sources sont des documents officiels français ou
 francophones, cités par leur page réelle.
 
-## Pilote : `eau`
+## Sujets
 
-`topics/eau.json` — « De l'eau potable sûre » : 8 situations, 7 limites,
-4 préparations, 4 lectures d'approfondissement, **37 références vérifiées**
-(`validate_topics.py`, 0 erreur).
+| sujet | situations | limites | préparation | approfondissement | références |
+|---|---|---|---|---|---|
+| `eau` — De l'eau potable sûre | 8 | 7 | 4 | 4 | 37 |
+| `assainissement` — Évacuer les excréments sans risque | 5 | 5 | 3 | 3 | 24 |
+
+**61 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -18,6 +21,8 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `ficr-hwts` | Traitement et stockage sûr de l'eau à domicile | Fédération internationale de la Croix-Rouge | 44 |
 | `hcsp-comprimes` | Avis sur les comprimés désinfectants (Mayotte) | HCSP, 2023 | 10 |
 | `iode-territoriale` | Déclinaison territoriale de la doctrine IODE | SIDESA | 33 |
+| `oms-fiches-eha` | Fiches techniques eau, hygiène et assainissement | OMS / WEDC, 2013 | 64 |
+| `crf-latrines` | Latrines en situation d'urgence (montage ERU) | Croix-Rouge française, 2018 | 15 |
 
 ## Reconstruire
 

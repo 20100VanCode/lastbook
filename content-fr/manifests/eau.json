@@ -38,5 +38,25 @@
   "collection": "IODE",
   "publisher": "SIDESA",
   "url": "https://www.sidesa.fr/upload/files/pdf/eaupotable/distribution/170619-I-ORSEC.pdf"
+ },
+ {
+  "id": "oms-fiches-eha",
+  "kind": "pdf",
+  "path": "documents/oms-fiches-eha.pdf",
+  "title": "Fiches techniques eau, hygiène et assainissement en situation d'urgence",
+  "category": "urgent",
+  "collection": "OMS/WEDC",
+  "publisher": "Organisation mondiale de la Santé / WEDC",
+  "url": "https://bdd.pseau.org/outils/ouvrages/oms_wedc_fiches_techniques_eau_hygiene_et_assainissement_en_situation_d_urgence_2014.pdf"
+ },
+ {
+  "id": "crf-latrines",
+  "kind": "pdf",
+  "path": "documents/crf-latrines-urgence.pdf",
+  "title": "Latrines en situation d'urgence — guide et schéma de montage à l'usage des ERU",
+  "category": "urgent",
+  "collection": "Croix-Rouge",
+  "publisher": "Croix-Rouge française, pôle Urgences / ERU",
+  "url": "https://wash.ifrc.org/wp-content/uploads/2025/06/CRF-2018-Doc-technique-Latrines.pdf"
  }
 ]

@@ -1,0 +1,214 @@
+{
+ "id": "assainissement",
+ "mode": "now",
+ "title": "Évacuer les excréments sans risque",
+ "short": "Latrines, mains propres, déchets",
+ "intro": "Lectures pour organiser l'évacuation des excréments et des déchets quand les toilettes ne fonctionnent plus : les options techniques possibles, les gestes d'hygiène qui limitent la transmission des maladies, et ce qu'il faut préparer avant.",
+ "keywords": [
+  "assainissement",
+  "latrine",
+  "toilettes",
+  "excréments",
+  "défécation",
+  "air libre",
+  "fosse",
+  "lavage des mains",
+  "savon",
+  "hygiène",
+  "déchets",
+  "eaux usées",
+  "égout",
+  "choléra",
+  "diarrhée",
+  "verrou",
+  "intimité",
+  "bâche",
+  "tranchée",
+  "inondation",
+  "cyclone",
+  "camp"
+ ],
+ "choices": [
+  {
+   "id": "libre",
+   "label": "La défécation se fait à l'air libre",
+   "hint": "Plus de toilettes utilisables, camp ou lieu public",
+   "read": [
+    {
+     "doc": "oms-fiches-eha",
+     "page": 55,
+     "label": "La défécation à l'air libre comme risque sanitaire majeur",
+     "note": "Fiche technique OMS/WEDC (2013) : la défécation à l'air libre est souvent le risque sanitaire le plus important dans les camps ; la fiche présente les méthodes de gestion des excréments et de l'urine pendant que des solutions durables sont conçues."
+    },
+    {
+     "doc": "crf-latrines",
+     "page": 3,
+     "label": "Les standards Sphere appliqués à l'évacuation des excréments",
+     "note": "Guide Croix-Rouge française (2018) : l'évacuation des excréments est la première barrière contre les maladies liées aux selles, une priorité majeure au même titre que l'eau."
+    },
+    {
+     "doc": "oms-fiches-eha",
+     "page": 56,
+     "label": "Les champs de défécation : une solution de tout premier jour",
+     "note": "Même fiche : les champs de défécation ont une courte durée de vie, sont difficiles à gérer et doivent être remplacés par des solutions plus durables dès que possible."
+    }
+   ]
+  },
+  {
+   "id": "latrines",
+   "label": "Monter des latrines simples",
+   "hint": "Fosse, tranchée, plaque ou dalle de squat",
+   "read": [
+    {
+     "doc": "crf-latrines",
+     "page": 5,
+     "label": "Les grands types d'installation pour les excréments en urgence",
+     "note": "Guide Croix-Rouge française (2018) : zone de défécation, latrines en tranchées en première phase (jusqu'à deux mois), latrines à fosse simple, avec les dimensions usuelles."
+    },
+    {
+     "doc": "crf-latrines",
+     "page": 6,
+     "label": "Les latrines à fosse simple et leurs éléments",
+     "note": "Même guide : la fosse fait office de puits perdu ; la superstructure, les dalles PVC ou squatting plates (la CRF fournit des plaques de 80 × 80 cm)."
+    },
+    {
+     "doc": "oms-fiches-eha",
+     "page": 57,
+     "label": "Tranchées de défécation : dimensions et fermeture",
+     "note": "Fiche OMS/WEDC : tranchées d'environ 0,2 à 0,3 m de large, 1,5 m de profondeur et 4,0 m de longueur ; quand le contenu arrive à 0,3 m de la surface, la tranchée est remplie de terre et fermée."
+    },
+    {
+     "doc": "oms-fiches-eha",
+     "page": 56,
+     "label": "Latrines familiales ou partagées",
+     "note": "Même fiche : une latrine par famille a des avantages, mais le partage entre proches a été une option efficace ; si l'espace manque, des latrines publiques sont nécessaires."
+    }
+   ]
+  },
+  {
+   "id": "urbain",
+   "label": "Utiliser les structures existantes en zone urbaine",
+   "hint": "Égouts, toilettes publiques, canaux pluviaux",
+   "read": [
+    {
+     "doc": "oms-fiches-eha",
+     "page": 57,
+     "label": "Se raccorder aux structures existantes",
+     "note": "Fiche OMS/WEDC : en zone urbaine, il est possible d'utiliser les égouts, toilettes publiques, latrines à seau ou canaux d'eaux pluviales ; des latrines temporaires peuvent être construites au-dessus d'un égout."
+    },
+    {
+     "doc": "crf-latrines",
+     "page": 13,
+     "label": "La bâche de clôture et ses remplacements",
+     "note": "Guide Croix-Rouge française (2018) : la clôture est posée sur une hauteur de 2 à 2,5 m, sur des poteaux de 3 m enfoncés de 0,5 m ; l'entrée doit être réalisée en Z."
+    }
+   ]
+  },
+  {
+   "id": "mains",
+   "label": "Se laver les mains",
+   "hint": "Savon, cendres, point d'eau à côté des latrines",
+   "read": [
+    {
+     "doc": "oms-fiches-eha",
+     "page": 41,
+     "label": "La promotion de l'hygiène en situation d'urgence",
+     "note": "Fiche OMS/WEDC : recruter et former des animateurs de proximité, issus de la communauté si possible, et définir les thématiques à couvrir en formation."
+    },
+    {
+     "doc": "ficr-hwts",
+     "page": 25,
+     "label": "Se laver les mains avant de manipuler l'eau potable",
+     "note": "Manuel Croix-Rouge : toujours se laver les mains avant de manipuler l'eau potable ; les distributions de produits de traitement sont une occasion de distribuer du savon et des conseils d'hygiène."
+    }
+   ]
+  },
+  {
+   "id": "dechets",
+   "label": "Gérer les déchets et les eaux usées",
+   "hint": "Ordures ménagères, linge, vaisselle, eaux grises",
+   "read": [
+    {
+     "doc": "oms-fiches-eha",
+     "page": 55,
+     "label": "Ce que recouvre l'assainissement",
+     "note": "Fiche OMS/WEDC : l'assainissement est l'évacuation efficace des excréments, urines, déchets et eaux usées ; la fiche renvoie à la fiche n° 7 pour les déchets solides."
+    },
+    {
+     "doc": "oms-fiches-eha",
+     "page": 57,
+     "label": "Les latrines mal entretenues deviennent inacceptables",
+     "note": "Même fiche : une supervision rapprochée est essentielle ; une latrine mal entretenue sera rejetée par la communauté et ne sera pas utilisée."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "Les options techniques d'urgence doivent être gérées de façon adéquate, mais aussi comprises et acceptées par la communauté.",
+   "doc": "oms-fiches-eha",
+   "page": 55
+  },
+  {
+   "text": "Les champs de défécation ont une courte durée de vie et doivent être remplacés par des solutions plus durables aussi tôt que possible.",
+   "doc": "oms-fiches-eha",
+   "page": 56
+  },
+  {
+   "text": "Un système de latrines en tranchées demande beaucoup de travail et une supervision constante.",
+   "doc": "oms-fiches-eha",
+   "page": 57
+  },
+  {
+   "text": "La fourniture d'installations pour la défécation vise à assurer la dignité, la sécurité, la santé et le bien-être des personnes.",
+   "doc": "crf-latrines",
+   "page": 3
+  },
+  {
+   "text": "La mise en place d'un système d'assainissement efficace dépend davantage des idées et opinions des usagers que de la technologie.",
+   "doc": "oms-fiches-eha",
+   "page": 55
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "crf-latrines",
+   "page": 7,
+   "label": "Le matériel nécessaire pour deux latrines",
+   "note": "Guide Croix-Rouge française (2018) : la liste du matériel pour construire deux latrines classiques (scie à bois, marteau, etc.)."
+  },
+  {
+   "doc": "crf-latrines",
+   "page": 4,
+   "label": "Les critères de construction à prendre en compte",
+   "note": "Même guide : la construction doit prendre en compte la préservation de l'intimité au maximum, la sécurité et l'accessibilité."
+  },
+  {
+   "doc": "crf-latrines",
+   "page": 13,
+   "label": "La pose de la bâche et des poteaux",
+   "note": "Même guide : les étapes de pose de la bâche et des poteaux de façade arrière, avec les dimensions de clôture préconisées."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "oms-fiches-eha",
+   "label": "OMS/WEDC : fiches techniques eau, hygiène et assainissement en situation d'urgence",
+   "note": " Série de fiches traduite en français (2013), dont les options d'élimination des excréments, la promotion de l'hygiène, la chloration et la réhabilitation des puits."
+  },
+  {
+   "doc": "crf-latrines",
+   "label": "Croix-Rouge française : latrines en situation d'urgence",
+   "note": "Guide de montage à l'usage des ERU (2018) : standards Sphere, types d'installation, matériel et schémas de construction."
+  },
+  {
+   "doc": "ficr-hwts",
+   "label": "Manuel Croix-Rouge : traitement et stockage sûr de l'eau à domicile",
+   "note": "Manuel de terrain (44 pages) qui rappelle l'usage des latrines, le lavage des mains et les bonnes pratiques de stockage."
+  }
+ ],
+ "related": [
+  "eau",
+  "alimentation"
+ ]
+}
