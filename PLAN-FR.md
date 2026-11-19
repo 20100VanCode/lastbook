@@ -225,4 +225,10 @@ les limites et les « quand appeler à l'aide » restent cités.
   vignoble, 20/23 = vergers, FRA/FLA/FLP = petits fruits) → `crops.sqlite` et
   overlay coloré z7-13. Corse : 4 692 parcelles.
 - **Unités** : échelle en km/m, courbes et altitude en mètres, partout (2D et 3D).
-- Prochaine étape : finir les 101 (55 restants), puis J3.
+- **J3b pilote « eau »** : `content-fr/` — 4 sources officielles françaises
+  (ORSEC Ain, manuel Croix-Rouge, avis HCSP, doctrine IODE), sujet rédigé en
+  français, 37 références vérifiées par `validate_topics.py`, bibliothèque
+  d'essai indexée par `content-fr/build.py`.
+- Prochaine étape : J3 — les 13 autres besoins (assainissement, alimentation,
+  abri, énergie, soins, blessures, communications, terrain…) sur les mêmes
+  sources françaises.
