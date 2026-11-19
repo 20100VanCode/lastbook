@@ -20,8 +20,9 @@ francophones, cités par leur page réelle.
 | `sante` — Soigner au quotidien, éviter l'aggravation | 6 | 5 | 3 | 4 | 29 |
 | `reparation` — Réparer, mettre hors d'eau, déclarer | 5 | 5 | 3 | 3 | 26 |
 | `terrain` — Connaître son terrain et ses risques | 6 | 5 | 3 | 3 | 28 |
+| `conservation` — Conserver pour durer | 5 | 5 | 3 | 3 | 25 |
 
-**341 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
+**366 références vérifiées** par `validate_topics.py` (0 erreur), chaque page lue.
 
 Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 
@@ -58,6 +59,9 @@ Documents sources (`documents/`, manifeste `manifests/eau.json`) :
 | `mrn-inondations` | Mémento pratique du particulier — inondations | MRN, 2005 | 20 |
 | `mrn-mvt` | Mémento pratique du particulier — mouvements de terrain | MRN, 2005 | 21 |
 | `dicrim-bergheim` | DICRIM — risques majeurs (inondation, mvt, TMD, séisme) | Ville de Bergheim / Géorisques | 63 |
+| `bp-hygiene` | Recueil de bonnes pratiques d'hygiène (consommateurs) | DILA / Léo Lagrange, 2013 | 101 |
+| `sante-conserves` | Conserves maison : comment éviter le botulisme | sante.fr | page web |
+| `avrdc-graines` | Produire et conserver ses propres semences | AVRDC | 32 |
 
 ## Reconstruire
 

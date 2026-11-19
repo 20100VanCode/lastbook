@@ -1,0 +1,215 @@
+{
+ "id": "conservation",
+ "mode": "learn",
+ "title": "Conserver pour durer",
+ "short": "Conserves, semences, aliments de longue conservation",
+ "intro": "Lectures pour garder des réserves dans la durée : la stérilisation des conserves ménagères et les dangers qu'elle évite, les aliments qui se conservent sans énergie, et la production et la conservation de ses propres semences de légumes.",
+ "keywords": [
+  "conserver",
+  "conserve",
+  "stérilisation",
+  "appertisation",
+  "botulisme",
+  "bocal",
+  "caoutchouc",
+  "vide",
+  "semences",
+  "graines",
+  "germination",
+  "séchage",
+  "semencier",
+  "réserve",
+  "garde-manger",
+  "longue conservation",
+  "conserve maison",
+  "étanchéité",
+  "Clostridium botulinum",
+  "acidité",
+  "autocuiseur",
+  "réfrigérateur",
+  "obscurité"
+ ],
+ "choices": [
+  {
+   "id": "principe",
+   "label": "Comprendre la stérilisation",
+   "hint": "Étanchéité + traitement thermique",
+   "read": [
+    {
+     "doc": "bp-hygiene",
+     "page": 92,
+     "label": "L'appertisation, les deux règles essentielles",
+     "note": "Recueil DILA (2013) : conserver des aliments à température ambiante pendant plusieurs années, c'est l'appertisation ; cela suppose un emballage parfaitement étanche et un traitement thermique adapté."
+    },
+    {
+     "doc": "bp-hygiene",
+     "page": 92,
+     "label": "Les principaux dangers des conserves",
+     "note": "Même fiche : danger microbiologique (Clostridium botulinum) et danger physique (débris de métal ou de verre) ; les incidents surviennent souvent sur des conserves « faites maison » ou artisanales."
+    },
+    {
+     "doc": "sante-conserves",
+     "label": "L'acidité change le traitement",
+     "note": "sante.fr : les barèmes de stérilisation dépendent de l'acidité des aliments ; les produits très acides (fruits, tomates, cornichons au vinaigre) sont traités à plus faible température, car un pH inférieur à 4,5 empêche la prolifération de la bactérie du botulisme."
+    }
+   ]
+  },
+  {
+   "id": "gestes",
+   "label": "Faire des conserves ménagères",
+   "hint": "Bocaux, joints neufs, remplissage",
+   "read": [
+    {
+     "doc": "sante-conserves",
+     "label": "Préparer les bocaux et les joints",
+     "note": "sante.fr : rincez abondamment les bocaux à l'eau bien chaude et laissez-les sécher tête en bas sur un torchon propre ; stérilisez bocaux et joints (eau bouillante plusieurs minutes ou four à 120 °C pendant 20 minutes) ; utilisez toujours des caoutchoucs neufs."
+    },
+    {
+     "doc": "sante-conserves",
+     "label": "Remplir et vérifier la fermeture",
+     "note": "Même page : remplissez jusqu'au niveau de remplissage gravé sur le bocal ou jusqu'à 2 cm du bord, attendez quelques minutes pour chasser les poches d'air, nettoyez les coulures, puis vérifiez le vide en débloquant la fermeture une fois les bocaux refroidis."
+    },
+    {
+     "doc": "bp-hygiene",
+     "page": 92,
+     "label": "Les bons gestes avant tout travail",
+     "note": "Recueil DILA : vérifiez que la date limite d'utilisation optimale de la boîte est compatible avec la date prévue de consommation ; lavez-vous les mains avant tout travail et ayez du matériel et des vêtements propres ; nettoyez et rincez le matériel."
+    }
+   ]
+  },
+  {
+   "id": "dangers",
+   "label": "Le botulisme et ses signes",
+   "hint": "Ce que la toxine fait, et quand elle se forme",
+   "read": [
+    {
+     "doc": "bp-hygiene",
+     "page": 16,
+     "label": "Clostridium botulinum et la toxine",
+     "note": "Recueil DILA : la toxine produite est responsable du botulisme ; troubles digestifs d'abord, puis atteintes oculaires et paralysie buccale, paralysie des membres et des muscles respiratoires dans les cas les plus sévères ; incubation de 1 à 10 jours."
+    },
+    {
+     "doc": "bp-hygiene",
+     "page": 16,
+     "label": "Le botulisme infantile",
+     "note": "Même tableau : chez les nourrissons de moins d'un an, un des premiers signes est la constipation (plus de 3 jours sans défécation) et la léthargie, et cela peut aller jusqu'à la mort."
+    },
+    {
+     "doc": "sante-conserves",
+     "label": "Les aliments les plus concernés",
+     "note": "sante.fr : pour les aliments peu acides — légumes, viandes, volailles, poissons, soupes et sauces — une température supérieure à celle de l'ébullition est nécessaire pour détruire la bactérie du botulisme, ce qui n'est pas toujours possible en conditions domestiques."
+    }
+   ]
+  },
+  {
+   "id": "semences",
+   "label": "Produire ses semences de légumes",
+   "hint": "Récolte, séchage, pureté",
+   "read": [
+    {
+     "doc": "avrdc-graines",
+     "page": 3,
+     "label": "Un guide pour produire ses propres semences",
+     "note": "AVRDC - The World Vegetable Center : guide pour les producteurs sur la production et la conservation des semences de légumes, de la récolte au stockage."
+    },
+    {
+     "doc": "avrdc-graines",
+     "page": 4,
+     "label": "Pourquoi toutes les semences ne se conservent pas",
+     "note": "Même guide : les semences et les bulbes de légumes peuvent être conservés, mais toutes les semences ne se prêtent pas à la conservation ; il faut en assurer la survie pour un usage futur."
+    }
+   ]
+  },
+  {
+   "id": "stockage",
+   "label": "Conserver les semences",
+   "hint": "Séchage, obscurité, température, humidité",
+   "read": [
+    {
+     "doc": "avrdc-graines",
+     "page": 4,
+     "label": "Le séchage avant le stockage",
+     "note": "AVRDC : les semences nouvellement récoltées ne doivent pas être entreposées immédiatement dans des contenants hermétiques, car leur teneur en humidité est encore élevée ; il faut environ 7 à 8 % d'humidité avant le stockage."
+    },
+    {
+     "doc": "avrdc-graines",
+     "page": 4,
+     "label": "Les conditions de stockage",
+     "note": "Même guide : obscurité (l'exposition au soleil réduit la durée de vie), température inférieure à 15 °C pour la plupart des semences potagères, et récipient hermétique — bocal à couvercle vissé, boîte métallique ou papier aluminium."
+    },
+    {
+     "doc": "avrdc-graines",
+     "page": 4,
+     "label": "La durée de conservation des semences",
+     "note": "Même guide : la plupart des semences de cultures maraîchères peuvent être conservées en toute sécurité pendant au moins trois à cinq ans ; pour une conservation courte, un lieu sec et frais à l'abri de la lumière suffit."
+    }
+   ]
+  }
+ ],
+ "limits": [
+  {
+   "text": "L'appertisation suppose un emballage parfaitement étanche et un traitement thermique adapté.",
+   "doc": "bp-hygiene",
+   "page": 92
+  },
+  {
+   "text": "Utilisez toujours des caoutchoucs neufs ; ne réutilisez pas les anciens, même s'ils semblent en bon état.",
+   "doc": "sante-conserves"
+  },
+  {
+   "text": "Pour les aliments peu acides, une température supérieure à celle de l'ébullition est nécessaire, ce qui n'est pas toujours possible en conditions domestiques.",
+   "doc": "sante-conserves"
+  },
+  {
+   "text": "Les incidents de botulisme surviennent souvent sur des conserves « faites maison » ou artisanales.",
+   "doc": "bp-hygiene",
+   "page": 92
+  },
+  {
+   "text": "Les semences nouvellement récoltées ne doivent pas être entreposées immédiatement dans des contenants hermétiques : leur humidité est encore trop élevée.",
+   "doc": "avrdc-graines",
+   "page": 4
+  }
+ ],
+ "prepare": [
+  {
+   "doc": "sante-conserves",
+   "label": "Prévoir le matériel de stérilisation",
+   "note": "sante.fr : autocuiseur ou cuiseur à bocaux, bocaux et joints, et la possibilité de chauffer l'eau à ébullition ; respecter les barèmes du fabricant et des recettes."
+  },
+  {
+   "doc": "avrdc-graines",
+   "page": 4,
+   "label": "Préparer le local de stockage des semences",
+   "note": "AVRDC : un lieu sec, frais et sombre, avec des récipients hermétiques — bocaux à couvercle vissé, boîtes métalliques ou papier aluminium."
+  },
+  {
+   "doc": "bp-hygiene",
+   "page": 92,
+   "label": "Vérifier dates et propreté avant de commencer",
+   "note": "Recueil DILA : vérifier la date limite d'utilisation optimale des boîtes, se laver les mains, et nettoyer puis rincer le matériel."
+  }
+ ],
+ "learn": [
+  {
+   "doc": "bp-hygiene",
+   "label": "DILA : recueil de bonnes pratiques d'hygiène pour les consommateurs",
+   "note": "Recueil (101 pages, 2013) dont la fiche 20 sur les conserves et les tableaux des dangers microbiologiques, botulisme compris."
+  },
+  {
+   "doc": "sante-conserves",
+   "label": "sante.fr : conserves maison et botulisme",
+   "note": "Page ministérielle : préparation des bocaux, remplissage, barèmes, acidité et vérification de la fermeture."
+  },
+  {
+   "doc": "avrdc-graines",
+   "label": "AVRDC : produire et conserver ses propres semences de légumes",
+   "note": "Guide (32 pages) : production, récolte, séchage et conditions de stockage des semences potagères."
+  }
+ ],
+ "related": [
+  "alimentation",
+  "terrain",
+  "culture"
+ ]
+}

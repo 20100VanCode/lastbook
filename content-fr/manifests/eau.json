@@ -358,5 +358,35 @@
   "collection": "DICRIM",
   "publisher": "Ville de Bergheim / Géorisques",
   "url": "https://www.georisques.gouv.fr/DICRIM/68028"
+ },
+ {
+  "id": "bp-hygiene",
+  "kind": "pdf",
+  "path": "documents/bonnes-pratiques-hygiene-consommateurs.pdf",
+  "title": "Recueil de recommandations de bonnes pratiques d'hygiène à destination des consommateurs",
+  "category": "urgent",
+  "collection": "DILA",
+  "publisher": "Direction de l'information légale et administrative / Association Léo Lagrange",
+  "url": "https://agriculture.gouv.fr/telecharger/138860"
+ },
+ {
+  "id": "sante-conserves",
+  "kind": "html",
+  "path": "documents/sante-conserves-botulisme.html",
+  "title": "Conserves maison : comment éviter le botulisme ?",
+  "category": "urgent",
+  "collection": "sante.fr",
+  "publisher": "Ministère des Solidarités et de la Santé (sante.fr)",
+  "url": "https://www.sante.fr/decryptage/nos-reponses/conserves-maison-comment-eviter-le-botulisme"
+ },
+ {
+  "id": "avrdc-graines",
+  "kind": "pdf",
+  "path": "documents/avrdc-conserver-graines.pdf",
+  "title": "Comment produire et conserver ses propres semences de légumes",
+  "category": "urgent",
+  "collection": "AVRDC",
+  "publisher": "AVRDC - The World Vegetable Center",
+  "url": "https://www.saint-lunaire.fr/wp-content/uploads/2020/09/Produire-et-conserver-ses-graines.pdf"
  }
 ]
