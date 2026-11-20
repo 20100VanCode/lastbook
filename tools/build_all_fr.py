@@ -188,6 +188,7 @@ def main():
     ap.add_argument('--work', help='build folders; defaults to --out/.work')
     ap.add_argument('--ign', required=True, help='folder holding ign-bdtopo.json and ign-bdalti.json')
     ap.add_argument('--only', help='comma-separated département codes')
+    ap.add_argument('--from', dest='start', help='commencer à ce code (dans l’ordre des départements)')
     ap.add_argument('--force', action='store_true')
     a = ap.parse_args()
     cache, out = Path(a.cache), Path(a.out)
@@ -198,6 +199,10 @@ def main():
     regions = json.loads((ign / 'ign-bdtopo-regions.json').read_text(encoding='utf-8'))
     rpg = json.loads((ign / 'ign-rpg-regions.json').read_text(encoding='utf-8'))
     codes = [c.strip() for c in a.only.split(',')] if a.only else [d[0] for d in DEPARTEMENTS]
+    if a.start and not a.only:
+        if a.start not in codes:
+            raise SystemExit(f'code de départ inconnu : {a.start}')
+        codes = codes[codes.index(a.start):]
     unknown = [c for c in codes if c not in {d[0] for d in DEPARTEMENTS}]
     if unknown:
         raise SystemExit('départements inconnus : ' + ', '.join(unknown))
