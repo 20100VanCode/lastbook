@@ -83,8 +83,9 @@ def main():
             return 0
         print(f'{time.strftime("%H:%M:%S")} reprise à {code}', flush=True)
         t0 = time.time()
+        interp = str(Path(a.repo) / 'derived' / 'buildenv' / 'bin' / 'python')
         r = subprocess.run(
-            [sys.executable, '-B', 'tools/build_all_fr.py', '--from', code,
+            [interp, '-B', 'tools/build_all_fr.py', '--from', code,
              '--cache', str(root / 'data' / 'cache'), '--work', str(root / 'data' / 'work'),
              '--out', str(packs), '--ign', str(root / 'data' / 'ign')],
             cwd=a.repo, env=env,
