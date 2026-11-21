@@ -60,9 +60,12 @@ def read_asc(path):
     """An ARC/INFO ASCII grid: six header lines, then the rows."""
     with open(path, 'r', encoding='utf-8', errors='replace') as stream:
         head = {}
-        for _ in range(6):
-            key, value = stream.readline().split()
-            head[key.lower()] = float(value)
+        # certaines livraisons ont des lignes d'en-tête à trois champs ou des lignes
+        # vides : on n'en retient que la clé et la première valeur.
+        while len(head) < 6:
+            parts = stream.readline().split()
+            if len(parts) >= 2:
+                head[parts[0].lower()] = float(parts[1])
         data = np.array(stream.read().split(), dtype=np.float32).reshape(int(head['nrows']), int(head['ncols']))
     data[data <= NODATA + 1] = np.nan
     return head, data
