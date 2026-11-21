@@ -104,7 +104,18 @@ def main():
     con = duckdb.connect()
     con.execute('INSTALL spatial; LOAD spatial;')
     con.execute('SET geometry_always_xy = true')
-    layer = 'batiment' if kind == 'gpkg' else str(next(iter(sorted(rglob_ci(src, 'BATIMENT.shp')))))
+    if kind == 'gpkg':
+        layer = 'batiment'
+    else:
+        # 3.5 nomme la couche BATIMENT ; les éditions 2.2 livrent BATI_INDIFFERENCIE,
+        # BATI_INDUSTRIEL et BATI_REMARQUABLE à la place — on prend la première présente.
+        for nom in ('BATIMENT.shp', 'BATI_INDIFFERENCIE.shp', 'BATI_INDUSTRIEL.shp', 'BATI_REMARQUABLE.shp'):
+            found = sorted(rglob_ci(src, nom))
+            if found:
+                layer = str(found[0])
+                break
+        else:
+            raise SystemExit('pas de couche bâtie dans la livraison BD TOPO')
     geom = 'geometrie' if kind == 'gpkg' else 'geom'
     if kind == 'gpkg':
         describe, args = 'DESCRIBE SELECT * FROM ST_Read(?, layer=?)', [str(target), layer]
