@@ -10,8 +10,15 @@ import fnmatch
 
 
 def rglob_ci(src, pattern):
-    """Itérateur des chemins de `src` dont le nom matche `pattern`, à la casse près."""
+    """Itérateur des chemins de `src` dont le nom matche `pattern`, à la casse près.
+
+    Les `._nom` sont les fichiers de ressources AppleDouble que macOS écrit sur les
+    volumes externes : ce ne sont pas les fichiers livrés, et ils se trient avant les
+    autres (le point précède les lettres), ce qui faisait retenir un faux .gpkg.
+    """
     pat = pattern.lower()
     for p in src.rglob('*'):
+        if p.name.startswith('._'):
+            continue
         if fnmatch.fnmatch(p.name.lower(), pat):
             yield p
