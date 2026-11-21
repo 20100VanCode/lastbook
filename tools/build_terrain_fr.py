@@ -17,6 +17,7 @@ import argparse
 import math
 import sqlite3
 import struct
+import sys
 import time
 import zlib
 from pathlib import Path
@@ -24,9 +25,12 @@ from pathlib import Path
 import numpy as np
 from pyproj import CRS, Transformer
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fsutil import rglob_ci                                              # noqa: E402
+
 def crs_of(src):
     """The delivery's CRS: its .prj when there is one, else the name IGN gives it."""
-    prj = next(iter(sorted(src.rglob('*.prj'))), None)
+    prj = next(iter(sorted(rglob_ci(src, '*.prj'))), None)
     if prj:
         return CRS.from_wkt(prj.read_text(encoding='utf-8')).to_epsg() or 4326
     names = ' '.join(p.name.upper() for p in src.rglob('*'))
@@ -102,7 +106,7 @@ def main():
     src = Path(a.dir)
     started = time.time()
 
-    grids = [read_asc(p) for p in sorted(src.rglob('*.asc'))]
+    grids = [read_asc(p) for p in sorted(rglob_ci(src, '*.asc'))]
     if not grids:
         raise SystemExit(f'no .asc grid in {src}')
     crs = CRS.from_epsg(crs_of(src))

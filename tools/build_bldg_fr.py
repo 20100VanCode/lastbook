@@ -16,6 +16,7 @@ map still draws their footprint.
 import argparse
 import math
 import sqlite3
+import sys
 import time
 import zlib
 from array import array
@@ -23,10 +24,13 @@ from pathlib import Path
 
 from pyproj import CRS
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fsutil import rglob_ci                                              # noqa: E402
+
 
 def delivery(src):
     """(kind, target, epsg): IGN's 3.5 is a GeoPackage inside the 7z, 3.0 and older are shapefiles."""
-    gpkg = next(iter(sorted(src.rglob('*.gpkg'))), None)
+    gpkg = next(iter(sorted(rglob_ci(src, '*.gpkg'))), None)
     if gpkg:
         db = sqlite3.connect(f'file:{gpkg}?mode=ro', uri=True)
         try:
@@ -34,7 +38,7 @@ def delivery(src):
         finally:
             db.close()
         return 'gpkg', gpkg, int(row[0]) if row else 4326
-    prj = next(iter(sorted(p for p in src.rglob('*.prj') if not p.name.startswith('._'))), None)
+    prj = next(iter(sorted(p for p in rglob_ci(src, '*.prj') if not p.name.startswith('._'))), None)
     if prj is None:
         raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
     # IGN écrit ses .prj en Latin-1 : on décode en tolérant.
@@ -100,7 +104,7 @@ def main():
     con = duckdb.connect()
     con.execute('INSTALL spatial; LOAD spatial;')
     con.execute('SET geometry_always_xy = true')
-    layer = 'batiment' if kind == 'gpkg' else str(next(iter(sorted(src.rglob('BATI/BATIMENT.shp')))))
+    layer = 'batiment' if kind == 'gpkg' else str(next(iter(sorted(rglob_ci(src, 'BATIMENT.shp')))))
     geom = 'geometrie' if kind == 'gpkg' else 'geom'
     if kind == 'gpkg':
         describe, args = 'DESCRIBE SELECT * FROM ST_Read(?, layer=?)', [str(target), layer]

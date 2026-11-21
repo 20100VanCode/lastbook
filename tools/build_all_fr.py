@@ -30,6 +30,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 from engine.departements import DEPARTEMENTS                            # noqa: E402
+from fsutil import rglob_ci                                              # noqa: E402
 
 UA = {'User-Agent': 'relique-fr/1.0'}
 BAN = 'https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-{}.csv.gz'
@@ -228,7 +229,7 @@ def main():
                 if not entry:
                     raise RuntimeError('BD ALTI absente du flux')
                 raw = unzip(fetch(entry['url'], cache / 'bdalti' / f'{code}.7z'), cache / 'bdalti' / code)
-                grid = next(raw.rglob('*.asc'), None) or next(raw.rglob('*.asc.gz'), None)
+                grid = next(rglob_ci(raw, '*.asc'), None) or next(rglob_ci(raw, '*.asc.gz'), None)
                 if not grid:
                     raise RuntimeError('pas de grille ASC dans la livraison')
                 run('build_terrain_fr.py', '--dir', grid.parent, '--departement', code, '--out', target)
@@ -244,7 +245,7 @@ def main():
                 raw = unzip(fetch(GEOFABRIK.format(region, kind), cache / 'osm' / f'{region}.{kind}.zip'),
                             cache / 'osm' / region)
                 # a shapefile delivery is a directory of layers; a GeoPackage is one file
-                source = raw if kind == 'shp' else next(raw.rglob('*.gpkg'), None)
+                source = raw if kind == 'shp' else next(rglob_ci(raw, '*.gpkg'), None)
                 if not source:
                     raise RuntimeError(f'pas de .{kind} dans la livraison {region}')
                 args = ['build_map_fr.py', f'--{kind}', source, '--departement', code, '--out', target]

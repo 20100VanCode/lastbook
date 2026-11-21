@@ -17,11 +17,15 @@ import argparse
 import math
 import sqlite3
 import struct
+import sys
 import time
 from array import array
 from pathlib import Path
 
 from pyproj import CRS
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fsutil import rglob_ci                                              # noqa: E402
 
 HERE = Path(__file__).resolve().parent.parent
 Q = 100000
@@ -109,7 +113,7 @@ def wkb_parts(b, o=0):
 
 def delivery(src):
     """(kind, target, epsg): IGN's 3.5 is a GeoPackage inside the 7z, 3.0 and older are shapefiles."""
-    gpkg = next(iter(sorted(p for p in src.rglob('*.gpkg') if not p.name.startswith('._'))), None)
+    gpkg = next(iter(sorted(p for p in rglob_ci(src, '*.gpkg') if not p.name.startswith('._'))), None)
     if gpkg:
         db = sqlite3.connect(f'file:{gpkg}?mode=ro', uri=True)
         try:
@@ -117,7 +121,7 @@ def delivery(src):
         finally:
             db.close()
         return 'gpkg', gpkg, int(row[0]) if row else 4326
-    prj = next(iter(sorted(p for p in src.rglob('*.prj') if not p.name.startswith('._'))), None)
+    prj = next(iter(sorted(p for p in rglob_ci(src, '*.prj') if not p.name.startswith('._'))), None)
     if prj is None:
         raise SystemExit('ni .gpkg ni .prj dans la livraison BD TOPO')
     # IGN écrit ses .prj en Latin-1 (accentués non UTF-8) : on décode en tolérant.
@@ -226,7 +230,7 @@ def main():
         """The layer to read: a GeoPackage table name, or the first matching shapefile."""
         if kind == 'gpkg':
             return name
-        found = sorted(src_dir.rglob(name + '.shp'))
+        found = sorted(rglob_ci(src_dir, name + '.shp'))
         return found[0] if found else None
 
     t0 = time.time()
